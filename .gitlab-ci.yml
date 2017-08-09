@@ -1,7 +1,7 @@
 junit:
   stage: test
   script:
-    - mvn -B clean test
+    - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64 mvn -B clean test
 
 generate_artifacts:
   stage: deploy
