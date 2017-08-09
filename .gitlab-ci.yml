@@ -6,7 +6,7 @@ junit:
 generate_artifacts:
   stage: deploy
   script:
-    - mvn -B clean site package
+    - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64 mvn -B clean site package
   artifacts:
     paths:
     - target/s202gteam9-runner.jar
