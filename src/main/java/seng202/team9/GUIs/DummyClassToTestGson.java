@@ -1,9 +1,10 @@
-package seng202.team9;
+package seng202.team9.GUIs;
 
 import com.google.gson.Gson;
 
 /**
  * Created by andrewspearman on 8/3/17.
+ * dummy class
  */
 public class DummyClassToTestGson {
 
