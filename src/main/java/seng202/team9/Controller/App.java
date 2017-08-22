@@ -1,7 +1,9 @@
-package seng202.team9;
+package seng202.team9.Controller;
 
 /**
  * Hello world!
+ *
+ * This one can be deleted ---- it was from the lab // andrew
  *
  */
 public class App 
