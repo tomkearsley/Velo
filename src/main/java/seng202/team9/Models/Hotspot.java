@@ -55,4 +55,84 @@ public class Hotspot {
     id = newID;
   }
 
+  public double getLatitude() {
+    return latitude;
+  }
+
+  public void setLatitude(double newLatitude) {
+    latitude = newLatitude;
+  }
+
+  public double getLongitude() {
+    return longitude;
+  }
+
+  public void setLongitude(double newLongitude) {
+    longitude = newLongitude;
+  }
+
+  public String getLocationAddress() {
+    return locationAddress;
+  }
+
+  public void setLocationAdress(String newLocationAddress) {
+    locationAddress = newLocationAddress;
+  }
+
+  public String getBorough() {
+    return borough;
+  }
+
+  public void setBorough(String newBorough) {
+    borough = newBorough;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String newCity) {
+    city = newCity;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String newType) {
+    type = newType;
+  }
+
+  public String getSSID() {
+    return SSID;
+  }
+
+  public void setSSID(String newSSID) {
+    SSID = newSSID;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String newName) {
+    name = newName;
+  }
+
+  public String getProvider() {
+    return provider;
+  }
+
+  public void setProvider(String newProvider) {
+    provider = newProvider;
+  }
+
+  public String getRemarks() {
+    return remarks;
+  }
+
+  public void setRemarks(String newRemarks) {
+    remarks = newRemarks;
+  }
+
 }
