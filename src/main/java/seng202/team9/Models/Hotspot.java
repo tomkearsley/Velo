@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.*;
 
 /**
- * Created by andrewspearman on 8/23/17.
  * The class Hotspot defines the type for WiFi hotspot locations
  * @author andrewspearman
  */
@@ -26,6 +25,9 @@ public class Hotspot {
   /**City in which the hotspot is located*/
   private String city;
 
+  /**Postal code*/
+  private int postcode;
+
   /**Type of service i.e. free, limited free*/
   private String type;
 
@@ -42,6 +44,8 @@ public class Hotspot {
 
   /** Comments on the hotspot*/
   private String remarks;
+
+
 
 
 
@@ -95,6 +99,14 @@ public class Hotspot {
     city = newCity;
   }
 
+  public int getPostcode() {
+    return postcode;
+  }
+
+  public void setPostcode(int newPostcode) {
+    postcode = newPostcode;
+  }
+
   public String getType() {
     return type;
   }
@@ -134,5 +146,7 @@ public class Hotspot {
   public void setRemarks(String newRemarks) {
     remarks = newRemarks;
   }
+
+
 
 }
