@@ -19,7 +19,7 @@ public class Reader {
 
   /**
    * Reads WiFi hotspots from .csv file
-   * @author Andrew Spearman
+   * @author andrewspearman
    */
   public void readHotspots(String filename) {
 
