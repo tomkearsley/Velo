@@ -29,8 +29,7 @@ public class Hotspot {
   /**Type of service i.e. free, limited free*/
   private String type;
 
-  /** WiFi hotspot name to the user i.e. "UCWireless"
-   * */
+  /** WiFi hotspot name to the user i.e. "UCWireless"*/
   private String SSID;
 
   /** Name of hotspot
