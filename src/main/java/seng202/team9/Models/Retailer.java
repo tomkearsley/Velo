@@ -1,31 +1,42 @@
 package seng202.team9.Models;
 
 /**
- * Created by andrewspearman on 8/23/17.
  * The class Retailer defines the type for retailers
  * @author Kyle Lamb
  */
-public class Retailer {
+public class Retailer implements Mappable {
   /** The title of the retailer */
   private String title;
 
   /** The retailer's address ([block], street no, street, [floor], city, state, ZIP) */
   private String address;
 
-  /** The description for the store (Primary + Secondary) */
+  /** The primary description for the store */
   private String description;
 
-  public Retailer(){}
+  /** The secondary description for the store */
+  private String secondaryDescription;
 
-  public String getTitle(){
+  public Retailer(String title, String address, String description, String secondaryDescription) {
+    this.title = title;
+    this.address = address;
+    this.description = description;
+    this.secondaryDescription = secondaryDescription;
+  }
+
+  public String getTitle() {
     return title;
   }
 
-  public String getAddress(){
+  public String getAddress() {
     return address;
   }
 
-  public String getDescription(){
+  public String getDescription() {
     return description;
+  }
+
+  public String getSecondaryDescription() {
+    return secondaryDescription;
   }
 }
