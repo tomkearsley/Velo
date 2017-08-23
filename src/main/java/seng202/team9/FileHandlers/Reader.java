@@ -28,6 +28,20 @@ public class Reader {
    */
   public ArrayList<Hotspot> readHotspots(String filename) throws FileNotFoundException {
 
+    // Column indexes for the appropriate value per row
+    int idIndex = 0;
+    int typeIndex = 3;
+    int providerIndex = 4;
+    int nameIndex = 5;
+    int locationAddressIndex = 6;
+    int latitudeIndex = 7;
+    int longitudeIndex = 8;
+    int remarksIndex = 12;
+    int cityIndex = 13;
+    int ssidIndex = 14;
+    int boroughIndex = 18;
+    int postcodeIndex = 22;
+
     // Initialize scanner and Hotspots array
     BufferedReader br = null;
     String line;
@@ -42,18 +56,19 @@ public class Reader {
         // Separate by comma
         String[] csvHotspot = line.split(",");
 
-        newHotspot.setID(Integer.valueOf(csvHotspot[0]));
-        newHotspot.setType(csvHotspot[3]);
-        newHotspot.setProvider(csvHotspot[4]);
-        newHotspot.setName(csvHotspot[5]);
-        newHotspot.setLocationAdress(csvHotspot[6]);
-        newHotspot.setLatitude(Double.parseDouble(csvHotspot[7]));
-        newHotspot.setLongitude(Double.parseDouble(csvHotspot[8]));
-        newHotspot.setRemarks(csvHotspot[12]);
-        newHotspot.setCity(csvHotspot[13]);
-        newHotspot.setSSID(csvHotspot[14]);
-        newHotspot.setBorough(csvHotspot[18]);
-        newHotspot.setPostcode(Integer.valueOf(csvHotspot[22]));
+        // Set Hotspot attributes from the buffered row
+        newHotspot.setID(Integer.valueOf(csvHotspot[idIndex]));
+        newHotspot.setType(csvHotspot[typeIndex]);
+        newHotspot.setProvider(csvHotspot[providerIndex]);
+        newHotspot.setName(csvHotspot[nameIndex]);
+        newHotspot.setLocationAdress(csvHotspot[locationAddressIndex]);
+        newHotspot.setLatitude(Double.parseDouble(csvHotspot[latitudeIndex]));
+        newHotspot.setLongitude(Double.parseDouble(csvHotspot[longitudeIndex]));
+        newHotspot.setRemarks(csvHotspot[remarksIndex]);
+        newHotspot.setCity(csvHotspot[cityIndex]);
+        newHotspot.setSSID(csvHotspot[ssidIndex]);
+        newHotspot.setBorough(csvHotspot[boroughIndex]);
+        newHotspot.setPostcode(Integer.valueOf(csvHotspot[postcodeIndex]));
 
         //add newHotspot to Hotspots array
         Hotspots.add(newHotspot);
