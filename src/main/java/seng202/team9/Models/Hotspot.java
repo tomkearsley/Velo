@@ -1,8 +1,5 @@
 package seng202.team9.Models;
 
-import java.util.ArrayList;
-import java.util.*;
-
 /**
  * The class Hotspot defines the type for WiFi hotspot locations
  * @author andrewspearman
@@ -44,8 +41,6 @@ public class Hotspot {
 
   /** Comments on the hotspot*/
   private String remarks;
-
-
 
 
 
@@ -146,7 +141,6 @@ public class Hotspot {
   public void setRemarks(String newRemarks) {
     remarks = newRemarks;
   }
-
 
 
 }

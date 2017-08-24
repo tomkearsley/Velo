@@ -17,11 +17,8 @@ public class Reader {
    * Reads WiFi hotspots from a csv file
    *
    * <p>
-   *   Needs to be tested to ensure it works. Add print statements to print each hotspot attribute
-   *   as it is parsed.
+   *   Needs to be tested to ensure it works.
    * </p>
-   * @author andrewspearman
-   *
    * @param filename  the name of file to open
    * @throws FileNotFoundException  if the file cannot be found
    * @return ArrayList<Hotspot> Hotspots
