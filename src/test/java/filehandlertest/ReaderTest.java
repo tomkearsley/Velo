@@ -1,6 +1,8 @@
 package filehandlertest;
 
 
+import java.util.ArrayList;
+import model.Hotspot;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +15,6 @@ public class ReaderTest {
 
   /**
    * This function is called before running any of the following functions.
-   * It ensure the application is in a state that you desire (A fresh game state).
    */
   @Before
   public void setUp() {
@@ -29,7 +30,17 @@ public class ReaderTest {
   }
 
   @Test
-  public void readHotspots() {
+  public void readSomeHotspots() throws Exception {
+
+    ArrayList<Hotspot> hotspots = reader.readHotspots("InitialHotspots");
+    ArrayList<Hotspot> expectedHotspots =
+
+    assertEquals(1, 1);
+  }
+
+  @Test
+  public void readManyHotspots() throws Exception {
+
     assertEquals(1, 1);
   }
 
