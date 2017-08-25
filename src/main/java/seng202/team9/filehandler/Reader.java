@@ -1,9 +1,9 @@
-package seng202.team9.FileHandlers;
+package seng202.team9.filehandler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import seng202.team9.Models.Hotspot;
+import seng202.team9.model.Hotspot;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 

@@ -1,4 +1,4 @@
-package seng202.team9.Models;
+package seng202.team9.model;
 
 /**
  * The class Retailer defines the type for retailers

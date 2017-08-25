@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import seng202.team9.FileHandlers.Reader;
+import seng202.team9.filehandler.Reader;
 
 
 public class ReaderTest {

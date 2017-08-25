@@ -1,4 +1,4 @@
-package seng202.team9.Controller;
+package seng202.team9.controller;
 
 /**
  * Created by andrewspearman on 8/22/17.

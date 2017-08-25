@@ -1,4 +1,4 @@
-package seng202.team9.GUIs;
+package seng202.team9.window;
 
 import com.google.gson.Gson;
 

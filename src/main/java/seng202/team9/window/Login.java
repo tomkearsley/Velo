@@ -1,4 +1,4 @@
-package seng202.team9.GUIs;
+package seng202.team9.window;
 
 /**
  * Created by andrewspearman on 8/22/17.
