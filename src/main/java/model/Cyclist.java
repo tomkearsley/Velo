@@ -1,9 +1,8 @@
-package seng202.team9.GUIs;
+package model;
 
 /**
  * Created by andrewspearman on 8/22/17.
- *
  */
-public class Login {
+public class Cyclist {
 
 }

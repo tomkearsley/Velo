@@ -1,4 +1,4 @@
-package seng202.team9.Models;
+package model;
 
 /**
  * The class Hotspot defines the type for WiFi hotspot locations

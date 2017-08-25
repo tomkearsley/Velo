@@ -1,4 +1,4 @@
-package seng202.team9.Models;
+package model;
 
 /**
  * Created by Thomas Kearsley on 8/22/17.

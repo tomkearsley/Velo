@@ -1,4 +1,4 @@
-package seng202.team9.Controller;
+package window;
 
 /**
  * Hello world!
