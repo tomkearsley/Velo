@@ -9,4 +9,5 @@ public class POI implements Mappable{
     String name = "";
   }
 
+
 }
