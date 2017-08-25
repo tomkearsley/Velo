@@ -33,7 +33,7 @@ public class ReaderTest {
   public void readSomeHotspots() throws Exception {
 
     ArrayList<Hotspot> hotspots = reader.readHotspots("InitialHotspots");
-    ArrayList<Hotspot> expectedHotspots =
+    ArrayList<Hotspot> expectedHotspots;
 
     assertEquals(1, 1);
   }
