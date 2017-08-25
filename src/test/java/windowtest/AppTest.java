@@ -1,4 +1,4 @@
-package seng202.team9;
+package windowtest;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

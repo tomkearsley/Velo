@@ -1,4 +1,4 @@
-package seng202.team9.window;
+package window;
 
 /**
  * Created by andrewspearman on 8/22/17.

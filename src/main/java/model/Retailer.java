@@ -1,9 +1,9 @@
-package seng202.team9.model;
+package model;
 
 /**
  * The class Retailer describes the attributes and methods of a Retail store object
  */
-public class Retailer implements Mappable {
+public class Retailer implements model.Mappable {
   /** The title of the retailer */
   private String title;
 

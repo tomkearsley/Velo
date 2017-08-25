@@ -1,4 +1,4 @@
-package seng202.team9.model;
+package model;
 
 import javax.swing.ImageIcon;
 

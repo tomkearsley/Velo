@@ -1,11 +1,11 @@
-package seng202.team9;
+package filehandlertest;
 
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import seng202.team9.filehandler.Reader;
+import filehandler.Reader;
 
 
 public class ReaderTest {

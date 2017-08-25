@@ -1,8 +1,8 @@
-package seng202.team9.window;
+package model;
 
 /**
  * Created by andrewspearman on 8/22/17.
  */
-public class Main {
+public class Cyclist {
 
 }
