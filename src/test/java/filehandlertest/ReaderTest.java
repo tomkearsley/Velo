@@ -32,7 +32,7 @@ public class ReaderTest {
   @Test
   public void readSomeHotspots() throws Exception {
 
-    ArrayList<Hotspot> hotspots = reader.readHotspots("InitialHotspots");
+    ArrayList<Hotspot> hotspots = reader.readHotspots("TestInitialHotspots");
     ArrayList<Hotspot> expectedHotspots;
 
     assertEquals(1, 1);
