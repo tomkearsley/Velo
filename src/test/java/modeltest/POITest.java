@@ -7,7 +7,6 @@ import model.PublicPOI;
 import java.lang.String;
 
 public class POITest {
-  @Test
   public void LocationTest(){
     double[] l1 = {40.719011, -73.908305};
     POI p1 = new POI(l1,"New York Center","");
