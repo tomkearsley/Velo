@@ -11,6 +11,7 @@ public interface Mappable {
   ImageIcon Logo = new ImageIcon();
   String info = "";
 
+  /*
   double[] getLocation();
   void setLocation(double focusLocation[]);
 
@@ -19,4 +20,5 @@ public interface Mappable {
 
   String getInfo();
   void setInfo(String info);
+  */
 }
