@@ -6,6 +6,7 @@ package model;
 public class POI implements Mappable{
   double location[] = new double[2];
   String name = "";
+
   public POI(double location[],String name) {
     this.location = location;
     this.name = name;

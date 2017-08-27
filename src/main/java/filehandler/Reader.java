@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import model.Hotspot;
+import model.POI;
 import model.Retailer;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
@@ -17,12 +18,11 @@ public class Reader {
   /**
    * Reads WiFi hotspots from a csv file
    *
-   * <p>
-   *   Needs to be tested to ensure it works.
-   * </p>
-   * @param filename  the name of file to open
-   * @throws FileNotFoundException  if the file cannot be found
+   * <p> Needs to be tested to ensure it works. </p>
+   *
+   * @param filename the name of file to open
    * @return ArrayList<Hotspot> Hotspots
+   * @throws FileNotFoundException if the file cannot be found
    */
   public ArrayList<Hotspot> readHotspots(String filename) throws FileNotFoundException {
 
@@ -93,12 +93,11 @@ public class Reader {
   /**
    * Reads retailers from a csv file
    *
-   * <p>
-   *   Needs to be tested to ensure it works.
-   * </p>
-   * @param filename  the name of file to open
-   * @throws FileNotFoundException  if the file cannot be found
+   * <p> Needs to be tested to ensure it works. </p>
+   *
+   * @param filename the name of file to open
    * @return ArrayList<Retailer> Retailers
+   * @throws FileNotFoundException if the file cannot be found
    */
   public ArrayList<Retailer> readRetailers(String filename) throws FileNotFoundException {
 
@@ -137,7 +136,8 @@ public class Reader {
         String secondaryDescription = csvRetailer[description2Index];
 
         //add newRetailer to Retailers array
-        Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description, secondaryDescription));
+        Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description,
+            secondaryDescription));
 
       }
 
@@ -158,7 +158,50 @@ public class Reader {
     return Retailers;
   }
 
+  public ArrayList<POI> readUserPOIS(String filename) throws FileNotFoundException {
+    int nameIndex = 0;
 
+    //Google uses latitude, longitude pairings.
+    int latitudeIndex = 1;
+    int longitudeIndex = 2;
 
+    BufferedReader br = null;
+    String line;
+    ArrayList<POI> POIS = new ArrayList<POI>();
 
+    try {
+
+      br = new BufferedReader(new FileReader(filename));
+      while ((line = br.readLine()).length() > 0) {
+        // Separate by comma
+        String[] csvPOIS = line.split("\t");
+
+        //Get name of POI
+        String name = csvPOIS[nameIndex];
+
+        //Get location values
+        double longitude = Double.valueOf(csvPOIS[latitudeIndex]);
+        double latitude = Double.valueOf(csvPOIS[longitudeIndex]);
+
+        //add newRetailer to Retailers array
+        double[] location = {longitude, latitude};
+
+        POIS.add(new POI(location, name));
+      }
+
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return POIS;
+  }
 }
