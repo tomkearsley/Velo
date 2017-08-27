@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import model.Hotspot;
+import model.Retailer;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 
@@ -89,6 +90,74 @@ public class Reader {
     return Hotspots;
   }
 
+  /**
+   * Reads retailers from a csv file
+   *
+   * <p>
+   *   Needs to be tested to ensure it works.
+   * </p>
+   * @param filename  the name of file to open
+   * @throws FileNotFoundException  if the file cannot be found
+   * @return ArrayList<Retailer> Retailers
+   */
+  public ArrayList<Retailer> readRetailers(String filename) throws FileNotFoundException {
+
+    // Column indexes for the appropriate value per row
+    int titleIndex = 0;
+    int addressIndex = 1;
+    int floorIndex = 2;
+    int cityIndex = 3;
+    int stateIndex = 4;
+    int zipcodeIndex = 5;
+    int blockIndex = 6;
+    int descriptionIndex = 7;
+    int description2Index = 8;
+
+    // Initialize scanner and Retailers array
+    BufferedReader br = null;
+    String line;
+    ArrayList<Retailer> Retailers = new ArrayList<Retailer>();
+
+    try {
+
+      br = new BufferedReader(new FileReader(filename));
+      while ((line = br.readLine()) != null) {
+
+        // Separate by comma
+        String[] csvRetailer = line.split(",");
+
+        // Set Retailer attributes from the buffered row
+        String title = csvRetailer[titleIndex];
+        String address = csvRetailer[addressIndex];
+        String floor = csvRetailer[floorIndex];
+        String city = csvRetailer[cityIndex];
+        String state = csvRetailer[stateIndex];
+        int zipcode = Integer.valueOf(csvRetailer[zipcodeIndex]);
+        String block = csvRetailer[blockIndex];
+        String description = csvRetailer[descriptionIndex];
+        String secondaryDescription = csvRetailer[description2Index];
+
+        //add newRetailer to Retailers array
+        Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description, secondaryDescription));
+
+      }
+
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return Retailers;
+  }
 
 
 
