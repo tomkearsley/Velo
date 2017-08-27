@@ -2,11 +2,11 @@ package filehandlertest;
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import model.Retailer;
 import model.Hotspot;
-import java.util.ArrayList;
+import model.Retailer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,8 +84,8 @@ public class ReaderTest {
    * and does not miss any entries
    */
   @Test
-  public void readRetailers() throws FileNotFoundException {
-    List<Retailer> Retailers = reader.readRetailers("src/test/testResources/retailersCSV.csv");
+  public void readRetailers() throws FileNotFoundException{
+    List<Retailer> Retailers = reader.readRetailers("src/test/testResources/retailers.csv");
     Retailer r1, r2, r3;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York", "NY", 10004, "8-32",
         "Casual Eating & Takeout", "F-Coffeehouse");
