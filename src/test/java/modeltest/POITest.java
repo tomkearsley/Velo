@@ -10,7 +10,7 @@ public class POITest {
   @Test
   public void LocationTest(){
     double[] l1 = {40.719011, -73.908305};
-    POI p1 = new POI(l1,"New York Center");
+    POI p1 = new POI(l1,"New York Center","");
 
 
     double[] l2 = {40.748652, -73.985773};
@@ -22,6 +22,7 @@ public class POITest {
     String userHouse = "My House";
     UserPOI up1 = new UserPOI(l3,"My House",userHouse);
     double[] testArray = {40.719011, -73.908305};
+
 
 
   }

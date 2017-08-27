@@ -4,9 +4,14 @@ package model;
  *
  */
 public class UserPOI extends POI{
-  String description = "";
   public UserPOI(double location[],String name,String description){
-    super(location,name);
+    super(location,name,description);
+  }
+
+
+
+  public String toString(){
+    return "Your saved location is: " + name + " " + description;
   }
 
   /**
