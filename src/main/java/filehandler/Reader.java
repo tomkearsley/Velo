@@ -165,6 +165,8 @@ public class Reader {
     int latitudeIndex = 1;
     int longitudeIndex = 2;
 
+    int descriptionIndex = 3;
+
     BufferedReader br = null;
     String line;
     ArrayList<POI> POIS = new ArrayList<POI>();
@@ -183,10 +185,12 @@ public class Reader {
         double longitude = Double.valueOf(csvPOIS[latitudeIndex]);
         double latitude = Double.valueOf(csvPOIS[longitudeIndex]);
 
-        //add newRetailer to Retailers array
+        //Get location array
         double[] location = {longitude, latitude};
 
-        POIS.add(new POI(location, name));
+        String description = csvPOIS[descriptionIndex];
+
+        POIS.add(new POI(location, name,description));
       }
 
     } catch (FileNotFoundException e) {
