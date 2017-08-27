@@ -31,7 +31,27 @@ public class Retailer implements model.Mappable {
   /** The secondary description for the store */
   private String secondaryDescription;
 
-  public Retailer() {}
+  public Retailer(String title, String address, String floor, String city, String state, int zipcode, String block, String description, String secondaryDescription) {
+    this.title = title;
+    this.address = address;
+    this.floor = floor;
+    this.city = city;
+    this.state = state;
+    this.zipcode = zipcode;
+    this.block = block;
+    this.description = description;
+    this.secondaryDescription = secondaryDescription;
+  }
+
+  public String toString(){
+    return "Retailer: " + title + " Address: " + address + ", " + floor + ", " + block
+        + ", " + city + ", " + state + ", " + Integer.toString(zipcode) + " Description(s): "
+        + description + ", " + secondaryDescription;
+  }
+
+  public boolean equals(Retailer r){
+    return this.toString().equals(r.toString());
+  }
 
   public String getTitle() {
     return title;
