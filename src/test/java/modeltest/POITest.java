@@ -12,9 +12,12 @@ import window.App;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class POITest {
+  @Test
   public void LocationTest(){
     double[] l1 = {40.719011, -73.908305};
     POI p1 = new POI(l1,"New York Center","");
@@ -29,7 +32,8 @@ public class POITest {
     String userHouse = "My House";
     UserPOI up1 = new UserPOI(l3,"My House",userHouse);
     double[] testArray = {40.719011, -73.908305};
-    double[] array1 = p1.getLocation();
+    double delta = 1.0;
+    assertArrayEquals(testArray,p1.getLocation(),delta);
 
   }
 
