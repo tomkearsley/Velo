@@ -1,5 +1,7 @@
 package modeltest;
 
+
+
 import org.junit.*;
 import model.UserPOI;
 import model.POI;
@@ -21,8 +23,7 @@ public class POITest {
     String userHouse = "My House";
     UserPOI up1 = new UserPOI(l3,"My House",userHouse);
     double[] testArray = {40.719011, -73.908305};
-
-
+    double[] array1 = p1.getLocation();
 
   }
 
