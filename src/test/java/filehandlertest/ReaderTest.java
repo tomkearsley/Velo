@@ -2,8 +2,10 @@ package filehandlertest;
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import model.Hotspot;
 import model.Retailer;
 import org.junit.After;
 import org.junit.Before;
