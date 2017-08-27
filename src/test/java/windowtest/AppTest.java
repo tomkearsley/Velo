@@ -1,38 +1,39 @@
 package windowtest;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import filehandler.Reader;
+import java.util.ArrayList;
+import model.Hotspot;
+import window.App;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
+public class AppTest {
+
     /**
-     * Create the test case
-     *
-     * @param testName name of the test case
+     * This function is called before running any of the following functions.
+     * It ensure the application is in a state that you desire (A fresh game state).
      */
-    public AppTest( String testName )
-    {
-        super( testName );
+    @Before
+    public void setUp() {
     }
 
     /**
-     * @return the suite of tests being tested
+     * This function is called at the end of every test that is run.
      */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    @After
+    public void tearDown() {
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test
+    public void readHotspots() {
+
+
     }
+
 }

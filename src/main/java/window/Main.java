@@ -16,12 +16,15 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    //System.out.print(getClass().getResource("../resource/main.fxml"));//prints null
-    Parent root = FXMLLoader.load(getClass().getResource("../resource/main.fxml"));
-    primaryStage.setTitle("Velo");
-    primaryStage.setScene(new Scene(root, 500, 400));
-    primaryStage.show();
+    try {
+      //System.out.print(getClass().getResource("../resource/main.fxml"));//prints null
+      Parent root = FXMLLoader.load(getClass().getResource("../resource/main.fxml"));
+      primaryStage.setTitle("Velo");
+      primaryStage.setScene(new Scene(root, 500, 400));
+      primaryStage.show();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
-
 }
 

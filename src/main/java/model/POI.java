@@ -25,6 +25,15 @@ public class POI implements Mappable{
   }
 
   /**
+   * Sets the description of the Public POI.
+   * @param description Desired description for Public POI
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+
+  /**
    * Sets the Name of the POI
    * @param name Desired name for POI
    */
@@ -32,4 +41,28 @@ public class POI implements Mappable{
     this.name = name;
   }
 
+
+  // GETTERS
+
+  /**
+   * Returns location of POI object.
+   * @return Location of POI Object.
+   */
+  public double[] getLocation() { return this.location; }
+
+  /**
+   * Returns the name of POI Object
+   * @return Name of POI Object.
+   */
+  public String getName() {return this.name; }
+
+  /**
+   * Returns the description of POI Object
+   * @return Description of POI Object
+   */
+  public String getDescription() {return this.description; }
+
 }
+
+
+

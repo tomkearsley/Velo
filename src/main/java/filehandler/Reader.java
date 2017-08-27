@@ -37,7 +37,7 @@ public class Reader {
     int remarksIndex = 12;
     int cityIndex = 13;
     int ssidIndex = 14;
-    int boroughIndex = 18;
+    int boroughIndex = 19;
     int postcodeIndex = 22;
 
     // Initialize scanner and Hotspots array
