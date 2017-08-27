@@ -1,21 +1,27 @@
 package window;
 
 /**
- * Created by tylerkennedy on 25/8/17
+ * Created by tyler kennedy on 25/8/17
  */
 import javafx.application.Application;
-    import javafx.fxml.FXMLLoader;
-    import javafx.scene.Parent;
-    import javafx.scene.Scene;
-    import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class Main extends Application {
+  public static void main(String[] args) {
+    launch(args);
+  }
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("../resources/main.fxml"));
-    primaryStage.setTitle("Hello World");
-    primaryStage.setScene(new Scene(root, 300, 275));
+    //System.out.print(getClass().getResource("../resource/main.fxml"));//prints null
+    Parent root = FXMLLoader.load(getClass().getResource("../resource/main.fxml"));
+    primaryStage.setTitle("Velo");
+    primaryStage.setScene(new Scene(root, 500, 400));
     primaryStage.show();
   }
+
 }
+
