@@ -17,8 +17,7 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     try {
-      //System.out.print(getClass().getResource("../resource/main.fxml"));//prints null
-      Parent root = FXMLLoader.load(getClass().getResource("../resource/main.fxml"));
+      Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));//shows as an error in intelliJ but it works
       primaryStage.setTitle("Velo");
       primaryStage.setScene(new Scene(root, 500, 400));
       primaryStage.show();
