@@ -16,6 +16,11 @@ public class POI implements Mappable {
 
   }
 
+  public POI(String name, String description){
+    this.name = name;
+    this.description = description;
+  }
+
   /**
    * Sets the Location of the POI
    *
