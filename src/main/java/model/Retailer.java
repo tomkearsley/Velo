@@ -31,6 +31,9 @@ public class Retailer implements model.Mappable {
   /** The secondary description for the store */
   private String secondaryDescription;
 
+
+  //Methods
+
   public Retailer(String title, String address, String floor, String city, String state, int zipcode, String block, String description, String secondaryDescription) {
     this.title = title;
     this.address = address;

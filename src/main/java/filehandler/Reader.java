@@ -91,7 +91,7 @@ public class Reader {
   }
 
   /**
-   * Reads retailers from a csv file
+   * Reads retailers from a tsv file
    *
    * <p> Needs to be tested to ensure it works. </p>
    *
