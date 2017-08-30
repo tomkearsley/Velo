@@ -30,7 +30,11 @@ public class Route {
   /**User birth year*/
   private int birthYear;
 
-  /**User gender*/
+  /**User gender
+   * 0 - male
+   * 1 - female
+   * 2 - not specified
+   * */
   private int gender;
 
 
