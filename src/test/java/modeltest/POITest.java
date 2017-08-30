@@ -76,6 +76,6 @@ public class POITest {
 
   @Test
   public void DescriptionTestPublic() {
-    assertEquals(empireString, up1.getDescription());
+    assertEquals(empireString, pp1.getDescription());
   }
 }

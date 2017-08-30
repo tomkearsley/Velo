@@ -174,14 +174,15 @@ public class Reader {
     try {
 
       br = new BufferedReader(new FileReader(filename));
-      while ((line = br.readLine()).length() > 0) {
+      while ((line = br.readLine()) != null) {
         // Separate by comma
-        String[] csvPOIS = line.split("\t");
+        String[] csvPOIS = line.split(",");
 
         //Get name of POI
         String name = csvPOIS[nameIndex];
 
         //Get location values
+        System.out.print(csvPOIS[latitudeIndex]);
         double longitude = Double.valueOf(csvPOIS[latitudeIndex]);
         double latitude = Double.valueOf(csvPOIS[longitudeIndex]);
 

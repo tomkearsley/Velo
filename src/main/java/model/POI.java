@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Arrays;
+
 /**
  * Created by Thomas Kearsley on 8/22/17. Checked by Tyler Kennedy on 8/29/17.
  */
@@ -78,6 +80,14 @@ public class POI implements Mappable {
     return this.description;
   }
 
+  @Override
+  public String toString() {
+    return "Name: " + name + "\nLocation: " + location[0] + ", " + location[1] + "\nDescription: " + description;
+  }
+
+  public boolean equals(POI p) {
+    return this.toString().equals(p.toString());
+  }
 }
 
 

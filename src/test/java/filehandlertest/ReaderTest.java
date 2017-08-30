@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import model.Hotspot;
+import model.POI;
 import model.Retailer;
 import org.junit.After;
 import org.junit.Before;
@@ -102,6 +103,37 @@ public class ReaderTest {
       assertTrue(Retailers.get(i).equals(actualRetailers.get(i)));
     }
 
+  }
+
+  @Test
+  public void readPOIS() throws FileNotFoundException {
+    ArrayList<POI> POIS = reader.readUserPOIS("src/test/testResources/POIS.csv");
+    ArrayList<POI> expectedPOIS = new ArrayList<POI>();
+
+    double location1[] = {40.7484,-73.9857};
+    double location2[] = {40.7829,-73.9654};
+    double location3[] = {40.6892,-74.0445};
+
+    String name1 = "Empire State Building";
+    String name2 = "Central Park";
+    String name3 = "Statue Of Liberty";
+
+    String desc1 = "The Empire State Building is a 102-story skyscraper";
+    String desc2 = "Central Park is an urban park in Manhattan";
+    String desc3 = "The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York Harbor";
+
+    //Location,Name,Description
+    POI POI1 = new POI(location1,name1,desc1);
+    POI POI2 = new POI(location2,name2,desc2);
+    POI POI3 = new POI(location3,name3,desc3);
+
+    expectedPOIS.add(POI1);
+    expectedPOIS.add(POI2);
+    expectedPOIS.add(POI3);
+
+    for(int i = 0; i < expectedPOIS.size(); i++) {
+      assertTrue(expectedPOIS.get(i).equals(POIS.get(i)));
+    }
   }
 
 }
