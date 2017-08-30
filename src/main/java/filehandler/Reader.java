@@ -213,91 +213,92 @@ public class Reader {
     return POIS;
   }
 
-  /**
-   * Reads routes from a csv file
-   *
-   * <p> Needs to be tested to ensure it works. </p>
-   *
-   * @param filename the name of file to open
-   * @return ArrayList<Route> Routes
-   * @throws FileNotFoundException if the file cannot be found
-   */
-  public ArrayList<Route> readRoutes(String filename) throws FileNotFoundException {
 
-    // Column indexes for the appropriate value per row
-    int durationIndex = 0;
-    int startDateTimeIndex = 1;
-    int stopDateTimeIndex = 2;
-
-    // Start Station
-    int startStationIDIndex = 3;
-    int startStationNameIndex = 4;
-    int startStationLatitudeIndex = 5;
-    int startStationLongitudeIndex = 6;
-
-    //Stop Station
-    int stopStationIDIndex = 7;
-    int stopStationNameIndex = 8;
-    int stopStationLatitudeIndex = 9;
-    int stopStationLongitudeIndex = 10;
-
-    int bikeIDIndex = 11;
-    int userTypeIndex = 12;
-    int birthYearIndex = 13;
-    int genderIndex = 14;
-
-
-    // Initialize scanner and Retailers array
-    BufferedReader br = null;
-    String line;
-    ArrayList<Route> Routes = new ArrayList<Route>();
-
-    try {
-
-      br = new BufferedReader(new FileReader(filename));
-      while ((line = br.readLine()) != null) {
-        // Separate by comma
-        String[] csvRoute = line.split(",");
-
-        // Set Route attributes from the buffered row
-        int duration = Integer.valueOf(csvRoute[durationIndex]);
-        Date startDateTime = csvRoute[startDateTimeIndex];
-        Date stopDateTime = csvRoute[stopDateTimeIndex];
-
-        Station startStation = new Station(Integer.valueOf(csvRoute[startStationIDIndex]),
-            String.valueOf(csvRoute[startStationNameIndex]),
-            Double.valueOf(csvRoute[startStationLatitudeIndex]),
-            Double.valueOf(csvRoute[startStationLongitudeIndex]));
-
-        Station stopStation = new Station(Integer.valueOf(csvRoute[stopStationIDIndex]),
-            String.valueOf(csvRoute[stopStationNameIndex]),
-            Double.valueOf(csvRoute[stopStationLatitudeIndex]),
-            Double.valueOf(csvRoute[stopStationLongitudeIndex]));
-
-        int bikeID = Integer.valueOf(csvRoute[bikeIDIndex]);
-        String userType = csvRoute[userTypeIndex];
-        int birthYear = Integer.valueOf(csvRoute[birthYearIndex]);
-        int gender = Integer.valueOf(csvRoute[genderIndex]);
-
-        //add newRetailer to Retailers array
-        Routes.add(new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID, userType, birthYear, gender));
-
-      }
-
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return Routes;
-  }
+//  /**
+//   * Reads routes from a csv file
+//   *
+//   * <p> Needs to be tested to ensure it works. </p>
+//   *
+//   * @param filename the name of file to open
+//   * @return ArrayList<Route> Routes
+//   * @throws FileNotFoundException if the file cannot be found
+//   */
+//  public ArrayList<Route> readRoutes(String filename) throws FileNotFoundException {
+//
+//    // Column indexes for the appropriate value per row
+//    int durationIndex = 0;
+//    int startDateTimeIndex = 1;
+//    int stopDateTimeIndex = 2;
+//
+//    // Start Station
+//    int startStationIDIndex = 3;
+//    int startStationNameIndex = 4;
+//    int startStationLatitudeIndex = 5;
+//    int startStationLongitudeIndex = 6;
+//
+//    //Stop Station
+//    int stopStationIDIndex = 7;
+//    int stopStationNameIndex = 8;
+//    int stopStationLatitudeIndex = 9;
+//    int stopStationLongitudeIndex = 10;
+//
+//    int bikeIDIndex = 11;
+//    int userTypeIndex = 12;
+//    int birthYearIndex = 13;
+//    int genderIndex = 14;
+//
+//
+//    // Initialize scanner and Retailers array
+//    BufferedReader br = null;
+//    String line;
+//    ArrayList<Route> Routes = new ArrayList<Route>();
+//
+//    try {
+//
+//      br = new BufferedReader(new FileReader(filename));
+//      while ((line = br.readLine()) != null) {
+//        // Separate by comma
+//        String[] csvRoute = line.split(",");
+//
+//        // Set Route attributes from the buffered row
+//        int duration = Integer.valueOf(csvRoute[durationIndex]);
+//        Date startDateTime = csvRoute[startDateTimeIndex];
+//        Date stopDateTime = csvRoute[stopDateTimeIndex];
+//
+//        Station startStation = new Station(Integer.valueOf(csvRoute[startStationIDIndex]),
+//            String.valueOf(csvRoute[startStationNameIndex]),
+//            Double.valueOf(csvRoute[startStationLatitudeIndex]),
+//            Double.valueOf(csvRoute[startStationLongitudeIndex]));
+//
+//        Station stopStation = new Station(Integer.valueOf(csvRoute[stopStationIDIndex]),
+//            String.valueOf(csvRoute[stopStationNameIndex]),
+//            Double.valueOf(csvRoute[stopStationLatitudeIndex]),
+//            Double.valueOf(csvRoute[stopStationLongitudeIndex]));
+//
+//        int bikeID = Integer.valueOf(csvRoute[bikeIDIndex]);
+//        String userType = csvRoute[userTypeIndex];
+//        int birthYear = Integer.valueOf(csvRoute[birthYearIndex]);
+//        int gender = Integer.valueOf(csvRoute[genderIndex]);
+//
+//        //add newRetailer to Retailers array
+//        Routes.add(new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID, userType, birthYear, gender));
+//
+//      }
+//
+//    } catch (FileNotFoundException e) {
+//      e.printStackTrace();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    } finally {
+//      if (br != null) {
+//        try {
+//          br.close();
+//        } catch (IOException e) {
+//          e.printStackTrace();
+//        }
+//      }
+//    }
+//
+//    return Routes;
+//  }
 }
