@@ -42,9 +42,50 @@ public class Hotspot {
   /** Comments on the hotspot*/
   private String remarks;
 
+  /** Empty constructor */
+  public Hotspot() {
 
+  }
+
+  /** Full contructor */
+  public Hotspot(int id, double latitude, double longitude, String locationAddress, String borough,
+      String city, int postcode, String type, String SSID, String name, String provider, String remarks) {
+    this.id = id;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.locationAddress = locationAddress;
+    this.borough = borough;
+    this.city = city;
+    this.postcode = postcode;
+    this.type = type;
+    this.SSID = SSID;
+    this.name = name;
+    this.provider = provider;
+    this.remarks = remarks;
+  }
 
   /*Hotspot methods*/
+
+  /** Print method for Hotspot
+   * @return String
+   */
+  public String toString(){
+
+    return "ID: " + Integer.toString(id) + ", Latitude: " + Double.toString(latitude) +
+        ", Longitude: " + Double.toString(longitude) + ", Address: " + locationAddress +
+        ", Borough: " + borough + ", City: " + city + ", Postcode: " + Integer.toString(postcode) +
+        ", Type: " + type + ", SSID: " + SSID + ", Name: " + name + ", Provider: " + provider +
+        ", Remarks: " + remarks;
+  }
+
+  /** Used for the assert functions in JUnit testing
+   *
+   * @param h is the hotspot to be tested
+   * @return boolean
+   */
+  public boolean equals(Hotspot h){
+    return this.toString().equals(h.toString());
+  }
 
   public int getID() {
     return id;
@@ -141,49 +182,5 @@ public class Hotspot {
   public void setRemarks(String newRemarks) {
     remarks = newRemarks;
   }
-
-  /** Empty constructor */
-  public Hotspot() {
-
-  }
-
-  /** Full contructor */
-  public Hotspot(int id, double latitude, double longitude, String locationAddress, String borough,
-      String city, int postcode, String type, String SSID, String name, String provider, String remarks) {
-    this.id = id;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.locationAddress = locationAddress;
-    this.borough = borough;
-    this.city = city;
-    this.postcode = postcode;
-    this.type = type;
-    this.SSID = SSID;
-    this.name = name;
-    this.provider = provider;
-    this.remarks = remarks;
-  }
-
-  /** Print method for Hotspot
-   * @return String
-   */
-  public String toString(){
-
-    return "ID: " + Integer.toString(id) + ", Latitude: " + Double.toString(latitude) +
-        ", Longitude: " + Double.toString(longitude) + ", Address: " + locationAddress +
-        ", Borough: " + borough + ", City: " + city + ", Postcode: " + Integer.toString(postcode) +
-        ", Type: " + type + ", SSID: " + SSID + ", Name: " + name + ", Provider: " + provider +
-        ", Remarks: " + remarks;
-  }
-
-  /** Used for the assert functions in JUnit testing
-   *
-   * @param h is the hotspot to be tested
-   * @return boolean
-   */
-  public boolean equals(Hotspot h){
-    return this.toString().equals(h.toString());
-  }
-
 
 }
