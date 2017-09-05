@@ -41,7 +41,7 @@ public class GUIManager {
     Reader rdr = new Reader();
     try{
       //hotspots = rdr.readHotspots("src/main/resources/InitialHotspots");
-      retailers = rdr.readRetailers("src/main/resources/Lower_Manhattan_Retailers.csv");
+      retailers = rdr.readRetailers("src/test/testResources/retailers.csv");
 
     }
     catch(FileNotFoundException e){
@@ -59,7 +59,7 @@ public class GUIManager {
    * TODO adapt to using database primarily with csv as fallback
    */
   public void initialize() {
-    //populateArrayLists(); //TODO fix reader so it doesn't explode
+    populateArrayLists(); //TODO fix reader so it doesn't explode
   }
 
   //menu button declarations
