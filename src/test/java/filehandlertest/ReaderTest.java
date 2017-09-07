@@ -42,39 +42,19 @@ public class ReaderTest {
 
     ArrayList<Hotspot> hotspots = reader.readHotspots("src/test/testResources/TestInitialHotspots.csv");
 
+    Hotspot hotspot998 = new Hotspot(998, 40.745968, -73.994039,
+        "179 WEST 26 STREET", "Manhattan", "New York", 10001,
+        "Free", "LinkNYC Free Wi-Fi", "LinkNYC - Citybridge",
+        "LinkNYC - Citybridge", "Tablet Internet -phone , Free 1 GB Wi-FI Service");
 
-    Hotspot hotspot998 = new Hotspot();
-    hotspot998.setID(998);
-    hotspot998.setLatitude(40.745968);
-    hotspot998.setLongitude(-73.994039);
-    hotspot998.setLocationAdress("179 WEST 26 STREET");
-    hotspot998.setBorough("Manhattan");
-    hotspot998.setCity("New York");
-    hotspot998.setPostcode(10001);
-    hotspot998.setType("Free");
-    hotspot998.setSSID("LinkNYC Free Wi-Fi");
-    hotspot998.setName("LinkNYC - Citybridge");
-    hotspot998.setProvider("LinkNYC - Citybridge");
-    hotspot998.setRemarks("Tablet Internet -phone , Free 1 GB Wi-FI Service");
-
-    Hotspot hotspot26 = new Hotspot();
-    hotspot26.setID(26);
-    hotspot26.setLatitude(40.657452);
-    hotspot26.setLongitude(-73.963991);
-    hotspot26.setLocationAdress("Skate Rental Area");
-    hotspot26.setBorough("Brooklyn");
-    hotspot26.setCity("Brooklyn");
-    hotspot26.setPostcode(11215);
-    hotspot26.setType("Limited Free");
-    hotspot26.setSSID("GuestWiFi");
-    hotspot26.setName("Prospect Park");
-    hotspot26.setProvider("ALTICEUSA");
-    hotspot26.setRemarks("3 free 10 min sessions");
+    Hotspot hotspot26 = new Hotspot(26, 40.657452, -73.963991,
+        "Skate Rental Area", "Brooklyn", "Brooklyn", 11215,
+        "Limited Free", "GuestWiFi", "Prospect Park",
+        "ALTICEUSA", "3 free 10 min sessions");
 
     ArrayList<Hotspot> expectedHotspots = new ArrayList<Hotspot>();
     expectedHotspots.add(hotspot998);
     expectedHotspots.add(hotspot26);
-
 
     assertEquals(expectedHotspots, hotspots);
   }
