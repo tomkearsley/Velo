@@ -4,7 +4,7 @@ package model;
  * The class Hotspot defines the type for WiFi hotspot locations
  * @author andrewspearman
  */
-public class Hotspot {
+public class Hotspot extends POI {
 
   /**Hotspot ObjectID from csv file*/
   private int id;
@@ -42,14 +42,11 @@ public class Hotspot {
   /** Comments on the hotspot*/
   private String remarks;
 
-  /** Empty constructor */
-  public Hotspot() {
 
-  }
-
-  /** Full contructor */
+  /** Full constructor */
   public Hotspot(int id, double latitude, double longitude, String locationAddress, String borough,
       String city, int postcode, String type, String SSID, String name, String provider, String remarks) {
+    super(name, remarks);
     this.id = id;
     this.latitude = latitude;
     this.longitude = longitude;

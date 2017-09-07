@@ -100,6 +100,7 @@ public class GUIManager {
   public void viewMap() {
     mapViewPane.toFront();
   }
+
   public void dataViewHotspots() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
     TableColumn<Hotspot, String> firstCol = new TableColumn<Hotspot, String>("Name");

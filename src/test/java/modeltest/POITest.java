@@ -1,14 +1,9 @@
 package modeltest;
 
 
-import filehandler.Reader;
-import java.util.ArrayList;
-import model.Hotspot;
 import model.POI;
 import model.PublicPOI;
 import model.UserPOI;
-import window.App;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
