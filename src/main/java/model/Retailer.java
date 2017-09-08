@@ -40,6 +40,7 @@ public class Retailer extends POI {
     this.secondaryDescription = secondaryDescription;
   }
 
+  @Override
   public String toString(){
     return "Retailer: " + getName() + " Address: " + address + ", " + floor + ", " + block
         + ", " + city + ", " + state + ", " + Integer.toString(zipcode) + " Description(s): "

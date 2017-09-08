@@ -128,7 +128,7 @@ public class Reader {
       br = new BufferedReader(new FileReader(filename));
       while ((line = br.readLine()) != null) {
         // Separate by comma
-        String[] csvRetailer = line.split(",");
+        String[] csvRetailer = line.split(",", -1);
 
         // Set Retailer attributes from the buffered row
         String title = csvRetailer[titleIndex];

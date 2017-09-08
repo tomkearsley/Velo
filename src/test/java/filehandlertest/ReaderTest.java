@@ -86,6 +86,22 @@ public class ReaderTest {
   }
 
   @Test
+  public void readRetailerWithEmptyEndingCells() throws FileNotFoundException{
+    List<Retailer> Retailers = reader.readRetailers("src/test/testResources/retailerEmptyEnds.csv");
+    Retailer r1, r2;
+    r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
+        "NY", 10004, "", "",
+        "");
+    r2 = new Retailer("A.J. Kelly's", "6 Stone Street", "", "New York",
+        "NY", 10004, "10-32", "Full Service Dining",
+        "");
+    List<Retailer> actualRetailers = Arrays.asList(r1, r2);
+    for (int i=0; i < Retailers.size(); i++) {
+      assertTrue(Retailers.get(i).equals(actualRetailers.get(i)));
+    }
+  }
+
+  @Test
   public void readPOIS() throws FileNotFoundException {
     ArrayList<POI> POIS = reader.readUserPOIS("src/test/testResources/POIS.csv");
     ArrayList<POI> expectedPOIS = new ArrayList<POI>();
