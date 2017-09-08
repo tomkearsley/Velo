@@ -7,6 +7,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -28,7 +30,6 @@ import model.UserPOI;
  */
 
 public class GUIManager {
-  //Reader rdr = new Reader();
 
   ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
   ArrayList<Retailer> retailers = new ArrayList<Retailer>();
@@ -36,6 +37,20 @@ public class GUIManager {
   ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
   ArrayList<Route> routes = new ArrayList<Route>();
   //TODO use reader to populate these ArrayLists
+
+
+  //Data table
+  @FXML
+  private TableView rawDataTable;
+  @FXML
+  private SplitPane dataSplitPane;
+  @FXML
+  private Pane mapViewPane;
+
+  @FXML
+  private ChoiceBox<DataType> dataTypeChoiceBox;
+
+
 
   private boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -60,16 +75,10 @@ public class GUIManager {
    * TODO adapt to using database primarily with csv as fallback
    */
   public void initialize() {
-    populateArrayLists(); //TODO fix reader so it doesn't explode
-    dataViewRetailers(); //some initial data so the table isn't empty on startup
+    populateArrayLists();
+    dataViewRetailers(); /* some initial data so the table isn't empty on startup */
+    dataTypeChoiceBox.getItems().setAll(DataType.values());
   }
-    //Data table
-  @FXML
-  private TableView rawDataTable;
-  @FXML
-  private SplitPane dataSplitPane;
-  @FXML
-  private Pane mapViewPane;
 
   /*
   Action handlers
@@ -140,10 +149,13 @@ public class GUIManager {
     rawDataTable.getColumns().setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol, SSIDCol, providerCol, remarksCol); //something something
     rawDataTable.setItems(oListHotspots);
   }
-  //TODO fill out stubs
+  //TODO ask about POIs, which to view, how locations are being stored (lat/long together or not?)
   public void dataViewPublicPOIs() {
+    ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
 
+    TableColumn<PublicPOI, String>  nameCol = new TableColumn<PublicPOI, String>("Name");
   }
+  //TODO fill out stubs
   public void dataViewUserPOIs() {
 
   }
@@ -156,4 +168,27 @@ public class GUIManager {
     //TODO figure out how to show this
     //for point in route create column..?
   }
+  public void dataViewSelected() {
+    DataType selected = dataTypeChoiceBox.getValue();
+    switch (selected) {
+      case HOTSPOT:
+        dataViewHotspots();
+        break;
+      case RETAILER:
+        dataViewRetailers();
+        break;
+      case PUBLICPOI:
+        dataViewPublicPOIs();
+        break;
+      case USERPOI:
+        dataViewUserPOIs();
+        break;
+      case STATION:
+        dataViewStations();
+        break;
+      case ROUTE:
+        dataViewRoutes();
+        break;
+      }
+    }
 }
