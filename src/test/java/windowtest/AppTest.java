@@ -1,9 +1,5 @@
 package windowtest;
 
-import filehandler.Reader;
-import java.util.ArrayList;
-import model.Hotspot;
-import window.App;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -28,7 +28,8 @@ public class Retailer extends POI {
 
   //Methods
 
-  public Retailer(String title, String address, String floor, String city, String state, int zipcode, String block, String description, String secondaryDescription) {
+  public Retailer(String title, String address, String floor, String city, String state, int zipcode,
+      String block, String description, String secondaryDescription) {
     super(title, description);
     this.address = address;
     this.floor = floor;

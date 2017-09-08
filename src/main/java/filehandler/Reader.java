@@ -52,24 +52,27 @@ public class Reader {
 
       br = new BufferedReader(new FileReader(filename));
       while ((line = br.readLine()) != null) {
-        Hotspot newHotspot = new Hotspot();
 
         // Separate by comma
         String[] csvHotspot = line.split(",");
 
-        // Set Hotspot attributes from the buffered row
-        newHotspot.setID(Integer.valueOf(csvHotspot[idIndex]));
-        newHotspot.setType(csvHotspot[typeIndex]);
-        newHotspot.setProvider(csvHotspot[providerIndex]);
-        newHotspot.setName(csvHotspot[nameIndex]);
-        newHotspot.setLocationAdress(csvHotspot[locationAddressIndex]);
-        newHotspot.setLatitude(Double.parseDouble(csvHotspot[latitudeIndex]));
-        newHotspot.setLongitude(Double.parseDouble(csvHotspot[longitudeIndex]));
-        newHotspot.setRemarks(csvHotspot[remarksIndex]);
-        newHotspot.setCity(csvHotspot[cityIndex]);
-        newHotspot.setSSID(csvHotspot[ssidIndex]);
-        newHotspot.setBorough(csvHotspot[boroughIndex]);
-        newHotspot.setPostcode(Integer.valueOf(csvHotspot[postcodeIndex]));
+        // Get Hotspot attributes from the buffered row
+        int id = Integer.valueOf(csvHotspot[idIndex]);
+        Double latitude = Double.valueOf(csvHotspot[latitudeIndex]);
+        Double longitude = Double.valueOf(csvHotspot[longitudeIndex]);
+        String location = csvHotspot[locationAddressIndex];
+        String borough = csvHotspot[boroughIndex];
+        String city = csvHotspot[cityIndex];
+        int postcode = Integer.valueOf(csvHotspot[postcodeIndex]);
+        String type = csvHotspot[typeIndex];
+        String ssid = csvHotspot[ssidIndex];
+        String name = csvHotspot[nameIndex];
+        String provider = csvHotspot[providerIndex];
+        String remarks = csvHotspot[remarksIndex];
+
+        // Create Hotspot with the attributes
+        Hotspot newHotspot = new Hotspot(id, latitude, longitude, location, borough,
+            city, postcode, type, ssid, name, provider, remarks);
 
         //add newHotspot to Hotspots array
         Hotspots.add(newHotspot);
