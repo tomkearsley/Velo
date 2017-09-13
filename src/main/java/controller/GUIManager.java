@@ -2,6 +2,8 @@ package controller;
 
 import filehandler.Reader;
 import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +17,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import model.Hotspot;
 import model.Mappable;
 import model.POI;
@@ -46,11 +50,10 @@ public class GUIManager {
   private SplitPane dataSplitPane;
   @FXML
   private Pane mapViewPane;
-
   @FXML
   private ChoiceBox<DataType> dataTypeChoiceBox;
-
-
+  @FXML
+  private WebView mapWebView;
 
   private boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -74,7 +77,7 @@ public class GUIManager {
    * Populates the model structure with data from .csv files
    * TODO adapt to using database primarily with csv as fallback
    */
-  public void initialize() {
+  public void initialize(){
     populateArrayLists();
     dataViewRetailers(); /* some initial data so the table isn't empty on startup */
     dataTypeChoiceBox.getItems().setAll(DataType.values());

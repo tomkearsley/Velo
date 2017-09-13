@@ -7,12 +7,14 @@ import java.util.Arrays;
  */
 public class POI implements Mappable {
 
-  double location[] = new double[2];
+  double longitude = 0;
+  double latidude = 0;
   String name = "";
   String description = "";
 
-  public POI(double location[], String name, String description) {
-    this.location = location;
+  public POI(double longitude, double latidude, String name, String description) {
+    this.longitude = longitude;
+    this.latidude = latidude;
     this.name = name;
     this.description = description;
 
@@ -24,12 +26,14 @@ public class POI implements Mappable {
   }
 
   /**
-   * Sets the Location of the POI
-   *
-   * @param location GPS Co-ordinates of POI
+   * Sets the location of the POI
+   * @param longitude
+   * @param latidude
    */
-  public void setLocation(double location[]) {
-    this.location = location;
+  public void setLocation(double longitude, double latidude)
+  {
+    this.longitude = longitude;
+    this.latidude = latidude;
   }
 
   /**
@@ -53,15 +57,13 @@ public class POI implements Mappable {
 
   // GETTERS
 
-  /**
-   * Returns location of POI object.
-   *
-   * @return Location of POI Object.
-   */
-  public double[] getLocation() {
-    return this.location;
+  public double getLongitude() {
+    return longitude;
   }
 
+  public double getLatidude() {
+    return latidude;
+  }
   /**
    * Returns the name of POI Object
    *
@@ -82,7 +84,7 @@ public class POI implements Mappable {
 
   @Override
   public String toString() {
-    return "Name: " + name + "\nLocation: " + location[0] + ", " + location[1] + "\nDescription: " + description;
+    return "Name: " + name + "\nLocation: " + longitude + ", " + latidude + "\nDescription: " + description;
   }
 
   public boolean equals(POI p) {
