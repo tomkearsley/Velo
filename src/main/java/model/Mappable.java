@@ -7,7 +7,8 @@ import javax.swing.ImageIcon;
  */
 
 public interface Mappable {
-  double focusLocation[] = new double[2];
+  double latitude = 0;
+  double longitude = 0;
   ImageIcon Logo = new ImageIcon();
   String info = "";
 
