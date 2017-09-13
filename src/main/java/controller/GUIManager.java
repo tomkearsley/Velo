@@ -151,12 +151,15 @@ public class GUIManager {
   }
   //TODO ask about POIs, which to view, how locations are being stored (lat/long together or not?)
   public void dataViewPublicPOIs() {
+    //location, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
-
+    TableColumn<PublicPOI, double[]> locationCol;
     TableColumn<PublicPOI, String>  nameCol = new TableColumn<PublicPOI, String>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("name"));
   }
   //TODO fill out stubs
   public void dataViewUserPOIs() {
+    //location, name, description
 
   }
 
