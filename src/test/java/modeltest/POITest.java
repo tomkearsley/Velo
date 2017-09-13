@@ -69,6 +69,9 @@ public class POITest {
     assertEquals(userHouse, up1.getDescription());
   }
 
+  /**
+   * Checks descriptions for public POI
+   */
   @Test
   public void DescriptionTestPublic() {
     assertEquals(empireString, pp1.getDescription());
