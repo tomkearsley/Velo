@@ -1,7 +1,10 @@
 package controller;
 
+import com.google.common.collect.Table;
 import filehandler.Reader;
 import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +18,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import model.Hotspot;
 import model.Mappable;
 import model.POI;
@@ -46,11 +51,10 @@ public class GUIManager {
   private SplitPane dataSplitPane;
   @FXML
   private Pane mapViewPane;
-
   @FXML
   private ChoiceBox<DataType> dataTypeChoiceBox;
-
-
+  @FXML
+  private WebView mapWebView;
 
   private boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -74,7 +78,7 @@ public class GUIManager {
    * Populates the model structure with data from .csv files
    * TODO adapt to using database primarily with csv as fallback
    */
-  public void initialize() {
+  public void initialize(){
     populateArrayLists();
     dataViewRetailers(); /* some initial data so the table isn't empty on startup */
     dataTypeChoiceBox.getItems().setAll(DataType.values());
@@ -151,12 +155,20 @@ public class GUIManager {
   }
   //TODO ask about POIs, which to view, how locations are being stored (lat/long together or not?)
   public void dataViewPublicPOIs() {
+    //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
-
+    TableColumn<PublicPOI, Double> latCol = new TableColumn<PublicPOI, Double>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("latitude"));
+    TableColumn<PublicPOI, Double> longCol = new TableColumn<PublicPOI, Double>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("longitude"));
     TableColumn<PublicPOI, String>  nameCol = new TableColumn<PublicPOI, String>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("name"));
+    TableColumn<PublicPOI, Double> descriptionCol = new TableColumn<PublicPOI, Double>("Description");
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("description"));
   }
   //TODO fill out stubs
   public void dataViewUserPOIs() {
+    //lat, long, name, description
 
   }
 

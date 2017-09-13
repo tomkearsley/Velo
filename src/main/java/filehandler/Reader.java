@@ -193,11 +193,11 @@ public class Reader {
         double latitude = Double.valueOf(csvPOIS[longitudeIndex]);
 
         //Get location array
-        double[] location = {longitude, latitude};
+        //double[] location = {longitude, latitude};
 
         String description = csvPOIS[descriptionIndex];
 
-        POIS.add(new POI(location, name,description));
+        POIS.add(new POI(latitude, longitude, name,description));
       }
 
     } catch (FileNotFoundException e) {
