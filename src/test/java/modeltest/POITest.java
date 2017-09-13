@@ -26,15 +26,21 @@ public class POITest {
 
   @Before
   public void setUpPOI() {
+    double longitude1 = 40.719011;
+    double latitude1 = -73.908305;
+    double longitude2 = 40.748652;
+    double latitude2 = -73.985773;
+    double longitude3;
+    double latitude3;
     l1 = new double[]{40.719011, -73.908305};
-    p1 = new POI(l1, "New York Center", "");
+    p1 = new POI(longitude1,latitude1, "New York Center", "");
     l2 = new double[]{40.748652, -73.985773};
     empireString = "Iconic, art deco office tower from 1931 with exhibits "
         + "& observatories on the 86th & 102nd floors.";
-    pp1 = new PublicPOI(l2, "Empire State Building", empireString);
+    pp1 = new PublicPOI(longitude2,latitude2, "Empire State Building", empireString);
     l3 = new double[]{};
     userHouse = "My House";
-    up1 = new UserPOI(l3, "My House", userHouse);
+    //up1 = new UserPOI(l3, "My House", userHouse);
     testArray1 = new double[]{40.719011, -73.908305};
     testArray2 = new double[]{40.748652, -73.985773};
     delta = 1.0;
@@ -46,9 +52,10 @@ public class POITest {
    */
   @Test
   public void LocationTest() {
-
-    assertArrayEquals(testArray1, p1.getLocation(), delta);
-    assertArrayEquals(testArray2, pp1.getLocation(), delta);
+    double[] p1Location = {p1.getLongitude(),p1.getLatidude()};
+    double[] pp1Location = {pp1.getLongitude(),pp1.getLatidude()};
+    assertArrayEquals(testArray1,p1Location , delta);
+    assertArrayEquals(testArray2, pp1Location, delta);
   }
 
   /**
