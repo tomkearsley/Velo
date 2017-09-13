@@ -46,7 +46,7 @@ public class Retailer extends POI {
         + ", " + city + ", " + state + ", " + Integer.toString(zipcode) + " Description(s): "
         + getDescription() + ", " + secondaryDescription;
   }
-
+  //TODO add lat and long fields derived from street address using google api
   public boolean equals(Retailer r){
     return this.toString().equals(r.toString());
   }
