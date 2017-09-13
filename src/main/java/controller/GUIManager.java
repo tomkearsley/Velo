@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.common.collect.Table;
 import filehandler.Reader;
 import java.io.FileNotFoundException;
 import java.net.URI;
@@ -154,15 +155,20 @@ public class GUIManager {
   }
   //TODO ask about POIs, which to view, how locations are being stored (lat/long together or not?)
   public void dataViewPublicPOIs() {
-    //location, name, description
+    //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
-    TableColumn<PublicPOI, double[]> locationCol;
+    TableColumn<PublicPOI, Double> latCol = new TableColumn<PublicPOI, Double>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("latitude"));
+    TableColumn<PublicPOI, Double> longCol = new TableColumn<PublicPOI, Double>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("longitude"));
     TableColumn<PublicPOI, String>  nameCol = new TableColumn<PublicPOI, String>("Name");
     nameCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("name"));
+    TableColumn<PublicPOI, Double> descriptionCol = new TableColumn<PublicPOI, Double>("Description");
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("description"));
   }
   //TODO fill out stubs
   public void dataViewUserPOIs() {
-    //location, name, description
+    //lat, long, name, description
 
   }
 
