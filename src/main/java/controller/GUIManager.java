@@ -82,6 +82,7 @@ public class GUIManager {
     populateArrayLists();
     dataViewRetailers(); /* some initial data so the table isn't empty on startup */
     dataTypeChoiceBox.getItems().setAll(DataType.values());
+    mapWebView.getEngine().load("www.google.co.nz");
   }
 
   /*
