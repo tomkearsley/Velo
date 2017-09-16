@@ -2,6 +2,7 @@ package controller;
 
 import com.google.common.collect.Table;
 import filehandler.Reader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
@@ -53,8 +54,11 @@ public class GUIManager {
   private Pane mapViewPane;
   @FXML
   private ChoiceBox<DataType> dataTypeChoiceBox;
+
   @FXML
   private WebView mapWebView;
+
+
 
   private boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -82,6 +86,9 @@ public class GUIManager {
     populateArrayLists();
     dataViewRetailers(); /* some initial data so the table isn't empty on startup */
     dataTypeChoiceBox.getItems().setAll(DataType.values());
+
+    File f = new File("src/main/resources/googleMaps.html");
+    mapWebView.getEngine().load(f.toURI().toString());
   }
 
   /*
