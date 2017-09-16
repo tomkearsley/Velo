@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 /**
  * The class Warning runs the warning.fxml file to build the Warning GUI window
- * Designed to display a custom warning or error message
+ * Designed to display a custom warning message
  */
 public class Warning {
 
