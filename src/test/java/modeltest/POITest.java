@@ -12,17 +12,17 @@ import static org.junit.Assert.assertEquals;
 
 public class POITest {
 
-  double[] l1;
-  POI p1;
-  double[] l2;
-  String empireString;
-  PublicPOI pp1;
-  double[] l3;
-  String userHouse;
-  UserPOI up1;
-  double[] testArray1;
-  double[] testArray2;
-  double delta;
+  private double[] l1;
+  private POI p1;
+  private double[] l2;
+  private String empireString;
+  private PublicPOI pp1;
+  private double[] l3;
+  private String userHouse;
+  private UserPOI up1;
+  private double[] testArray1;
+  private double[] testArray2;
+  private double delta;
 
   @Before
   public void setUpPOI() {
