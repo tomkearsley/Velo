@@ -1,7 +1,7 @@
 package model;
 
 /**
- * The class Retailer describes the attributes and methods of a Retail store object
+ * The class Retailer defines the object type of retailer locations
  */
 public class Retailer extends POI {
   /** The Street no + Road name */

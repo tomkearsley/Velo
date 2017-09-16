@@ -12,7 +12,7 @@ import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class googleQuery {
+public class GoogleQuery {
 
   //String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
 
@@ -55,7 +55,7 @@ public class googleQuery {
       return location;
     }
     catch(Exception e) {
-      System.out.print("Something went wrong");     //Add more specific things
+      System.out.print("Something went wrong");     //TODO Add more specific things
       return null;
     }
   }

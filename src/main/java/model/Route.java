@@ -2,7 +2,9 @@ package model;
 import model.Station;
 import java.util.Date;
 
-
+/**
+ * The class Route defines the object type for bicycle routes
+ */
 public class Route {
 
 

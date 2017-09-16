@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Created by Thomas Kearsley on 8/22/17.
+ * The class UserPOI defines the object type for User Points of Interest
  */
 public class UserPOI extends POI {
 

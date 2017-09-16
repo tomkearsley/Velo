@@ -3,7 +3,7 @@ package model;
 import java.util.Arrays;
 
 /**
- * Created by Thomas Kearsley on 8/22/17. Checked by Tyler Kennedy on 8/29/17.
+ * The class POI defines the superclass for Points of Interest
  */
 public class POI implements Mappable {
 

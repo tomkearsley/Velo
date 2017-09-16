@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * The class Station defines the object type for CitiBike rental locations
+ */
 public class Station {
 
   /**Station ID*/
