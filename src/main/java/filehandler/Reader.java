@@ -13,9 +13,9 @@ import model.Route;
 import model.Station;
 
 /**
- * The class Reader is used to load files and data
+ * The class Reader defines the object type Reader
+ * It is used to read data from files
  */
-
 public class Reader {
 
   /**

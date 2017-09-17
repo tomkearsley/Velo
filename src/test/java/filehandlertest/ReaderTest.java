@@ -124,7 +124,7 @@ public class ReaderTest {
     //Location,Name,Description
     POI POI1 = new POI(longitude1,latitude1,name1,desc1);
     POI POI2 = new POI(longitude2,latitude2,name2,desc2);
-    POI POI3 = new POI(longitude3,longitude3,name3,desc3);
+    POI POI3 = new POI(longitude3,latitude3,name3,desc3);
 
     expectedPOIS.add(POI1);
     expectedPOIS.add(POI2);

@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Created by andrewspearman on 8/22/17.
+ * The class Cyclist defines the type for users of type Cyclist
  */
 public class Cyclist {
 

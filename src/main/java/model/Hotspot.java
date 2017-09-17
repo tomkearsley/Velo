@@ -2,7 +2,6 @@ package model;
 
 /**
  * The class Hotspot defines the type for WiFi hotspot locations
- * @author andrewspearman
  */
 public class Hotspot extends POI {
 

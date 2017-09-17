@@ -3,9 +3,8 @@ package model;
 import javax.swing.ImageIcon;
 
 /**
- * Thinking about making this a normal class, or maybe abstract because the methods can just be defined here instead of individually
+ * The interface Mappable
  */
-
 public interface Mappable {
   double latitude = 0;
   double longitude = 0;
