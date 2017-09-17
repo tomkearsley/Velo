@@ -20,7 +20,7 @@ public class Main extends Application {
     try {
       Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));//shows as an error in intelliJ but it works
       primaryStage.setTitle("Vélo");
-      primaryStage.setScene(new Scene(root, 500, 400));
+      primaryStage.setScene(new Scene(root));
       primaryStage.show();
     } catch (Exception e) {
       e.printStackTrace();
