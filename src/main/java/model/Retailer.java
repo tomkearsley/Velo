@@ -4,10 +4,10 @@ package model;
  * The class Retailer describes the attributes and methods of a Retail store object
  */
 public class Retailer extends POI {
-  /** The Street no + Road name */
+  /** The street no + Road name */
   private String address;
 
-  /** The Floor (Concourse, Third floor) */
+  /** The floor (Concourse, Third floor) */
   private String floor;
 
   /** The city in which the retailer is located */

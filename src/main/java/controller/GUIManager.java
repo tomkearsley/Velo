@@ -56,7 +56,7 @@ public class GUIManager {
   @FXML
   private WebView mapWebView;
 
-  private boolean populateArrayLists() {
+  public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try{
       //TODO update sources when reader is fixed
@@ -203,4 +203,68 @@ public class GUIManager {
         break;
       }
     }
+
+  /**
+   * Fetches a specified attribute of the retailer instance. Used for filtering of retailers
+   * using one function that can control the filter field through this parameter
+   * @param retailer The retailer instance to fetch attributes from
+   * @param field The field char to be filtered ('n' for name, 'a' for address, etc...)
+   * @return The string value of that attribute
+   */
+  public String getRetailerField(Retailer retailer, char field) {
+    switch(field) {
+      case 'n':
+        return retailer.getName();
+      case 'a':
+        return retailer.getAddress();
+      case 'f':
+        return retailer.getFloor();
+      case 'c':
+        return retailer.getCity();
+      case 's':
+        return retailer.getState();
+      case 'z':
+        return Integer.toString(retailer.getZipcode());
+      case 'b':
+        return retailer.getBlock();
+      default:
+        return "Invalid field name";
+    }
+  }
+
+  /**
+   * Filters the list of retailers to match a certain term in a given field
+   * @param matchList The list of currently matched retailers (empty for filtering original list,
+   *                  populated for adding additional filtering (ie filtering by name, then state)
+   * @param field The field to be filtered on, standard is first character of field name ('n' for name)
+   * @param term  The field to search against. If the attribute is a string, searches for attribute containing
+   *              the term. If integer, searches for direct matches
+   * @return  The filtered list of retailers
+   */
+  public ArrayList<Retailer> filterRetailers(ArrayList<Retailer> matchList, char field, String term) {
+    boolean firstRun = matchList.size() == 0;
+    if (firstRun) {
+      for (Retailer retailer : retailers) {
+        if (field == 'z') {
+          if (getRetailerField(retailer, field).equals(term)) {
+            matchList.add(retailer);
+          }
+        } else if (getRetailerField(retailer, field).contains(term)) {
+          matchList.add(retailer);
+        }
+      }
+    } else {
+      for (Retailer retailer : matchList) {
+        if (field == 'z') {
+          if (!getRetailerField(retailer, field).equals(term)) {
+            matchList.remove(retailer);
+          }
+        } else if (!getRetailerField(retailer, field).contains(term)) {
+          matchList.remove(retailer);
+        }
+      }
+    }
+    return matchList;
+  }
+
 }
