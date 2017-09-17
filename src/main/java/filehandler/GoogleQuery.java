@@ -12,6 +12,9 @@ import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * The class GoogleQuery defines the type to query the Google APIs
+ */
 public class GoogleQuery {
 
   //String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
@@ -55,7 +58,7 @@ public class GoogleQuery {
       return location;
     }
     catch(Exception e) {
-      System.out.print("Something went wrong");     //TODO Add more specific things
+      System.out.print("Something went wrong");     // TODO Add more specific things
       return null;
     }
   }
