@@ -1,29 +1,22 @@
 package controller;
 
-import com.google.common.collect.Table;
 import filehandler.Reader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Hotspot;
-import model.Mappable;
-import model.POI;
 import model.PublicPOI;
 import model.Retailer;
 import model.Route;
@@ -56,11 +49,14 @@ public class GUIManager {
   private ChoiceBox<DataType> dataTypeChoiceBox;
 
   @FXML
+  private TextField rawDataFilterField;
+
+  @FXML
   private WebView mapWebView;
 
 
 
-  private boolean populateArrayLists() {
+  public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try{
       //TODO update sources when reader is fixed
@@ -108,7 +104,10 @@ public class GUIManager {
   public void dataViewRetailers() {
     //converting the arraylist to an observable list
     ObservableList<Retailer>  oListRetailers = FXCollections.observableArrayList(retailers);
+    FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
+    //TODO add filteredLists to other dataView__ methods, probably abstract these up a layer
     //each 2 line section creates one table heading and set of values
+    //TODO lat and long from address?
     TableColumn<Retailer, String> nameCol = new TableColumn<Retailer, String>("Name");//title to be written above column
     nameCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("name"));//looks for retailer.getName()
     TableColumn<Retailer, String> addressCol = new TableColumn<Retailer, String>("Address");
@@ -127,7 +126,7 @@ public class GUIManager {
     secondaryDescCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
 
     rawDataTable.getColumns().setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol, secondaryDescCol);
-    rawDataTable.setItems(oListRetailers);
+    rawDataTable.setItems(fListRetailers);
   }
   public void dataViewHotspots() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
@@ -170,13 +169,27 @@ public class GUIManager {
     longCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("longitude"));
     TableColumn<PublicPOI, String>  nameCol = new TableColumn<PublicPOI, String>("Name");
     nameCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("name"));
-    TableColumn<PublicPOI, Double> descriptionCol = new TableColumn<PublicPOI, Double>("Description");
-    descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("description"));
+    TableColumn<PublicPOI, String> descriptionCol = new TableColumn<PublicPOI, String>("Description");
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("description"));
+
+    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
+    rawDataTable.setItems(oListPublicPOIs);
   }
   //TODO fill out stubs
   public void dataViewUserPOIs() {
     //lat, long, name, description
+    ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(userPOIs);
+    TableColumn<UserPOI, Double> latCol = new TableColumn<UserPOI, Double>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("latitude"));
+    TableColumn<UserPOI, Double> longCol = new TableColumn<UserPOI, Double>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("longitude"));
+    TableColumn<UserPOI, String>  nameCol = new TableColumn<UserPOI, String>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("name"));
+    TableColumn<UserPOI, String> descriptionCol = new TableColumn<UserPOI, String>("Description");
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("description"));
 
+    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
+    rawDataTable.setItems(oListUserPOIs);
   }
 
   public void dataViewStations() {
