@@ -37,6 +37,7 @@ public class POITest {
         + "& observatories on the 86th & 102nd floors.";
     testPublicPOI = new PublicPOI(longitude2,latitude2, "Empire State Building", empireString);
     userHouse = "My House";
+
     //up1 = new UserPOI(l3, "My House", userHouse);
     testArray1 = new double[]{40.719011, -73.908305};
     testArray2 = new double[]{40.748652, -73.985773};
