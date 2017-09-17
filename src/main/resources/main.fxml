@@ -6,6 +6,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -36,7 +37,7 @@
                <children>
                   <Pane fx:id="mapViewPane">
                      <children>
-                        <WebView id="mapWebView" fx:id="mapWebView" prefHeight="400.0" prefWidth="475.0" />
+                        <WebView id="mapWebView" fx:id="mapWebView" prefWidth="633.0" />
                      </children>
                   </Pane>
                   <SplitPane fx:id="dataSplitPane" dividerPositions="0.9" orientation="VERTICAL" prefHeight="398.0" prefWidth="417.0">
@@ -50,6 +51,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
                               <ChoiceBox fx:id="dataTypeChoiceBox" prefWidth="150.0" />
+                              <TextField fx:id="rawDataFilterField" promptText="Filter (optional)" />
                               <Button mnemonicParsing="false" onAction="#dataViewSelected" text="Show" />
                            </children>
                            <padding>
