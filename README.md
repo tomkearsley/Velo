@@ -1,6 +1,6 @@
 #Vélo
 
-Welcome to the best app for New York City bicyclists looking to explore the city.
+Vélo is the best way for New York City bicyclists to explore the city.
 
 ##Hardware Requirements
 
