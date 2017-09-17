@@ -17,7 +17,7 @@ import org.json.JSONObject;
  */
 public class Google {
 
-  //String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
+  // String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
 
   public static double[] stringToLocation(String string) {
     String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
@@ -58,7 +58,7 @@ public class Google {
       return location;
     }
     catch(Exception e) {
-      System.out.print("Something went wrong");     // TODO Add more specific things
+      System.out.print(e);     // TODO Add more specific things
       return null;
     }
   }

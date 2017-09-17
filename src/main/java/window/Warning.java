@@ -19,7 +19,7 @@ public class Warning {
 
   public void start(Stage primaryStage) throws Exception {
     try {
-      Parent root = FXMLLoader.load(getClass().getResource("/warning.fxml"));//shows as an error in intelliJ but it works
+      Parent root = FXMLLoader.load(getClass().getResource("/gui/warning.fxml"));//shows as an error in intelliJ but it works
       primaryStage.setTitle("Vélo");
       primaryStage.setScene(new Scene(root, 500, 400));
       primaryStage.show();
