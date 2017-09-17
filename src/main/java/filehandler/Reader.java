@@ -22,7 +22,7 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 
 /**
  * The class Reader defines the object type Reader
- * It is used to read data from files
+ * It is used to read data from text files
  */
 public class Reader {
 
