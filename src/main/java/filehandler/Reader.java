@@ -2,26 +2,95 @@ package filehandler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.Date;
+
 import model.Hotspot;
-import model.POI;
 import model.Retailer;
-import java.util.ArrayList;
-import java.io.FileNotFoundException;
+import model.POI;
 import model.Route;
 import model.Station;
 
-/**
- * The class Reader is used to load files and data
- */
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+
+/**
+ * The class Reader defines the object type Reader
+ * It is used to read data from text files
+ */
 public class Reader {
+
 
   /**
    * Reads WiFi hotspots from a csv file
+   * Uses OpenCSV
    *
-   * <p> Needs to be tested to ensure it works. </p>
+   * TODO Needs to be rewritten to work with our files
+   *
+   */
+  public List<Hotspot> OpenCSVReadHotspots(String filename) throws IOException {
+
+    ArrayList<Hotspot> Hotspots = new ArrayList<Hotspot>();
+
+    try
+    {
+      CSVReader reader = new CSVReader(new FileReader(filename), ',', '\"', 0);
+
+      ColumnPositionMappingStrategy<Hotspot> mappingStrategy  = new ColumnPositionMappingStrategy<Hotspot>();
+      mappingStrategy.setType(Hotspot.class);
+
+      // the fields to bind to in your JavaBean
+      String[] columns = new String[]{
+          "id",
+          "latitude",
+          "longitude",
+          "locationAddress",
+          "borough",
+          "city",
+          "postcode",
+          "type",
+          "SSID",
+          "name",
+          "provider",
+          "remarks"
+      };
+      mappingStrategy.setColumnMapping(columns);
+
+      CsvToBean<Hotspot> csv = new CsvToBean<Hotspot>();
+      List<Hotspot> HotspotsList = csv.parse(mappingStrategy, reader);
+
+      // Convert Hotspots from List to ArrayList
+      for (int i = 0; i < HotspotsList.size(); i++)
+      {
+        Hotspot newHotspot = HotspotsList.get(i);
+        Hotspots.add(newHotspot);
+
+        // display CSV values
+        System.out.println("WiFi name: " + newHotspot.getName());
+        System.out.println("------------------------------");
+
+      }
+
+    }
+    catch (FileNotFoundException e)
+    {
+      System.err.println(e.getMessage());
+    }
+
+    return Hotspots;
+  }
+
+  /**
+   * Reads WiFi hotspots from a csv file
+   * Uses BufferedReader
+   *
+   * TODO Needs to be tested to ensure it works.
    *
    * @param filename the name of file to open
    * @return ArrayList<Hotspot> Hotspots
@@ -193,11 +262,11 @@ public class Reader {
         double latitude = Double.valueOf(csvPOIS[longitudeIndex]);
 
         //Get location array
-        double[] location = {longitude, latitude};
+        //double[] location = {longitude, latitude};
 
         String description = csvPOIS[descriptionIndex];
 
-        POIS.add(new POI(location, name,description));
+        POIS.add(new POI(latitude, longitude, name,description));
       }
 
     } catch (FileNotFoundException e) {

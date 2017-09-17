@@ -1,13 +1,13 @@
 package model;
 
 /**
- * The class Retailer describes the attributes and methods of a Retail store object
+ * The class Retailer defines the object type of retailer locations
  */
 public class Retailer extends POI {
-  /** The Street no + Road name */
+  /** The street no + Road name */
   private String address;
 
-  /** The Floor (Concourse, Third floor) */
+  /** The floor (Concourse, Third floor) */
   private String floor;
 
   /** The city in which the retailer is located */
@@ -46,7 +46,7 @@ public class Retailer extends POI {
         + ", " + city + ", " + state + ", " + Integer.toString(zipcode) + " Description(s): "
         + getDescription() + ", " + secondaryDescription;
   }
-
+  //TODO add lat and long fields derived from street address using google api
   public boolean equals(Retailer r){
     return this.toString().equals(r.toString());
   }

@@ -1,12 +1,12 @@
 package model;
 
 /**
- * Created by Thomas Kearsley on 8/22/17.
+ * The class UserPOI defines the object type for User Points of Interest
  */
 public class UserPOI extends POI {
 
-  public UserPOI(double location[], String name, String description) {
-    super(location, name, description);
+  public UserPOI(double longitude,double latidude, String name, String description) {
+    super(longitude,latidude, name, description);
   }
 
 

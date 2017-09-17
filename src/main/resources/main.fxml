@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainSplitpane" dividerPositions="0.2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIManager">
+<SplitPane fx:id="mainSplitpane" dividerPositions="0.2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIManager">
   <items>
     <AnchorPane>
          <children>
@@ -36,12 +36,12 @@
                <children>
                   <Pane fx:id="mapViewPane">
                      <children>
-                        <WebView fx:id="mapWebView" prefHeight="400.0" prefWidth="475.0" />
+                        <WebView id = "mapWebView" fx:id="mapWebView" prefHeight="400.0" prefWidth="475.0" />
                      </children>
                   </Pane>
                   <SplitPane fx:id="dataSplitPane" dividerPositions="0.9" orientation="VERTICAL" prefHeight="398.0" prefWidth="417.0">
                      <items>
-                    <TableView fx:id="rawDataTable">
+                    <TableView id="mapBrowser" fx:id="rawDataTable">
                       <columns>
                         <TableColumn prefWidth="75.0" text="C1" />
                         <TableColumn prefWidth="75.0" text="C2" />

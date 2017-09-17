@@ -106,9 +106,12 @@ public class ReaderTest {
     ArrayList<POI> POIS = reader.readUserPOIS("src/test/testResources/POIS.csv");
     ArrayList<POI> expectedPOIS = new ArrayList<POI>();
 
-    double location1[] = {40.7484,-73.9857};
-    double location2[] = {40.7829,-73.9654};
-    double location3[] = {40.6892,-74.0445};
+    double longitude1 = 40.7484;
+    double latitude1 = 73.9857;
+    double longitude2 = 40.7829;
+    double latitude2 = -73.9654;
+    double longitude3 = 40.6892;
+    double latitude3 = 74.0445;
 
     String name1 = "Empire State Building";
     String name2 = "Central Park";
@@ -119,9 +122,9 @@ public class ReaderTest {
     String desc3 = "The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York Harbor";
 
     //Location,Name,Description
-    POI POI1 = new POI(location1,name1,desc1);
-    POI POI2 = new POI(location2,name2,desc2);
-    POI POI3 = new POI(location3,name3,desc3);
+    POI POI1 = new POI(longitude1,latitude1,name1,desc1);
+    POI POI2 = new POI(longitude2,latitude2,name2,desc2);
+    POI POI3 = new POI(longitude3,latitude3,name3,desc3);
 
     expectedPOIS.add(POI1);
     expectedPOIS.add(POI2);

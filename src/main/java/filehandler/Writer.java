@@ -1,9 +1,9 @@
 package filehandler;
 
 /**
- * Created by andrewspearman on 8/22/17.
+ * The class Writer defines the object type Writer
+ * It is used to write data to files
  */
-
 public class Writer {
 
 }

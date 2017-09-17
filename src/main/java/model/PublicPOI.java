@@ -1,12 +1,12 @@
 package model;
 
 /**
- * Created by Thomas Kearsley on 8/22/17.
+ * The class PublicPOI defines the object type for Public Points of Interest
  */
 public class PublicPOI extends POI {
 
-  public PublicPOI(double location[], String name, String description) {
-    super(location, name, description);
+  public PublicPOI(double longitude, double latitude, String name, String description) {
+    super(longitude, latitude, name, description);
   }
 
 
