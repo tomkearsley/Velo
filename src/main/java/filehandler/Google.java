@@ -64,6 +64,6 @@ public class Google {
   }
 
   public static void main(String[] args) {
-    System.out.println(Arrays.toString(stringToLocation("Upper Manhattan")));
+    System.out.println(Arrays.toString(stringToLocation("University of Canterbury")));
   }
 }
