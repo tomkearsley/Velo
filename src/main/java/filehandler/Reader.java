@@ -263,6 +263,7 @@ public class Reader {
         line = changeQuotedCommas(line, locs);
         String[] csvRetailer = line.split(",", -1);
         csvRetailer = replaceQuotedCommas(csvRetailer, locs);
+        csvRetailer = removeBorderQuotes(csvRetailer);
 
         // Set Retailer attributes from the buffered row
         String title = csvRetailer[titleIndex];
