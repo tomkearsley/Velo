@@ -1,6 +1,6 @@
 package filehandlertest;
 
-
+//TODO Replace assertTrue (blah.equals(blah2)) with assertEquals (overriding issue)
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,16 +39,15 @@ public class ReaderTest {
 
   @Test
   public void readHotspots() throws FileNotFoundException {
-
     ArrayList<Hotspot> hotspots = reader.readHotspots("src/test/testResources/TestInitialHotspots.csv");
 
     Hotspot hotspot998 = new Hotspot(998, 40.745968, -73.994039,
-        "179 WEST 26 STREET", "Manhattan", "New York", 10001,
-        "Free", "LinkNYC Free Wi-Fi", "LinkNYC - Citybridge",
+        "179 WEST 26 STREET", "MN17", "New York", 10001,
+        "Free", "LinkNYC Free Wi-Fi", "mn-05-123662",
         "LinkNYC - Citybridge", "Tablet Internet -phone , Free 1 GB Wi-FI Service");
 
     Hotspot hotspot26 = new Hotspot(26, 40.657452, -73.963991,
-        "Skate Rental Area", "Brooklyn", "Brooklyn", 11215,
+        "Skate Rental Area", "BK99", "Brooklyn", 11215,
         "Limited Free", "GuestWiFi", "Prospect Park",
         "ALTICEUSA", "3 free 10 min sessions");
 
@@ -56,7 +55,9 @@ public class ReaderTest {
     expectedHotspots.add(hotspot998);
     expectedHotspots.add(hotspot26);
 
-    assertEquals(expectedHotspots, hotspots);
+    for(int i=0; i<expectedHotspots.size(); i++) {
+      assertTrue(expectedHotspots.get(i).equals(hotspots.get(i)));
+    }
   }
 
 
