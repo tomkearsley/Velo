@@ -16,10 +16,6 @@ import java.util.List;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
-
 /**
  * The class Reader defines the object type Reader
  * It is used to read data from text files
@@ -85,64 +81,6 @@ public class Reader {
     return csv;
   }
 
-  /**
-   * Reads WiFi hotspots from a csv file
-   * Uses OpenCSV
-   *
-   * TODO Needs to be rewritten to work with our files
-   *
-   */
-  public ArrayList<Hotspot> OpenCSVReadHotspots(String filename) throws IOException {
-
-    ArrayList<Hotspot> Hotspots = new ArrayList<Hotspot>();
-
-    try
-    {
-      CSVReader reader = new CSVReader(new FileReader(filename), ',', '\"', 0);
-
-      ColumnPositionMappingStrategy<Hotspot> mappingStrategy  = new ColumnPositionMappingStrategy<Hotspot>();
-      mappingStrategy.setType(Hotspot.class);
-
-      // the fields to bind to in your JavaBean
-      String[] columns = new String[]{
-          "id",
-          "latitude",
-          "longitude",
-          "locationAddress",
-          "borough",
-          "city",
-          "postcode",
-          "type",
-          "SSID",
-          "name",
-          "provider",
-          "remarks"
-      };
-      mappingStrategy.setColumnMapping(columns);
-
-      CsvToBean<Hotspot> csv = new CsvToBean<Hotspot>();
-      List<Hotspot> HotspotsList = csv.parse(mappingStrategy, reader);
-
-      // Convert Hotspots from List to ArrayList
-      for (int i = 0; i < HotspotsList.size(); i++)
-      {
-        Hotspot newHotspot = HotspotsList.get(i);
-        Hotspots.add(newHotspot);
-
-        // display CSV values
-        System.out.println("WiFi name: " + newHotspot.getName());
-        System.out.println("------------------------------");
-
-      }
-
-    }
-    catch (FileNotFoundException e)
-    {
-      System.err.println(e.getMessage());
-    }
-
-    return Hotspots;
-  }
 
   /**
    * Reads WiFi hotspots from a csv file
