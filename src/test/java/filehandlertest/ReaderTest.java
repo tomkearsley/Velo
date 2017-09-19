@@ -104,35 +104,21 @@ public class ReaderTest {
 
   @Test
   public void readPOIS() throws FileNotFoundException {
-    ArrayList<POI> POIS = reader.readUserPOIS("src/test/testResources/POIS.csv");
-    ArrayList<POI> expectedPOIS = new ArrayList<POI>();
+    ArrayList<POI> POIs = reader.readUserPOIS("src/test/testResources/POIS.csv");
+    ArrayList<POI> expectedPOIs = new ArrayList<POI>();
 
-    double longitude1 = 40.7484;
-    double latitude1 = 73.9857;
-    double longitude2 = 40.7829;
-    double latitude2 = -73.9654;
-    double longitude3 = 40.6892;
-    double latitude3 = 74.0445;
-
-    String name1 = "Empire State Building";
-    String name2 = "Central Park";
-    String name3 = "Statue Of Liberty";
-
-    String desc1 = "The Empire State Building is a 102-story skyscraper";
-    String desc2 = "Central Park is an urban park in Manhattan";
-    String desc3 = "The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York Harbor";
-
+    POI p1, p2, p3;
     //Location,Name,Description
-    POI POI1 = new POI(longitude1,latitude1,name1,desc1);
-    POI POI2 = new POI(longitude2,latitude2,name2,desc2);
-    POI POI3 = new POI(longitude3,latitude3,name3,desc3);
+    p1 = new POI(40.7484,-73.9857,"Empire State Building","The Empire State Building is a 102-story skyscraper");
+    p2 = new POI(40.7829,-73.9654,"Central Park","Central Park is an urban park in Manhattan");
+    p3 = new POI(40.6892,-74.0445,"Statue Of Liberty","The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York Harbor");
 
-    expectedPOIS.add(POI1);
-    expectedPOIS.add(POI2);
-    expectedPOIS.add(POI3);
+    expectedPOIs.add(p1);
+    expectedPOIs.add(p2);
+    expectedPOIs.add(p3);
 
-    for(int i = 0; i < expectedPOIS.size(); i++) {
-      assertTrue(expectedPOIS.get(i).equals(POIS.get(i)));
+    for(int i = 0; i < expectedPOIs.size(); i++) {
+      assertTrue(expectedPOIs.get(i).equals(POIs.get(i)));
     }
   }
 

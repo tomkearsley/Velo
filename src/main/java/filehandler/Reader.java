@@ -28,6 +28,11 @@ public class Reader {
 
   //TODO remove OpenCSV once all reader tests verified working with comma issues
 
+  /**
+   * Finds commas embedded in quotes and adds the index of such commas to a list
+   * @param string The string to find quoted commas within
+   * @return An ArrayList of integers - The comma indexes
+   */
   public ArrayList<Integer> findQuotedCommas(String string) {
     boolean quoteReached = false;
     ArrayList<Integer> locs = new ArrayList<Integer>();
@@ -42,6 +47,13 @@ public class Reader {
     return locs;
   }
 
+  /**
+   * Replaces the commas embedded in quotes with a space to keep the string length constant while allowing
+   * for proper splitting
+   * @param string The string to be adjusted
+   * @param locs The list of offending comma indexes
+   * @return The string after replacing offending commas
+   */
   public String changeQuotedCommas(String string, ArrayList<Integer> locs) {
     String newString = "";
     int locCount = 0;
@@ -56,6 +68,13 @@ public class Reader {
     return newString;
   }
 
+  /**
+   * Replaces the temporary space character with the original commas after splitting by valid commas
+   * Thus allowing splitting of a string by valid commas while allowing commas in the final fields
+   * @param csv The list of strings from a POI
+   * @param locs The list of offending comma indexes
+   * @return The list of strings with original commas replaced
+   */
   public String[] replaceQuotedCommas(String[] csv, ArrayList<Integer> locs) {
     int charCount = 0;
     int locCount = 0;
@@ -76,6 +95,12 @@ public class Reader {
     return csv;
   }
 
+  /**
+   * Removes double quotes from Strings that are embedded within them, as they were only functional for dealing
+   * with non-splitting commas within the csv
+   * @param csv The csv to search through
+   * @return The csv with border quotes removed
+   */
   public String[] removeBorderQuotes(String[] csv) {
     for (int i=0; i<csv.length; i++) {
       if (csv[i].length() > 0 && csv[i].charAt(0) == '"' && csv[i].charAt(csv[i].length() - 1) == '"') {
@@ -321,29 +346,29 @@ public class Reader {
 
     BufferedReader br = null;
     String line;
-    ArrayList<POI> POIS = new ArrayList<POI>();
+    ArrayList<POI> POIs = new ArrayList<POI>();
 
     try {
 
       br = new BufferedReader(new FileReader(filename));
       while ((line = br.readLine()) != null) {
         // Separate by comma
-        String[] csvPOIS = line.split(",");
+        ArrayList<Integer> locs = findQuotedCommas(line);
+        line = changeQuotedCommas(line, locs);
+        String[] csvPOI = line.split(",", -1);
+        csvPOI = replaceQuotedCommas(csvPOI, locs);
+        csvPOI = removeBorderQuotes(csvPOI);
 
         //Get name of POI
-        String name = csvPOIS[nameIndex];
+        String name = csvPOI[nameIndex];
 
         //Get location values
-        System.out.print(csvPOIS[latitudeIndex]);
-        double longitude = Double.valueOf(csvPOIS[latitudeIndex]);
-        double latitude = Double.valueOf(csvPOIS[longitudeIndex]);
+        double latitude = Double.valueOf(csvPOI[latitudeIndex]);
+        double longitude = Double.valueOf(csvPOI[longitudeIndex]);
 
-        //Get location array
-        //double[] location = {longitude, latitude};
+        String description = csvPOI[descriptionIndex];
 
-        String description = csvPOIS[descriptionIndex];
-
-        POIS.add(new POI(latitude, longitude, name,description));
+        POIs.add(new POI(latitude, longitude, name,description));
       }
 
     } catch (FileNotFoundException e) {
@@ -359,7 +384,7 @@ public class Reader {
         }
       }
     }
-    return POIS;
+    return POIs;
   }
 
 

@@ -27,13 +27,13 @@ public class POI implements Mappable {
 
   /**
    * Sets the location of the POI
+   * @param latitude
    * @param longitude
-   * @param latidude
    */
-  public void setLocation(double longitude, double latidude)
+  public void setLocation(double latitude, double longitude)
   {
+    this.latidude = latitude;
     this.longitude = longitude;
-    this.latidude = latidude;
   }
 
   /**
