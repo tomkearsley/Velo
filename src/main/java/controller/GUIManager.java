@@ -23,11 +23,8 @@ import model.Route;
 import model.UserPOI;
 
 /**
- * Created by Tyler Kennedy on 29/8/17
- *
- * TODO change bottom bar on tableView to radio buttons for different tables and a "GO" button to link here
+ * Initialises all of the ArrayLists used for temporary storage and @FXML items
  */
-
 public class GUIManager {
 
   ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
@@ -36,7 +33,6 @@ public class GUIManager {
   ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
   ArrayList<Route> routes = new ArrayList<Route>();
   //TODO use reader to populate these ArrayLists
-
 
   //Data table
   @FXML
@@ -60,7 +56,7 @@ public class GUIManager {
     Reader rdr = new Reader();
     try{
       //TODO update sources when reader is fixed
-      hotspots = rdr.readHotspots("src/test/testResources/TestInitialHotspots.csv");
+      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots");
       retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers");
 
     }
@@ -75,7 +71,7 @@ public class GUIManager {
 
   /**
    * Runs at startup
-   * Populates the model structure with data from .csv files
+   * Populates the model structure with data from .csv files using populateArrayLists()
    * TODO adapt to using database primarily with csv as fallback
    */
   public void initialize(){
