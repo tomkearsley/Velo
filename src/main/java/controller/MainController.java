@@ -25,7 +25,7 @@ import model.UserPOI;
 /**
  * Initialises all of the ArrayLists used for temporary storage and @FXML items
  */
-public class GUIManager {
+public class MainController {
 
   ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
   ArrayList<Retailer> retailers = new ArrayList<Retailer>();
