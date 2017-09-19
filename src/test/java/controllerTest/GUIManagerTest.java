@@ -4,8 +4,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.sun.org.apache.regexp.internal.RE;
-import controller.GUIManager;
+import controller.MainController;
 import java.util.ArrayList;
 import model.Retailer;
 import org.junit.After;
@@ -13,10 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class GUIManagerTest {
-  private GUIManager guiManager;
+  private MainController guiManager;
   @Before
   public void setUp() throws Exception {
-    guiManager = new GUIManager();
+    guiManager = new MainController();
     guiManager.populateArrayLists();
   }
 

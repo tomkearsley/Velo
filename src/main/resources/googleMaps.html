@@ -21,6 +21,10 @@
     function initialize() {
       var mapOptions = {
         center: new google.maps.LatLng(40.785091, -73.968285),
+        disableDefaultUI: true,
+        zoomControl: true,
+        //streetViewControl: true,
+        rotateControl: true,    //Doesn't work :(
         zoom: 4,
         //The below code enables night mode. Design decision, comment out if we don't like it
         styles: [
