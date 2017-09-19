@@ -4,12 +4,14 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonParser;
 import com.google.gson.JsonObject;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.util.Arrays;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -57,8 +59,20 @@ public class Google {
       //resultArray.getJSONObject("address_components");
       return location;
     }
+    catch(MalformedURLException e) {
+      System.out.println("Something went wrong!\nCheck that you've entered a valid location");
+      return null;
+    }
+    catch(IOException e) {
+      System.out.println("Something went wrong!\nThere was an error in reading the location. Please retry");
+      return null;
+    }
+    catch(JSONException e) {
+      System.out.println("Something went wrong!\nThere was an error in parsing the location details. Please retry");
+      return null;
+    }
     catch(Exception e) {
-      System.out.print(e);     // TODO Add more specific things
+      System.out.print("Whoops! Something went wrong:\n" + e);
       return null;
     }
   }
