@@ -47,12 +47,12 @@ public class GUIManager {
   private Pane mapViewPane;
   @FXML
   private ChoiceBox<DataType> dataTypeChoiceBox;
-
   @FXML
   private TextField rawDataFilterField;
-
   @FXML
   private WebView mapWebView;
+
+
 
 
 
