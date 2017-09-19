@@ -15,6 +15,9 @@
   <script type="text/javascript">
     var map;
     var markerNum = 0;
+    var directionsService;
+    var directionsDisplay;
+    //alert(directionsService.toString());
     function initialize() {
       var mapOptions = {
         center: new google.maps.LatLng(40.785091, -73.968285),
@@ -100,16 +103,24 @@
             stylers: [{color: '#17263c'}]
           }]
       };
+
       map = new google.maps.Map(document.getElementById("map-canvas"),
           mapOptions);
       map.setZoom(12);
-      createMarker(40.785091, -73.968285,'Test Marker');
+
+      directionsService = new google.maps.DirectionsService;
+      directionsDisplay = new google.maps.DirectionsRenderer;
+
+      directionsDisplay.setMap(map);
+      //createMarker(40.785091, -73.968285,'Test Marker');
 
       //Create marker on click
       google.maps.event.addListener(map,'click',function(event) {
         markerNum++;
         createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum);
       });
+
+      displayRoute(40.785091,-73.968285,40.785091, -73.568285);
     }
 
     function createMarker(lat,lng,title) {
@@ -122,11 +133,27 @@
       });
     }
 
+    function displayRoute(startLat,startLng,endLat,endLng) {
+    //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      var startLocation = startLat + "," + startLng;
+      var endLocation = endLat + "," + endLng;
+      directionsService.route({
+        origin: startLocation,
+        destination: endLocation,
+        travelMode: 'BICYCLING'
+      }, function(response, status) {
+        //alert("as");
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+      //alert("Test");
+    }
+
     //initialize();
     google.maps.event.addDomListener(window, 'load', initialize);
-    google.maps.event.addListener(map, "click", function(event) {
-      prompt("Test");
-    });
     //google.maps.event.addListener(window, 'click', function(event) {
     //  alert(event.latLng);  // in event.latLng  you have the coordinates of click
     //});

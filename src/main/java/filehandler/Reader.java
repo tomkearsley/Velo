@@ -26,6 +26,64 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
  */
 public class Reader {
 
+  //TODO remove OpenCSV once all reader tests verified working with comma issues
+
+  public ArrayList<Integer> findQuotedCommas(String string) {
+    boolean quoteReached = false;
+    ArrayList<Integer> locs = new ArrayList<Integer>();
+    for (int i=0; i<string.length(); i++) {
+      if (string.charAt(i) == '"') {
+        quoteReached = !quoteReached;
+      }
+      if (quoteReached && string.charAt(i) == ',') {
+        locs.add(new Integer(i));
+      }
+    }
+    return locs;
+  }
+
+  public String changeQuotedCommas(String string, ArrayList<Integer> locs) {
+    String newString = "";
+    int locCount = 0;
+    for (int i=0; i<string.length(); i++) {
+      if (locCount < locs.size() && i == locs.get(locCount)) {
+        locCount++;
+        newString += " ";
+      } else {
+        newString += string.charAt(i);
+      }
+    }
+    return newString;
+  }
+
+  public String[] replaceQuotedCommas(String[] csv, ArrayList<Integer> locs) {
+    int charCount = 0;
+    int locCount = 0;
+    for (int i=0; i<csv.length; i++) {
+      String newString = "";
+      for (int o=0; o<csv[i].length(); o++) {
+        if (locCount < locs.size() && charCount == locs.get(locCount)) {
+          newString += ',';
+          locCount++;
+        } else {
+          newString += csv[i].charAt(o);
+        }
+        charCount++;
+      }
+      csv[i] = newString;
+      charCount++;
+    }
+    return csv;
+  }
+
+  public String[] removeBorderQuotes(String[] csv) {
+    for (int i=0; i<csv.length; i++) {
+      if (csv[i].length() > 0 && csv[i].charAt(0) == '"' && csv[i].charAt(csv[i].length() - 1) == '"') {
+        csv[i] = csv[i].substring(1, csv[i].length() - 1);
+      }
+    }
+    return csv;
+  }
 
   /**
    * Reads WiFi hotspots from a csv file
@@ -34,7 +92,7 @@ public class Reader {
    * TODO Needs to be rewritten to work with our files
    *
    */
-  public List<Hotspot> OpenCSVReadHotspots(String filename) throws IOException {
+  public ArrayList<Hotspot> OpenCSVReadHotspots(String filename) throws IOException {
 
     ArrayList<Hotspot> Hotspots = new ArrayList<Hotspot>();
 
@@ -123,7 +181,11 @@ public class Reader {
       while ((line = br.readLine()) != null) {
 
         // Separate by comma
-        String[] csvHotspot = line.split(",");
+        ArrayList<Integer> locs = findQuotedCommas(line);
+        line = changeQuotedCommas(line, locs);
+        String[] csvHotspot = line.split(",", -1);
+        csvHotspot = replaceQuotedCommas(csvHotspot, locs);
+        csvHotspot = removeBorderQuotes(csvHotspot);
 
         // Get Hotspot attributes from the buffered row
         int id = Integer.valueOf(csvHotspot[idIndex]);
@@ -197,7 +259,11 @@ public class Reader {
       br = new BufferedReader(new FileReader(filename));
       while ((line = br.readLine()) != null) {
         // Separate by comma
+        ArrayList<Integer> locs = findQuotedCommas(line);
+        line = changeQuotedCommas(line, locs);
         String[] csvRetailer = line.split(",", -1);
+        csvRetailer = replaceQuotedCommas(csvRetailer, locs);
+        csvRetailer = removeBorderQuotes(csvRetailer);
 
         // Set Retailer attributes from the buffered row
         String title = csvRetailer[titleIndex];
@@ -205,7 +271,18 @@ public class Reader {
         String floor = csvRetailer[floorIndex];
         String city = csvRetailer[cityIndex];
         String state = csvRetailer[stateIndex];
-        int zipcode = Integer.valueOf(csvRetailer[zipcodeIndex]);
+        int zipcode;
+        try {
+          zipcode = Integer.valueOf(csvRetailer[zipcodeIndex]);
+        } catch(Exception e) {
+          zipcode = -1;
+        }
+        if(csvRetailer.length < 7) {
+          for (int i=0; i < csvRetailer.length; i++){
+            System.out.print(i + ": " + csvRetailer[i]);
+          }
+          System.out.println();
+        }
         String block = csvRetailer[blockIndex];
         String description = csvRetailer[descriptionIndex];
         String secondaryDescription = csvRetailer[description2Index];

@@ -61,7 +61,7 @@ public class GUIManager {
     try{
       //TODO update sources when reader is fixed
       hotspots = rdr.readHotspots("src/test/testResources/TestInitialHotspots.csv");
-      retailers = rdr.readRetailers("src/test/testResources/retailers.csv");
+      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers");
 
     }
     catch(FileNotFoundException e){
