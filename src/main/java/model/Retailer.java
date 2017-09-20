@@ -1,5 +1,7 @@
 package model;
 
+import filehandler.Google;
+
 /**
  * The class Retailer defines the object type of retailer locations
  */
@@ -30,7 +32,7 @@ public class Retailer extends POI {
 
   public Retailer(String title, String address, String floor, String city, String state, int zipcode,
       String block, String description, String secondaryDescription) {
-    super(title, description);
+    super(Google.stringToLocation(address + " " + city + " " + state), title, description);
     this.address = address;
     this.floor = floor;
     this.city = city;

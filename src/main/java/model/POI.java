@@ -20,6 +20,14 @@ public class POI implements Mappable {
 
   }
 
+  public POI(double[] location, String name, String description) {
+    this.longitude = location[0];
+    this.latidude = location[1];
+    this.name = name;
+    this.description = description;
+
+  }
+
   public POI(String name, String description){
     this.name = name;
     this.description = description;
