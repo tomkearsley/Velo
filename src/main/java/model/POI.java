@@ -20,6 +20,14 @@ public class POI implements Mappable {
 
   }
 
+  public POI(double[] location, String name, String description) {
+    this.longitude = location[0];
+    this.latidude = location[1];
+    this.name = name;
+    this.description = description;
+
+  }
+
   public POI(String name, String description){
     this.name = name;
     this.description = description;
@@ -27,13 +35,13 @@ public class POI implements Mappable {
 
   /**
    * Sets the location of the POI
+   * @param latitude
    * @param longitude
-   * @param latidude
    */
-  public void setLocation(double longitude, double latidude)
+  public void setLocation(double latitude, double longitude)
   {
+    this.latidude = latitude;
     this.longitude = longitude;
-    this.latidude = latidude;
   }
 
   /**

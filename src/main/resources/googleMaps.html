@@ -10,7 +10,7 @@
     #map-canvas { height: 100% }
   </style>
   <script type="text/javascript"
-          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7V8e9xgXmPeYdcqWSdketYQ022xm9NRc&sensor=false">
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&sensor=false">
   </script>
   <script type="text/javascript">
     var map;
@@ -138,7 +138,7 @@
     }
 
     function displayRoute(startLat,startLng,endLat,endLng) {
-    //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
       var startLocation = startLat + "," + startLng;
       var endLocation = endLat + "," + endLng;
       directionsService.route({
