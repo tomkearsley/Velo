@@ -31,7 +31,7 @@ public class POITest {
     double longitude2 = 40.748652;
     double latitude2 = -73.985773;
     testLocation1 = new double[]{40.719011, -73.908305};
-    testPOI = new POI(longitude1,latitude1, "New York Center", "");
+    testPOI = new UserPOI(longitude1,latitude1, "New York Center", "");
     testLocation2 = new double[]{40.748652, -73.985773};
     empireString = "Iconic, art deco office tower from 1931 with exhibits "
         + "& observatories on the 86th & 102nd floors.";
@@ -44,17 +44,6 @@ public class POITest {
     delta = 1.0;
   }
 
-
-  /**
-   * Checks locations for POI, User POI & Public POI are set correctly
-   */
-  @Test
-  public void LocationTest() {
-    double[] p1Location = {testPOI.getLongitude(),testPOI.getLatidude()};
-    double[] testPublicPOILocation = {testPublicPOI.getLongitude(),testPublicPOI.getLatidude()};
-    assertArrayEquals(testArray1,p1Location , delta);
-    assertArrayEquals(testArray2, testPublicPOILocation, delta);
-  }
 
   /**
    * Checks names for POI, User POI & Public POI are correctly set.
