@@ -5,7 +5,7 @@ import java.io.FileReader;
 
 import model.Hotspot;
 import model.Retailer;
-import model.POI;
+import model.UserPOI;
 import model.Route;
 import model.Station;
 
@@ -335,7 +335,7 @@ public class Reader {
     return Retailers;
   }
 
-  public ArrayList<POI> readUserPOIS(String filename) throws FileNotFoundException {
+  public ArrayList<UserPOI> readUserPOIS(String filename) throws FileNotFoundException {
     int nameIndex = 0;
 
     //Google uses latitude, longitude pairings.
@@ -346,7 +346,7 @@ public class Reader {
 
     BufferedReader br = null;
     String line;
-    ArrayList<POI> POIs = new ArrayList<POI>();
+    ArrayList<UserPOI> UserPOIs = new ArrayList<UserPOI>();
 
     try {
 
@@ -368,7 +368,7 @@ public class Reader {
 
         String description = csvPOI[descriptionIndex];
 
-        POIs.add(new POI(latitude, longitude, name,description));
+        UserPOIs.add(new UserPOI(latitude, longitude, name,description));
       }
 
     } catch (FileNotFoundException e) {
@@ -384,7 +384,7 @@ public class Reader {
         }
       }
     }
-    return POIs;
+    return UserPOIs;
   }
 
 
