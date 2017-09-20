@@ -9,6 +9,7 @@
     body { height: 100%; margin: 0; padding: 0 }
     #map-canvas { height: 100% }
   </style>
+  <script type="text/javascript" src="nashorn:mozilla_compat.js"></script>
   <script type="text/javascript"
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&sensor=false">
   </script>
@@ -121,19 +122,23 @@
       //Create marker on click
       google.maps.event.addListener(map,'click',function(event) {
         markerNum++;
-        createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum);
+        createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"default");
       });
-
-      displayRoute(40.785091,-73.968285,40.785091, -73.568285);
+      //alert("Test");
+      var location1 = [40.7829,-73.9654];
+      var location2 = [40.7736,-73.9566];
+      displayRoute(location1[0],location1[1],location2[0],location2[1]);
     }
 
-    function createMarker(lat,lng,title) {
+    function createMarker(lat,lng,title,markerType) {
+      //Images should be ~ 23 * 23.
       var myLatLng = new google.maps.LatLng(lat, lng);
       //alert("lat: " + lat + "\nlng: " + lng + "\nLocation: " + myLatLng);
       var marker = new google.maps.Marker({
         position: myLatLng,
         map:map,
-        title: title
+        title: title,
+        icon: "image/" + markerType + ".png"
       });
     }
 
