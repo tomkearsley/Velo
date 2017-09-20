@@ -5,8 +5,12 @@ package model;
  */
 public class UserPOI extends POI {
 
+  private double latitude;
+
+  private double longitude;
+
   public UserPOI(double longitude,double latidude, String name, String description) {
-    super(longitude,latidude, name, description);
+    super(name, description);
   }
 
 

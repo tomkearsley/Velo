@@ -20,12 +20,14 @@ import org.json.JSONObject;
 public class Google {
 
   // String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
+  public static String toGoogleString(String string) {
+    return string.replaceAll(" ","+");
+  }
+
 
   public static double[] stringToLocation(String string) {
     String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
-    String JsonString =
-        "https://maps.googleapis.com/maps/api/geocode/json?address=" + string.replaceAll(" ", "+")
-            + "&key=" + apiKey;
+    String JsonString = "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string) + "&key=" + apiKey;
     InputStream input = null;
     StringBuilder sb = new StringBuilder();
 

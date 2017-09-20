@@ -7,33 +7,13 @@ import java.util.Arrays;
  */
 public class POI implements Mappable {
 
-  double longitude = 0;
-  double latidude = 0;
   String name = "";
   String description = "";
 
-  public POI(double longitude, double latidude, String name, String description) {
-    this.longitude = longitude;
-    this.latidude = latidude;
+  public POI(String name, String description) {
     this.name = name;
     this.description = description;
 
-  }
-
-  public POI(String name, String description){
-    this.name = name;
-    this.description = description;
-  }
-
-  /**
-   * Sets the location of the POI
-   * @param latitude
-   * @param longitude
-   */
-  public void setLocation(double latitude, double longitude)
-  {
-    this.latidude = latitude;
-    this.longitude = longitude;
   }
 
   /**
@@ -45,7 +25,6 @@ public class POI implements Mappable {
     this.description = description;
   }
 
-
   /**
    * Sets the Name of the POI
    *
@@ -56,14 +35,6 @@ public class POI implements Mappable {
   }
 
   // GETTERS
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public double getLatidude() {
-    return latidude;
-  }
   /**
    * Returns the name of POI Object
    *
@@ -84,7 +55,7 @@ public class POI implements Mappable {
 
   @Override
   public String toString() {
-    return "Name: " + name + "\nLocation: " + longitude + ", " + latidude + "\nDescription: " + description;
+    return "Name: " + name + "\nLocation: " + longitude + ", " + latitude + "\nDescription: " + description;
   }
 
   public boolean equals(POI p) {

@@ -11,6 +11,7 @@ import model.POI;
 import model.Retailer;
 import model.Route;
 import model.Station;
+import model.UserPOI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,15 +111,15 @@ public class ReaderTest {
 
   //TODO ADD JAVADOC
   @Test
-  public void readPOIS() throws FileNotFoundException {
-    ArrayList<POI> POIs = reader.readUserPOIS("src/test/testResources/POIS.csv");
-    ArrayList<POI> expectedPOIs = new ArrayList<POI>();
+  public void readUserPOIS() throws FileNotFoundException {
+    ArrayList<UserPOI> POIs = reader.readUserPOIS("src/test/testResources/POIS.csv");
+    ArrayList<UserPOI> expectedPOIs = new ArrayList<UserPOI>();
 
-    POI p1, p2, p3;
+    UserPOI p1, p2, p3;
     //Location,Name,Description
-    p1 = new POI(40.7484,-73.9857,"Empire State Building","The Empire State Building is a 102-story skyscraper");
-    p2 = new POI(40.7829,-73.9654,"Central Park","Central Park is an urban park in Manhattan");
-    p3 = new POI(40.6892,-74.0445,"Statue Of Liberty","The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York Harbor");
+    p1 = new UserPOI(40.7484,-73.9857,"Empire State Building","The Empire State Building is a 102-story skyscraper");
+    p2 = new UserPOI(40.7829,-73.9654,"Central Park","Central Park is an urban park in Manhattan");
+    p3 = new UserPOI(40.6892,-74.0445,"Statue Of Liberty","The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York Harbor");
 
     expectedPOIs.add(p1);
     expectedPOIs.add(p2);

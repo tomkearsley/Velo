@@ -4,6 +4,7 @@ import filehandler.Reader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,6 +21,7 @@ import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
 import model.Route;
+import model.Station;
 import model.UserPOI;
 
 /**
@@ -32,6 +34,7 @@ public class MainController {
   ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
   ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
   ArrayList<Route> routes = new ArrayList<Route>();
+  ArrayList<Station> stations = new ArrayList<Station>();
   //TODO use reader to populate these ArrayLists
 
   //Data table
@@ -43,21 +46,20 @@ public class MainController {
   private Pane mapViewPane;
   @FXML
   private ChoiceBox<DataType> dataTypeChoiceBox;
+
   @FXML
   private TextField rawDataFilterField;
+
   @FXML
   private WebView mapWebView;
-
-
 
 
 
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try{
-      //TODO update sources when reader is fixed
-      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots.csv");
-      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers.csv");
+      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots");
+      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers");
 
     }
     catch(FileNotFoundException e){
@@ -76,7 +78,7 @@ public class MainController {
    */
   public void initialize(){
     populateArrayLists();
-    dataViewRetailers(); /* some initial data so the table isn't empty on startup */
+    //dataViewRetailers(); /* some initial data so the table isn't empty on startup */
     dataTypeChoiceBox.getItems().setAll(DataType.values());
 
     File f = new File("src/main/resources/googleMaps.html");
@@ -100,7 +102,6 @@ public class MainController {
   public void dataViewRetailers() {
     //converting the arraylist to an observable list
     ObservableList<Retailer>  oListRetailers = FXCollections.observableArrayList(retailers);
-    FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
     //TODO add filteredLists to other dataView__ methods, probably abstract these up a layer
     //each 2 line section creates one table heading and set of values
     //TODO lat and long from address?
@@ -121,6 +122,26 @@ public class MainController {
     TableColumn<Retailer, String> secondaryDescCol = new TableColumn<Retailer, String>("Secondary Description");
     secondaryDescCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
 
+    final FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
+    //TODO wait for forum response
+    /*
+    rawDataFilterField.textProperty().addListener((observable, oldValue, final newValue) -> {
+      fListRetailers.setPredicate(Retailer -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
+          return true;
+        }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+
+        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter)) {
+          return true;
+        }
+        return false;
+        }
+      });
+    });
+    */
     rawDataTable.getColumns().setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol, secondaryDescCol);
     rawDataTable.setItems(fListRetailers);
   }
@@ -175,6 +196,7 @@ public class MainController {
   public void dataViewUserPOIs() {
     //lat, long, name, description
     ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(userPOIs);
+
     TableColumn<UserPOI, Double> latCol = new TableColumn<UserPOI, Double>("Latitude");
     latCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("latitude"));
     TableColumn<UserPOI, Double> longCol = new TableColumn<UserPOI, Double>("Longitude");
@@ -189,12 +211,47 @@ public class MainController {
   }
 
   public void dataViewStations() {
+    //latitude, longitude, name, ID
+    ObservableList<Station> oListStations = FXCollections.observableArrayList(stations);
 
+    TableColumn<Station, Double> latCol = new TableColumn<Station, Double>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<Station, Double>("latitude"));
+    TableColumn<Station, Double> longCol = new TableColumn<Station, Double>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<Station, Double>("longitude"));
+    TableColumn<Station, String> nameCol = new TableColumn<Station, String>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<Station, String>("name"));
+    TableColumn<Station, Integer> idCol = new TableColumn<Station, Integer>("ID");
+    idCol.setCellValueFactory(new PropertyValueFactory<Station, Integer>("ID"));
+
+    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, idCol);
+    rawDataTable.setItems(oListStations);
   }
 
   public void dataViewRoutes() {
     //TODO figure out how to show this
-    //for point in route create column..?
+    //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
+
+    ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
+
+    TableColumn<Route, Station> startStationCol = new TableColumn<Route, Station>("Start Station");
+    startStationCol.setCellValueFactory(new PropertyValueFactory<Route, Station>("startStation"));
+    TableColumn<Route, Station> stopStationCol = new TableColumn<Route, Station>("Stop Station");
+    stopStationCol.setCellValueFactory(new PropertyValueFactory<Route, Station>("stopStation"));
+    TableColumn<Route, Date> startDateTimeCol = new TableColumn<Route, Date>("Start Time");
+    startDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("startDateTime"));
+    TableColumn<Route, Date> endDateTimeCol = new TableColumn<Route, Date>("Stop Time");
+    endDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("endDateTime"));
+    TableColumn<Route, Integer> bikeIDCol= new TableColumn<Route, Integer>("Bike ID");
+    bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
+    TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
+    userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
+    TableColumn<Route, Integer> birthYearCol = new TableColumn<Route, Integer>("Birth Year");
+    birthYearCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("birthYear"));
+    TableColumn<Route, Integer> genderCol = new TableColumn<Route, Integer>("Gender");
+    genderCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("gender"));
+
+    rawDataTable.getColumns().setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol, userTypeCol, birthYearCol, genderCol);
+    rawDataTable.setItems(oListRoutes);
   }
   public void dataViewSelected() {
     DataType selected = dataTypeChoiceBox.getValue();

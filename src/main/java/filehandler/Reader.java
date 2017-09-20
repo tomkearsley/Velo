@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 
 import model.Hotspot;
 import model.Retailer;
-import model.POI;
+import model.UserPOI;
 import model.Route;
 import model.Station;
 
@@ -49,7 +49,7 @@ public class Reader {
    * @param string The string to find quoted commas within
    * @return An ArrayList of integers - The comma indexes
    */
-  public ArrayList<Integer> findQuotedCommas(String string) {
+  private ArrayList<Integer> findQuotedCommas(String string) {
     boolean quoteReached = false;
     ArrayList<Integer> locs = new ArrayList<Integer>();
     for (int i=0; i<string.length(); i++) {
@@ -70,7 +70,7 @@ public class Reader {
    * @param locs The list of offending comma indexes
    * @return The string after replacing offending commas
    */
-  public String changeQuotedCommas(String string, ArrayList<Integer> locs) {
+  private String changeQuotedCommas(String string, ArrayList<Integer> locs) {
     String newString = "";
     int locCount = 0;
     for (int i=0; i<string.length(); i++) {
@@ -91,7 +91,7 @@ public class Reader {
    * @param locs The list of offending comma indexes
    * @return The list of strings with original commas replaced
    */
-  public String[] replaceQuotedCommas(String[] csv, ArrayList<Integer> locs) {
+  private String[] replaceQuotedCommas(String[] csv, ArrayList<Integer> locs) {
     int charCount = 0;
     int locCount = 0;
     for (int i=0; i<csv.length; i++) {
@@ -117,7 +117,7 @@ public class Reader {
    * @param csv The csv to search through
    * @return The csv with border quotes removed
    */
-  public String[] removeBorderQuotes(String[] csv) {
+  private String[] removeBorderQuotes(String[] csv) {
     for (int i=0; i<csv.length; i++) {
       if (csv[i].length() > 0 && csv[i].charAt(0) == '"' && csv[i].charAt(csv[i].length() - 1) == '"') {
         csv[i] = csv[i].substring(1, csv[i].length() - 1);
@@ -293,7 +293,7 @@ public class Reader {
     return Retailers;
   }
 
-  public ArrayList<POI> readUserPOIS(String filename) throws FileNotFoundException {
+  public ArrayList<UserPOI> readUserPOIS(String filename) throws FileNotFoundException {
     int nameIndex = 0;
 
     //Google uses latitude, longitude pairings.
@@ -304,7 +304,7 @@ public class Reader {
 
     BufferedReader br = null;
     String line;
-    ArrayList<POI> POIs = new ArrayList<POI>();
+    ArrayList<UserPOI> UserPOIs = new ArrayList<UserPOI>();
 
     try {
 
@@ -326,7 +326,7 @@ public class Reader {
 
         String description = csvPOI[descriptionIndex];
 
-        POIs.add(new POI(latitude, longitude, name,description));
+        UserPOIs.add(new UserPOI(latitude, longitude, name,description));
       }
 
     } catch (FileNotFoundException e) {
@@ -342,7 +342,7 @@ public class Reader {
         }
       }
     }
-    return POIs;
+    return UserPOIs;
   }
 
 
