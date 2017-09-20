@@ -33,7 +33,7 @@ public class Reader {
    * @param string The string to find quoted commas within
    * @return An ArrayList of integers - The comma indexes
    */
-  public ArrayList<Integer> findQuotedCommas(String string) {
+  private ArrayList<Integer> findQuotedCommas(String string) {
     boolean quoteReached = false;
     ArrayList<Integer> locs = new ArrayList<Integer>();
     for (int i=0; i<string.length(); i++) {
@@ -54,7 +54,7 @@ public class Reader {
    * @param locs The list of offending comma indexes
    * @return The string after replacing offending commas
    */
-  public String changeQuotedCommas(String string, ArrayList<Integer> locs) {
+  private String changeQuotedCommas(String string, ArrayList<Integer> locs) {
     String newString = "";
     int locCount = 0;
     for (int i=0; i<string.length(); i++) {
@@ -75,7 +75,7 @@ public class Reader {
    * @param locs The list of offending comma indexes
    * @return The list of strings with original commas replaced
    */
-  public String[] replaceQuotedCommas(String[] csv, ArrayList<Integer> locs) {
+  private String[] replaceQuotedCommas(String[] csv, ArrayList<Integer> locs) {
     int charCount = 0;
     int locCount = 0;
     for (int i=0; i<csv.length; i++) {
@@ -101,7 +101,7 @@ public class Reader {
    * @param csv The csv to search through
    * @return The csv with border quotes removed
    */
-  public String[] removeBorderQuotes(String[] csv) {
+  private String[] removeBorderQuotes(String[] csv) {
     for (int i=0; i<csv.length; i++) {
       if (csv[i].length() > 0 && csv[i].charAt(0) == '"' && csv[i].charAt(csv[i].length() - 1) == '"') {
         csv[i] = csv[i].substring(1, csv[i].length() - 1);
