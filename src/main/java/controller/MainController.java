@@ -56,8 +56,8 @@ public class MainController {
     Reader rdr = new Reader();
     try{
       //TODO update sources when reader is fixed
-      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots");
-      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers");
+      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots.csv");
+      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers.csv");
 
     }
     catch(FileNotFoundException e){

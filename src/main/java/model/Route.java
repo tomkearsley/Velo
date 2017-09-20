@@ -26,7 +26,9 @@ public class Route {
   /**Bike ID*/
   private int bikeID;
 
-  /**User type*/
+  /**User type
+   * Either "customer" or "subscriber"
+   */
   private String userType;
 
   /**User birth year*/
