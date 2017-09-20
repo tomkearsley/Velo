@@ -122,10 +122,14 @@ public class MainController {
     TableColumn<Retailer, String> secondaryDescCol = new TableColumn<Retailer, String>("Secondary Description");
     secondaryDescCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
 
-    final FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
+    FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
     //TODO wait for forum response
-    /*
-    rawDataFilterField.textProperty().addListener((observable, oldValue, final newValue) -> {
+    /**
+     * Filtering:
+     * if this returns true, the object is shown. If the filter field is empty,
+     * or the attributes below match, then the object is shown
+     */
+    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListRetailers.setPredicate(Retailer -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -133,15 +137,16 @@ public class MainController {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-
-        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter)) {
+        /**
+         * Add more Retailer.get__'s below to include more things in the search
+         */
+        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName().toLowerCase().contains(lowerCaseFilter)) {
           return true;
         }
         return false;
-        }
+        });
       });
-    });
-    */
+
     rawDataTable.getColumns().setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol, secondaryDescCol);
     rawDataTable.setItems(fListRetailers);
   }
@@ -173,6 +178,26 @@ public class MainController {
     TableColumn<Hotspot, String> remarksCol = new TableColumn<Hotspot, String>("Remarks");
     remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("remarks"));
 
+    FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
+    /*
+    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+      fListHotspots.setPredicate(Retailer -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
+          return true;
+        }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+        /**
+         * Add more Hotspot.get__'s below to include more things in the search
+         //
+        if () {
+          return true;
+        }
+        return false;
+      });
+    });
+    */
     rawDataTable.getColumns().setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol, SSIDCol, providerCol, remarksCol); //something something
     rawDataTable.setItems(oListHotspots);
   }
@@ -228,9 +253,8 @@ public class MainController {
   }
 
   public void dataViewRoutes() {
-    //TODO figure out how to show this
     //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
-
+    //in-between points??
     ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
 
     TableColumn<Route, Station> startStationCol = new TableColumn<Route, Station>("Start Station");
