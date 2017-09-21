@@ -111,7 +111,7 @@ public class MainController {
     addressCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("address"));
     TableColumn<Retailer, String> floorCol = new TableColumn<Retailer, String>("Floor");
     floorCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("floor"));
-    TableColumn<Retailer, String> cityCol = new TableColumn<Retailer, String>("city");
+    TableColumn<Retailer, String> cityCol = new TableColumn<Retailer, String>("City");
     cityCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("city"));
     TableColumn<Retailer, String> zipcodeCol = new TableColumn<Retailer, String>("Zipcode");
     zipcodeCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("zipcode"));
@@ -123,7 +123,6 @@ public class MainController {
     secondaryDescCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
 
     FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
-    //TODO wait for forum response
     /**
      * Filtering:
      * if this returns true, the object is shown. If the filter field is empty,
@@ -179,7 +178,7 @@ public class MainController {
     remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("remarks"));
 
     FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
-    /*
+
     rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListHotspots.setPredicate(Retailer -> {
         //if filter is empty, show all
@@ -190,14 +189,14 @@ public class MainController {
         String lowerCaseFilter = newValue.toLowerCase();
         /**
          * Add more Hotspot.get__'s below to include more things in the search
-         //
-        if () {
+         */
+        if (Retailer.getName().toLowerCase().contains(lowerCaseFilter)) {
           return true;
         }
         return false;
       });
     });
-    */
+
     rawDataTable.getColumns().setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol, SSIDCol, providerCol, remarksCol); //something something
     rawDataTable.setItems(oListHotspots);
   }
