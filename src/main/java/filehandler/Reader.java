@@ -111,70 +111,8 @@ public class Reader {
   }
 
   /**
-   * Reads WiFi hotspots from a csv file
-   * Uses OpenCSV
-   *
-   * TODO Needs to be rewritten to work with our files
-   *
-   */
-  public ArrayList<Hotspot> OpenCSVReadHotspots(String filename) throws IOException {
-
-    ArrayList<Hotspot> Hotspots = new ArrayList<Hotspot>();
-
-    try
-    {
-      CSVReader reader = new CSVReader(new FileReader(filename), ',', '\"', 0);
-
-      ColumnPositionMappingStrategy<Hotspot> mappingStrategy  = new ColumnPositionMappingStrategy<Hotspot>();
-      mappingStrategy.setType(Hotspot.class);
-
-      // the fields to bind to in your JavaBean
-      String[] columns = new String[]{
-          "id",
-          "latitude",
-          "longitude",
-          "locationAddress",
-          "borough",
-          "city",
-          "postcode",
-          "type",
-          "SSID",
-          "name",
-          "provider",
-          "remarks"
-      };
-      mappingStrategy.setColumnMapping(columns);
-
-      CsvToBean<Hotspot> csv = new CsvToBean<Hotspot>();
-      List<Hotspot> HotspotsList = csv.parse(mappingStrategy, reader);
-
-      // Convert Hotspots from List to ArrayList
-      for (int i = 0; i < HotspotsList.size(); i++)
-      {
-        Hotspot newHotspot = HotspotsList.get(i);
-        Hotspots.add(newHotspot);
-
-        // display CSV values
-        System.out.println("WiFi name: " + newHotspot.getName());
-        System.out.println("------------------------------");
-
-      }
-
-    }
-    catch (FileNotFoundException e)
-    {
-      System.err.println(e.getMessage());
-    }
-
-    return Hotspots;
-  }
-
-  /**
-   * Reads WiFi hotspots from a csv file
-   * Uses BufferedReader
-   *
-   * TODO Needs to be tested to ensure it works.
-   *
+   * Reads WiFi hotspots from a csv file, and builds a list of hotspots instances using the extracted
+   * attributes
    * @param filename the name of file to open
    * @return ArrayList<Hotspot> Hotspots
    * @throws FileNotFoundException if the file cannot be found
@@ -253,10 +191,8 @@ public class Reader {
   }
 
   /**
-   * Reads retailers from a csv file
-   *
-   * <p> Needs to be tested to ensure it works. </p>
-   *
+   * Reads retailers from a csv file, and builds a list of retailer instances using the extracted
+   * attributes
    * @param filename the name of file to open
    * @return ArrayList<Retailer> Retailers
    * @throws FileNotFoundException if the file cannot be found
