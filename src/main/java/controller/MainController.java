@@ -175,7 +175,7 @@ public class MainController {
     TableColumn<Hotspot, String> providerCol = new TableColumn<Hotspot, String>("Provider");
     providerCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("provider"));
     TableColumn<Hotspot, String> remarksCol = new TableColumn<Hotspot, String>("Remarks");
-    remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("remarks"));
+    remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("description"));
 
     FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
 
