@@ -149,6 +149,11 @@ public class MainController {
     rawDataTable.getColumns().setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol, secondaryDescCol);
     rawDataTable.setItems(fListRetailers);
   }
+
+  /**
+   * converts the arrayList of hotspots to an ObservableList and creates TableColumns
+   * sets these as viewable in rawDataTable
+   */
   public void dataViewHotspots() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
 
@@ -178,29 +183,26 @@ public class MainController {
     remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("description"));
 
     FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
-
+    //TODO ask tutor why Hotspot.get__ is not usable
     rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListHotspots.setPredicate(Retailer -> {
+      fListHotspots.setPredicate(Hotspot -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
           return true;
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /**
-         * Add more Hotspot.get__'s below to include more things in the search
-         */
-        if (Retailer.getName().toLowerCase().contains(lowerCaseFilter)) {
+         // Add more Hotspot.get__'s below to include more things in the search
+
+        if (Hotspot.getName().toLowerCase().contains(lowerCaseFilter)) {
           return true;
         }
         return false;
       });
     });
-
     rawDataTable.getColumns().setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol, SSIDCol, providerCol, remarksCol); //something something
-    rawDataTable.setItems(oListHotspots);
+    rawDataTable.setItems(fListHotspots);
   }
-  //TODO ask about POIs, which to view, how locations are being stored (lat/long together or not?)
   public void dataViewPublicPOIs() {
     //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
@@ -213,8 +215,26 @@ public class MainController {
     TableColumn<PublicPOI, String> descriptionCol = new TableColumn<PublicPOI, String>("Description");
     descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("description"));
 
+    FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<PublicPOI>(oListPublicPOIs);
+    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+      fListPublicPOIs.setPredicate(PublicPOI -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
+          return true;
+        }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+        // Add more Hotspot.get__'s below to include more things in the search
+
+        if (PublicPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
+          return true;
+        }
+        return false;
+      });
+    });
+
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(oListPublicPOIs);
+    rawDataTable.setItems(fListPublicPOIs);
   }
   //TODO fill out stubs
   public void dataViewUserPOIs() {
@@ -230,6 +250,24 @@ public class MainController {
     TableColumn<UserPOI, String> descriptionCol = new TableColumn<UserPOI, String>("Description");
     descriptionCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("description"));
 
+    FilteredList<UserPOI> fListUserPOIs = new FilteredList<UserPOI>(oListUserPOIs);
+    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+      fListUserPOIs.setPredicate(UserPOI -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
+          return true;
+        }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+        /**
+         * Add more UserPOI.get__'s below to include more things in the search
+         */
+        if (UserPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
+          return true;
+        }
+        return false;
+      });
+    });
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
     rawDataTable.setItems(oListUserPOIs);
   }
@@ -247,6 +285,24 @@ public class MainController {
     TableColumn<Station, Integer> idCol = new TableColumn<Station, Integer>("ID");
     idCol.setCellValueFactory(new PropertyValueFactory<Station, Integer>("ID"));
 
+    FilteredList<Station> fListStations = new FilteredList<Station>(oListStations);
+    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+      fListStations.setPredicate(Station -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
+          return true;
+        }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+        /**
+         * Add more Station.get__'s below to include more things in the search
+         */
+        if (Station.getName().toLowerCase().contains(lowerCaseFilter)) {
+          return true;
+        }
+        return false;
+      });
+    });
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, idCol);
     rawDataTable.setItems(oListStations);
   }
@@ -273,6 +329,26 @@ public class MainController {
     TableColumn<Route, Integer> genderCol = new TableColumn<Route, Integer>("Gender");
     genderCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("gender"));
 
+
+    FilteredList<Route> fListRoutes = new FilteredList<Route>(oListRoutes);
+
+    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+      fListRoutes.setPredicate(Route -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
+          return true;
+        }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+        /**
+         * Add more Route.get__'s below to include more things in the search
+         */
+        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+          return true;
+        }
+        return false;
+      });
+    });
     rawDataTable.getColumns().setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol, userTypeCol, birthYearCol, genderCol);
     rawDataTable.setItems(oListRoutes);
   }

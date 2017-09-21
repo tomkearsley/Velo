@@ -27,7 +27,7 @@ public class Station {
     ID = newID;
   }
 
-  public String getNme() {
+  public String getName() {
     return name;
   }
 
