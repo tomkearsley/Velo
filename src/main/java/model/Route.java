@@ -131,9 +131,13 @@ public class Route {
   }
 
   public String toString(){
-    return "Route duration: " + duration + "startDateTime: " + startDate + "stopDateTime: " +
-        stopDate + "startStation: " + startStation + "stopStation: " + stopStation + "bikeID: " +
-        bikeID + "userType: " + userType + "birthYear: " + birthYear + "gender: " + gender;
+    return "Route duration: " + duration + " startDateTime: " + startDate + " stopDateTime: " +
+        stopDate + " startStation: " + startStation + " stopStation: " + stopStation + " bikeID: " +
+        bikeID + " userType: " + userType + " birthYear: " + birthYear + " gender: " + gender;
   }
 
+  @Override
+  public boolean equals(Object route) {
+    return this.toString().equals(route.toString());
+  }
 }
