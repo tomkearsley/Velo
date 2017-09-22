@@ -531,8 +531,7 @@ public class Reader {
         }
       }
     }
-    return new ArrayList<Route>();
-    //return Retailers;
+    return Routes;
   }
 
 
