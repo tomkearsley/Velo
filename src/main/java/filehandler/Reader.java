@@ -379,7 +379,7 @@ public class Reader {
    * @return ArrayList<Route> Routes
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Route> readRoutes(String filename) throws FileNotFoundException {
+  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations) throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int durationIndex = 0;
@@ -420,16 +420,24 @@ public class Reader {
         int duration = Integer.valueOf(csvRoute[durationIndex]);
 
         // startStation
-        Station startStation = new Station(Integer.valueOf(csvRoute[startStationIDIndex]),
-            String.valueOf(csvRoute[startStationNameIndex]),
-            Double.valueOf(csvRoute[startStationLatitudeIndex]),
-            Double.valueOf(csvRoute[startStationLongitudeIndex]));
+        int startStationID = Integer.parseInt(csvRoute[startStationIDIndex]);
+        Station startStation = getStationFromList(stations, startStationID);
+        if(startStation == null) {
+          startStation = new Station(startStationID,
+              String.valueOf(csvRoute[startStationNameIndex]),
+              Double.valueOf(csvRoute[startStationLatitudeIndex]),
+              Double.valueOf(csvRoute[startStationLongitudeIndex]));
+        }
 
         // stopStation
-        Station stopStation = new Station(Integer.valueOf(csvRoute[stopStationIDIndex]),
-            String.valueOf(csvRoute[stopStationNameIndex]),
-            Double.valueOf(csvRoute[stopStationLatitudeIndex]),
-            Double.valueOf(csvRoute[stopStationLongitudeIndex]));
+        int stopStationID = Integer.parseInt(csvRoute[stopStationIDIndex]);
+        Station stopStation = getStationFromList(stations, stopStationID);
+        if(stopStation == null) {
+          stopStation = new Station(stopStationID,
+              String.valueOf(csvRoute[stopStationNameIndex]),
+              Double.valueOf(csvRoute[stopStationLatitudeIndex]),
+              Double.valueOf(csvRoute[stopStationLongitudeIndex]));
+        }
 
         // Other values
         int bikeID = Integer.valueOf(csvRoute[bikeIDIndex]);
