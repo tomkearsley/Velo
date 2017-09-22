@@ -372,202 +372,24 @@ public class Reader {
    * @return ArrayList<Route> The extracted routes
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations) throws FileNotFoundException {
-
-    // Column indexes for the appropriate value per row
-    int durationIndex = 0;
-    int startTimeIndex = 1;
-    int stopTimeIndex = 2;
-    int stStationIdIndex = 3;
-    int stStationNameIndex = 4;
-    int stStationLatIndex = 5;
-    int stStationLongIndex = 6;
-    int endStationIdIndex = 7;
-    int endStationNameIndex = 8;
-    int endStationLatIndex = 9;
-    int endStationLongIndex = 10;
-    int bikeIdIndex = 11;
-    int userTypeIndex = 12;
-    int birthYearIndex = 13;
-    int genderIndex = 14;
-
-    // Initialize scanner and Retailers array
-    BufferedReader br = null;
-    String line;
-    ArrayList<Route> Routes = new ArrayList<Route>();
-
-    try {
-
-      br = new BufferedReader(new FileReader(filename));
-      while ((line = br.readLine()) != null) {
-        // Separate by comma
-        ArrayList<Integer> locs = findQuotedCommas(line);
-        line = changeQuotedCommas(line, locs);
-        String[] csvRoute = line.split(",", -1);
-        csvRoute = replaceQuotedCommas(csvRoute, locs);
-        csvRoute = removeBorderQuotes(csvRoute);
-
-        // Set Retailer attributes from the buffered row
-        int duration;
-        try {
-          duration = Integer.parseInt(csvRoute[durationIndex]);
-        } catch(NumberFormatException e) {
-          duration = 0;
-        }
-
-        LocalDate startDate, stopDate;
-        LocalTime startTime, stopTime;
-
-        try {
-          String[] startTimeFields = csvRoute[startTimeIndex].split(",", -1);
-
-          int startTimeYear = Integer.parseInt(startTimeFields[0].split("-", -1)[0]);
-          int startTimeMonth = Integer.parseInt(startTimeFields[0].split("-", -1)[1]);
-          int startTimeDay = Integer.parseInt(startTimeFields[0].split("-", -1)[2]);
-
-          int startTimeHour = Integer.parseInt(startTimeFields[1].split(":", -1)[0]);
-          int startTimeMin = Integer.parseInt(startTimeFields[1].split(":", -1)[1]);
-          int startTimeSec = Integer.parseInt(startTimeFields[1].split(":", -1)[2]);
-
-          startDate = LocalDate.of(startTimeYear, startTimeMonth, startTimeDay);
-          startTime = LocalTime.of(startTimeHour, startTimeMin, startTimeSec);
-
-          String[] stopTimeFields = csvRoute[stopTimeIndex].split(",", -1);
-
-          int stopTimeYear = Integer.parseInt(stopTimeFields[0].split("-", -1)[0]);
-          int stopTimeMonth = Integer.parseInt(stopTimeFields[0].split("-", -1)[1]);
-          int stopTimeDay = Integer.parseInt(stopTimeFields[0].split("-", -1)[2]);
-
-          int stopTimeHour = Integer.parseInt(stopTimeFields[1].split(":", -1)[0]);
-          int stopTimeMin = Integer.parseInt(stopTimeFields[1].split(":", -1)[1]);
-          int stopTimeSec = Integer.parseInt(stopTimeFields[1].split(":", -1)[2]);
-
-          stopDate = LocalDate.of(stopTimeYear, stopTimeMonth, stopTimeDay);
-          stopTime = LocalTime.of(stopTimeHour, stopTimeMin, stopTimeSec);
-
-
-        } catch(Exception e) {
-          continue;
-        }
-
-        int stStationId;
-        try {
-          stStationId = Integer.parseInt(csvRoute[stStationIdIndex]);
-        } catch(NumberFormatException e) {
-          continue;
-        }
-        String stStationName = csvRoute[stStationNameIndex];
-        double stStationLat, stStationLong;
-        try {
-          stStationLat = Double.parseDouble(csvRoute[stStationLatIndex]);
-          stStationLong = Double.parseDouble(csvRoute[stStationLongIndex]);
-        } catch(NumberFormatException e) {
-          continue;
-        }
-
-        Station startStation = getStationFromList(stations, stStationId);
-        if (startStation == null) {
-          startStation = new Station(stStationId, stStationName, stStationLat, stStationLong);
-        }
-
-        int endStationId;
-        try {
-          endStationId = Integer.parseInt(csvRoute[stStationIdIndex]);
-        } catch(NumberFormatException e) {
-          continue;
-        }
-        String endStationName = csvRoute[stStationNameIndex];
-        double endStationLat, endStationLong;
-        try {
-          endStationLat = Double.parseDouble(csvRoute[stStationLatIndex]);
-          endStationLong = Double.parseDouble(csvRoute[stStationLongIndex]);
-        } catch(NumberFormatException e) {
-          continue;
-        }
-
-        Station stopStation = getStationFromList(stations, endStationId);
-        if (stopStation == null) {
-          stopStation = new Station(endStationId, endStationName, endStationLat, endStationLong);
-        }
-
-        int bikeId;
-        try {
-          bikeId = Integer.parseInt(csvRoute[bikeIdIndex]);
-        } catch(NumberFormatException e) {
-          bikeId = 0;
-        }
-        String userType = csvRoute[userTypeIndex];
-
-        int birthYear;
-        try {
-          birthYear = Integer.parseInt(csvRoute[birthYearIndex]);
-        } catch(NumberFormatException e) {
-          birthYear = 0;
-        }
-
-        int gender;
-        try {
-          gender = Integer.parseInt(csvRoute[genderIndex]);
-        } catch(NumberFormatException e) {
-          gender = 0;
-        }
-
-        //add new Route to Route array
-        Routes.add(new Route(duration, startDate, startTime, stopDate, stopTime, startStation, stopStation,
-            bikeId, userType, birthYear, gender));
-
-      }
-
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-    return Routes;
-  }
-
-
-  /**
-   * Reads routes from a csv file
-   *
-   * <p> Needs to be tested to ensure it works. </p>
-   *
-   * @param filename the name of file to open
-   * @return ArrayList<Route> Routes
-   * @throws FileNotFoundException if the file cannot be found
-   */
-//  public ArrayList<Route> readRoutes(String filename) throws FileNotFoundException {
+//  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations) throws FileNotFoundException {
 //
 //    // Column indexes for the appropriate value per row
 //    int durationIndex = 0;
-//    int startDateTimeIndex = 1;
-//    int stopDateTimeIndex = 2;
-//
-//    // Start Station
-//    int startStationIDIndex = 3;
-//    int startStationNameIndex = 4;
-//    int startStationLatitudeIndex = 5;
-//    int startStationLongitudeIndex = 6;
-//
-//    //Stop Station
-//    int stopStationIDIndex = 7;
-//    int stopStationNameIndex = 8;
-//    int stopStationLatitudeIndex = 9;
-//    int stopStationLongitudeIndex = 10;
-//
-//    int bikeIDIndex = 11;
+//    int startTimeIndex = 1;
+//    int stopTimeIndex = 2;
+//    int stStationIdIndex = 3;
+//    int stStationNameIndex = 4;
+//    int stStationLatIndex = 5;
+//    int stStationLongIndex = 6;
+//    int endStationIdIndex = 7;
+//    int endStationNameIndex = 8;
+//    int endStationLatIndex = 9;
+//    int endStationLongIndex = 10;
+//    int bikeIdIndex = 11;
 //    int userTypeIndex = 12;
 //    int birthYearIndex = 13;
 //    int genderIndex = 14;
-//
 //
 //    // Initialize scanner and Retailers array
 //    BufferedReader br = null;
@@ -579,47 +401,121 @@ public class Reader {
 //      br = new BufferedReader(new FileReader(filename));
 //      while ((line = br.readLine()) != null) {
 //        // Separate by comma
-//        String[] csvRoute = line.split(",");
+//        ArrayList<Integer> locs = findQuotedCommas(line);
+//        line = changeQuotedCommas(line, locs);
+//        String[] csvRoute = line.split(",", -1);
+//        csvRoute = replaceQuotedCommas(csvRoute, locs);
+//        csvRoute = removeBorderQuotes(csvRoute);
 //
-//        // Set Route attributes from the buffered row
-//        int duration = Integer.valueOf(csvRoute[durationIndex]);
+//        // Set Retailer attributes from the buffered row
+//        int duration;
+//        try {
+//          duration = Integer.parseInt(csvRoute[durationIndex]);
+//        } catch(NumberFormatException e) {
+//          duration = 0;
+//        }
 //
-//        // startStation
-//        Station startStation = new Station(Integer.valueOf(csvRoute[startStationIDIndex]),
-//            String.valueOf(csvRoute[startStationNameIndex]),
-//            Double.valueOf(csvRoute[startStationLatitudeIndex]),
-//            Double.valueOf(csvRoute[startStationLongitudeIndex]));
+//        LocalDate startDate, stopDate;
+//        LocalTime startTime, stopTime;
 //
-//        // stopStation
-//        Station stopStation = new Station(Integer.valueOf(csvRoute[stopStationIDIndex]),
-//            String.valueOf(csvRoute[stopStationNameIndex]),
-//            Double.valueOf(csvRoute[stopStationLatitudeIndex]),
-//            Double.valueOf(csvRoute[stopStationLongitudeIndex]));
+//        try {
+//          String[] startTimeFields = csvRoute[startTimeIndex].split(",", -1);
 //
-//        // Other values
-//        int bikeID = Integer.valueOf(csvRoute[bikeIDIndex]);
+//          int startTimeYear = Integer.parseInt(startTimeFields[0].split("-", -1)[0]);
+//          int startTimeMonth = Integer.parseInt(startTimeFields[0].split("-", -1)[1]);
+//          int startTimeDay = Integer.parseInt(startTimeFields[0].split("-", -1)[2]);
+//
+//          int startTimeHour = Integer.parseInt(startTimeFields[1].split(":", -1)[0]);
+//          int startTimeMin = Integer.parseInt(startTimeFields[1].split(":", -1)[1]);
+//          int startTimeSec = Integer.parseInt(startTimeFields[1].split(":", -1)[2]);
+//
+//          startDate = LocalDate.of(startTimeYear, startTimeMonth, startTimeDay);
+//          startTime = LocalTime.of(startTimeHour, startTimeMin, startTimeSec);
+//
+//          String[] stopTimeFields = csvRoute[stopTimeIndex].split(",", -1);
+//
+//          int stopTimeYear = Integer.parseInt(stopTimeFields[0].split("-", -1)[0]);
+//          int stopTimeMonth = Integer.parseInt(stopTimeFields[0].split("-", -1)[1]);
+//          int stopTimeDay = Integer.parseInt(stopTimeFields[0].split("-", -1)[2]);
+//
+//          int stopTimeHour = Integer.parseInt(stopTimeFields[1].split(":", -1)[0]);
+//          int stopTimeMin = Integer.parseInt(stopTimeFields[1].split(":", -1)[1]);
+//          int stopTimeSec = Integer.parseInt(stopTimeFields[1].split(":", -1)[2]);
+//
+//          stopDate = LocalDate.of(stopTimeYear, stopTimeMonth, stopTimeDay);
+//          stopTime = LocalTime.of(stopTimeHour, stopTimeMin, stopTimeSec);
+//
+//
+//        } catch(Exception e) {
+//          continue;
+//        }
+//
+//        int stStationId;
+//        try {
+//          stStationId = Integer.parseInt(csvRoute[stStationIdIndex]);
+//        } catch(NumberFormatException e) {
+//          continue;
+//        }
+//        String stStationName = csvRoute[stStationNameIndex];
+//        double stStationLat, stStationLong;
+//        try {
+//          stStationLat = Double.parseDouble(csvRoute[stStationLatIndex]);
+//          stStationLong = Double.parseDouble(csvRoute[stStationLongIndex]);
+//        } catch(NumberFormatException e) {
+//          continue;
+//        }
+//
+//        Station startStation = getStationFromList(stations, stStationId);
+//        if (startStation == null) {
+//          startStation = new Station(stStationId, stStationName, stStationLat, stStationLong);
+//        }
+//
+//        int endStationId;
+//        try {
+//          endStationId = Integer.parseInt(csvRoute[stStationIdIndex]);
+//        } catch(NumberFormatException e) {
+//          continue;
+//        }
+//        String endStationName = csvRoute[stStationNameIndex];
+//        double endStationLat, endStationLong;
+//        try {
+//          endStationLat = Double.parseDouble(csvRoute[stStationLatIndex]);
+//          endStationLong = Double.parseDouble(csvRoute[stStationLongIndex]);
+//        } catch(NumberFormatException e) {
+//          continue;
+//        }
+//
+//        Station stopStation = getStationFromList(stations, endStationId);
+//        if (stopStation == null) {
+//          stopStation = new Station(endStationId, endStationName, endStationLat, endStationLong);
+//        }
+//
+//        int bikeId;
+//        try {
+//          bikeId = Integer.parseInt(csvRoute[bikeIdIndex]);
+//        } catch(NumberFormatException e) {
+//          bikeId = 0;
+//        }
 //        String userType = csvRoute[userTypeIndex];
 //
-//        // Birth year
 //        int birthYear;
-//        if (csvRoute[birthYearIndex].equals("\\N")) {
-//          birthYear = -1;
-//        } else {
-//          birthYear = Integer.valueOf(csvRoute[birthYearIndex]);
-//        }
-//        int gender = Integer.valueOf(csvRoute[genderIndex]);
-//
-//        // Convert to Dates
 //        try {
-//          Date startDateTime = StringToDate(csvRoute[startDateTimeIndex], "MM/dd/yyyy");
-//          Date stopDateTime = StringToDate(csvRoute[stopDateTimeIndex], "MM/dd/yyyy");
+//          birthYear = Integer.parseInt(csvRoute[birthYearIndex]);
+//        } catch(NumberFormatException e) {
+//          birthYear = 0;
+//        }
 //
-//          //add newRetailer to Retailers array
-//          Routes.add(new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID, userType, birthYear, gender));
+//        int gender;
+//        try {
+//          gender = Integer.parseInt(csvRoute[genderIndex]);
+//        } catch(NumberFormatException e) {
+//          gender = 0;
 //        }
-//        catch (Exception e) {
-//          System.out.println(e);
-//        }
+//
+//        //add new Route to Route array
+//        Routes.add(new Route(duration, startDate, startTime, stopDate, stopTime, startStation, stopStation,
+//            bikeId, userType, birthYear, gender));
+//
 //      }
 //
 //    } catch (FileNotFoundException e) {
@@ -635,7 +531,111 @@ public class Reader {
 //        }
 //      }
 //    }
-//
 //    return Routes;
 //  }
+
+
+  /**
+   * Reads routes from a csv file
+   *
+   * <p> Needs to be tested to ensure it works. </p>
+   *
+   * @param filename the name of file to open
+   * @return ArrayList<Route> Routes
+   * @throws FileNotFoundException if the file cannot be found
+   */
+  public ArrayList<Route> readRoutes(String filename) throws FileNotFoundException {
+
+    // Column indexes for the appropriate value per row
+    int durationIndex = 0;
+    int startDateTimeIndex = 1;
+    int stopDateTimeIndex = 2;
+
+    // Start Station
+    int startStationIDIndex = 3;
+    int startStationNameIndex = 4;
+    int startStationLatitudeIndex = 5;
+    int startStationLongitudeIndex = 6;
+
+    //Stop Station
+    int stopStationIDIndex = 7;
+    int stopStationNameIndex = 8;
+    int stopStationLatitudeIndex = 9;
+    int stopStationLongitudeIndex = 10;
+
+    int bikeIDIndex = 11;
+    int userTypeIndex = 12;
+    int birthYearIndex = 13;
+    int genderIndex = 14;
+
+
+    // Initialize scanner and Retailers array
+    BufferedReader br = null;
+    String line;
+    ArrayList<Route> Routes = new ArrayList<Route>();
+
+    try {
+
+      br = new BufferedReader(new FileReader(filename));
+      while ((line = br.readLine()) != null) {
+        // Separate by comma
+        String[] csvRoute = line.split(",");
+
+        // Set Route attributes from the buffered row
+        int duration = Integer.valueOf(csvRoute[durationIndex]);
+
+        // startStation
+        Station startStation = new Station(Integer.valueOf(csvRoute[startStationIDIndex]),
+            String.valueOf(csvRoute[startStationNameIndex]),
+            Double.valueOf(csvRoute[startStationLatitudeIndex]),
+            Double.valueOf(csvRoute[startStationLongitudeIndex]));
+
+        // stopStation
+        Station stopStation = new Station(Integer.valueOf(csvRoute[stopStationIDIndex]),
+            String.valueOf(csvRoute[stopStationNameIndex]),
+            Double.valueOf(csvRoute[stopStationLatitudeIndex]),
+            Double.valueOf(csvRoute[stopStationLongitudeIndex]));
+
+        // Other values
+        int bikeID = Integer.valueOf(csvRoute[bikeIDIndex]);
+        String userType = csvRoute[userTypeIndex];
+
+        // Birth year
+        int birthYear;
+        if (csvRoute[birthYearIndex].equals("\\N")) {
+          birthYear = -1;
+        } else {
+          birthYear = Integer.valueOf(csvRoute[birthYearIndex]);
+        }
+        int gender = Integer.valueOf(csvRoute[genderIndex]);
+
+        // Convert to Dates
+        try {
+          Date startDateTime = StringToDate(csvRoute[startDateTimeIndex], "MM/dd/yyyy");
+          Date stopDateTime = StringToDate(csvRoute[stopDateTimeIndex], "MM/dd/yyyy");
+
+          //add newRetailer to Retailers array
+          Routes.add(new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID, userType, birthYear, gender));
+        }
+        catch (Exception e) {
+          System.out.println(e);
+        }
+      }
+
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return Routes;
+  }
 }
