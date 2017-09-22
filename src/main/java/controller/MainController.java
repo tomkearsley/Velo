@@ -46,10 +46,8 @@ public class MainController {
   private Pane mapViewPane;
   @FXML
   private ChoiceBox<DataType> dataTypeChoiceBox;
-
   @FXML
   private TextField rawDataFilterField;
-
   @FXML
   private WebView mapWebView;
 
@@ -58,8 +56,8 @@ public class MainController {
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try{
-      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots");
-      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers");
+      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots.csv");
+      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers.csv");
 
     }
     catch(FileNotFoundException e){
