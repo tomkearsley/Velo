@@ -1,4 +1,6 @@
 package model;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import model.Station;
 import java.util.Date;
 
@@ -12,10 +14,12 @@ public class Route {
   private int duration;
 
   /**The time the route was started*/
-  private Date startDateTime;
+  private LocalDate startDate;
+  private LocalTime startTime;
 
   /**The time the route was stopped*/
-  private Date stopDateTime;
+  private LocalDate stopDate;
+  private LocalTime stopTime;
 
   /**Start station*/
   private Station startStation;
@@ -51,21 +55,29 @@ public class Route {
     duration = newDuration;
   }
 
-  public Date getStartDateTime() {
-    return startDateTime;
+  public LocalDate getStartDate() {
+    return startDate;
   }
 
-  public void setStartDateTime(Date newStartDateTime) {
-    startDateTime = newStartDateTime;
+  public void setStartDate(LocalDate newStartDate) {
+    startDate = newStartDate;
+  }
+  
+  public LocalTime getStartTime() { return startTime; }
+  
+  public void setStartTime(LocalTime newStartTime) { startTime = newStartTime; }
+
+  public LocalDate getstopDate() {
+    return stopDate;
   }
 
-  public Date getStopDateTime() {
-    return stopDateTime;
+  public void setstopDate(LocalDate newstopDate) {
+    stopDate = newstopDate;
   }
 
-  public void setStopDateTime(Date newStopDateTime) {
-    stopDateTime = newStopDateTime;
-  }
+  public LocalTime getstopTime() { return stopTime; }
+
+  public void setstopTime(LocalTime newstopTime) { stopTime = newstopTime; }
 
   public Station getStartStation() {
     return startStation;
@@ -115,11 +127,13 @@ public class Route {
     gender = newGender;
   }
 
-  public Route(int duration, Date startDateTime, Date stopDateTime, Station startStation,
-      Station stopStation, int bikeID, String userType, int birthYear, int gender) {
+  public Route(int duration, LocalDate startDate, LocalTime startTime, LocalDate stopDate, LocalTime stopTime,
+      Station startStation, Station stopStation, int bikeID, String userType, int birthYear, int gender) {
     this.duration = duration;
-    this.startDateTime = startDateTime;
-    this.stopDateTime = stopDateTime;
+    this.startDate = startDate;
+    this.startTime = startTime;
+    this.stopDate = stopDate;
+    this.stopTime = stopTime;
     this.startStation = startStation;
     this.stopStation = stopStation;
     this.bikeID = bikeID;
@@ -129,8 +143,8 @@ public class Route {
   }
 
   public String toString(){
-    return "Route duration: " + duration + "startDateTime: " + startDateTime + "stopDateTime: " +
-        stopDateTime + "startStation: " + startStation + "stopStation: " + stopStation + "bikeID: " +
+    return "Route duration: " + duration + "startDateTime: " + startDate + " " + startTime + "stopDateTime: " +
+        stopDate + " " + stopTime + "startStation: " + startStation + "stopStation: " + stopStation + "bikeID: " +
         bikeID + "userType: " + userType + "birthYear: " + birthYear + "gender: " + gender;
   }
 
