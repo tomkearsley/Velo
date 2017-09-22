@@ -32,8 +32,8 @@ public class Google {
     StringBuilder sb = new StringBuilder();
 
     try {
-      URL oracle = new URL(JsonString);
-      BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
+      URL googleURL = new URL(JsonString);
+      BufferedReader in = new BufferedReader(new InputStreamReader(googleURL.openStream()));
       String inputLine;
       while ((inputLine = in.readLine()) != null) {
         sb.append(inputLine);

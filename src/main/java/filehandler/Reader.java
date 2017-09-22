@@ -2,13 +2,12 @@ package filehandler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 
 import java.text.SimpleDateFormat;
 
-import java.security.spec.ECField;
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import model.Hotspot;
 import model.Retailer;
 import model.UserPOI;
@@ -16,12 +15,13 @@ import model.Route;
 import model.Station;
 
 import java.util.Date;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * The class Reader defines the object type Reader
@@ -131,22 +131,6 @@ public class Reader {
     return csv;
   }
 
-  /**
-   * Searches a list of stations and returns a station instance if a station with the same ID is found.
-   * else returns null
-   * @param stations  ArrayList of stations to search
-   * @param id        ID of the station being searched for
-   * @return          The matching Station instance (or null)
-   */
-  private Station getStationFromList(ArrayList<Station> stations, int id) {
-    for (Station station : stations) {
-      if(station.getID() == id) {
-        return station;
-      }
-    }
-    return null;
-  }
-
 
   /**
    * Reads WiFi hotspots from a csv file
@@ -192,13 +176,13 @@ public class Reader {
         csvHotspot = removeBorderQuotes(csvHotspot);
 
         // Get Hotspot attributes from the buffered row
-        int id = Integer.parseInt(csvHotspot[idIndex]);
-        Double latitude = Double.parseDouble(csvHotspot[latitudeIndex]);
-        Double longitude = Double.parseDouble(csvHotspot[longitudeIndex]);
+        int id = Integer.valueOf(csvHotspot[idIndex]);
+        Double latitude = Double.valueOf(csvHotspot[latitudeIndex]);
+        Double longitude = Double.valueOf(csvHotspot[longitudeIndex]);
         String location = csvHotspot[locationAddressIndex];
         String borough = csvHotspot[boroughIndex];
         String city = csvHotspot[cityIndex];
-        int postcode = Integer.parseInt(csvHotspot[postcodeIndex]);
+        int postcode = Integer.valueOf(csvHotspot[postcodeIndex]);
         String type = csvHotspot[typeIndex];
         String ssid = csvHotspot[ssidIndex];
         String name = csvHotspot[nameIndex];
@@ -275,9 +259,15 @@ public class Reader {
         String state = csvRetailer[stateIndex];
         int zipcode;
         try {
-          zipcode = Integer.parseInt(csvRetailer[zipcodeIndex]);
-        } catch(NumberFormatException e) {
+          zipcode = Integer.valueOf(csvRetailer[zipcodeIndex]);
+        } catch(Exception e) {
           zipcode = -1;
+        }
+        if(csvRetailer.length < 7) {
+          for (int i=0; i < csvRetailer.length; i++){
+            System.out.print(i + ": " + csvRetailer[i]);
+          }
+          System.out.println();
         }
         String block = csvRetailer[blockIndex];
         String description = csvRetailer[descriptionIndex];
@@ -306,13 +296,6 @@ public class Reader {
     return Retailers;
   }
 
-  /**
-   * Reads User Points of Interest from a csv file, and builds a list of UserPOI instances using the extracted
-   * attributes
-   * @param filename the name of file to open
-   * @return ArrayList<UserPOI> User Points of Interest
-   * @throws FileNotFoundException if the file cannot be found
-   */
   public ArrayList<UserPOI> readUserPOIS(String filename) throws FileNotFoundException {
     int nameIndex = 0;
 
@@ -341,8 +324,8 @@ public class Reader {
         String name = csvPOI[nameIndex];
 
         //Get location values
-        double latitude = Double.parseDouble(csvPOI[latitudeIndex]);
-        double longitude = Double.parseDouble(csvPOI[longitudeIndex]);
+        double latitude = Double.valueOf(csvPOI[latitudeIndex]);
+        double longitude = Double.valueOf(csvPOI[longitudeIndex]);
 
         String description = csvPOI[descriptionIndex];
 
@@ -364,175 +347,6 @@ public class Reader {
     }
     return UserPOIs;
   }
-
-  /**
-   * Reads routes from a csv file, and builds a list of route instances using the extracted
-   * attributes
-   * @param filename the name of file to open
-   * @return ArrayList<Route> The extracted routes
-   * @throws FileNotFoundException if the file cannot be found
-   */
-//  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations) throws FileNotFoundException {
-//
-//    // Column indexes for the appropriate value per row
-//    int durationIndex = 0;
-//    int startTimeIndex = 1;
-//    int stopTimeIndex = 2;
-//    int stStationIdIndex = 3;
-//    int stStationNameIndex = 4;
-//    int stStationLatIndex = 5;
-//    int stStationLongIndex = 6;
-//    int endStationIdIndex = 7;
-//    int endStationNameIndex = 8;
-//    int endStationLatIndex = 9;
-//    int endStationLongIndex = 10;
-//    int bikeIdIndex = 11;
-//    int userTypeIndex = 12;
-//    int birthYearIndex = 13;
-//    int genderIndex = 14;
-//
-//    // Initialize scanner and Retailers array
-//    BufferedReader br = null;
-//    String line;
-//    ArrayList<Route> Routes = new ArrayList<Route>();
-//
-//    try {
-//
-//      br = new BufferedReader(new FileReader(filename));
-//      while ((line = br.readLine()) != null) {
-//        // Separate by comma
-//        ArrayList<Integer> locs = findQuotedCommas(line);
-//        line = changeQuotedCommas(line, locs);
-//        String[] csvRoute = line.split(",", -1);
-//        csvRoute = replaceQuotedCommas(csvRoute, locs);
-//        csvRoute = removeBorderQuotes(csvRoute);
-//
-//        // Set Retailer attributes from the buffered row
-//        int duration;
-//        try {
-//          duration = Integer.parseInt(csvRoute[durationIndex]);
-//        } catch(NumberFormatException e) {
-//          duration = 0;
-//        }
-//
-//        LocalDate startDate, stopDate;
-//        LocalTime startTime, stopTime;
-//
-//        try {
-//          String[] startTimeFields = csvRoute[startTimeIndex].split(",", -1);
-//
-//          int startTimeYear = Integer.parseInt(startTimeFields[0].split("-", -1)[0]);
-//          int startTimeMonth = Integer.parseInt(startTimeFields[0].split("-", -1)[1]);
-//          int startTimeDay = Integer.parseInt(startTimeFields[0].split("-", -1)[2]);
-//
-//          int startTimeHour = Integer.parseInt(startTimeFields[1].split(":", -1)[0]);
-//          int startTimeMin = Integer.parseInt(startTimeFields[1].split(":", -1)[1]);
-//          int startTimeSec = Integer.parseInt(startTimeFields[1].split(":", -1)[2]);
-//
-//          startDate = LocalDate.of(startTimeYear, startTimeMonth, startTimeDay);
-//          startTime = LocalTime.of(startTimeHour, startTimeMin, startTimeSec);
-//
-//          String[] stopTimeFields = csvRoute[stopTimeIndex].split(",", -1);
-//
-//          int stopTimeYear = Integer.parseInt(stopTimeFields[0].split("-", -1)[0]);
-//          int stopTimeMonth = Integer.parseInt(stopTimeFields[0].split("-", -1)[1]);
-//          int stopTimeDay = Integer.parseInt(stopTimeFields[0].split("-", -1)[2]);
-//
-//          int stopTimeHour = Integer.parseInt(stopTimeFields[1].split(":", -1)[0]);
-//          int stopTimeMin = Integer.parseInt(stopTimeFields[1].split(":", -1)[1]);
-//          int stopTimeSec = Integer.parseInt(stopTimeFields[1].split(":", -1)[2]);
-//
-//          stopDate = LocalDate.of(stopTimeYear, stopTimeMonth, stopTimeDay);
-//          stopTime = LocalTime.of(stopTimeHour, stopTimeMin, stopTimeSec);
-//
-//
-//        } catch(Exception e) {
-//          continue;
-//        }
-//
-//        int stStationId;
-//        try {
-//          stStationId = Integer.parseInt(csvRoute[stStationIdIndex]);
-//        } catch(NumberFormatException e) {
-//          continue;
-//        }
-//        String stStationName = csvRoute[stStationNameIndex];
-//        double stStationLat, stStationLong;
-//        try {
-//          stStationLat = Double.parseDouble(csvRoute[stStationLatIndex]);
-//          stStationLong = Double.parseDouble(csvRoute[stStationLongIndex]);
-//        } catch(NumberFormatException e) {
-//          continue;
-//        }
-//
-//        Station startStation = getStationFromList(stations, stStationId);
-//        if (startStation == null) {
-//          startStation = new Station(stStationId, stStationName, stStationLat, stStationLong);
-//        }
-//
-//        int endStationId;
-//        try {
-//          endStationId = Integer.parseInt(csvRoute[stStationIdIndex]);
-//        } catch(NumberFormatException e) {
-//          continue;
-//        }
-//        String endStationName = csvRoute[stStationNameIndex];
-//        double endStationLat, endStationLong;
-//        try {
-//          endStationLat = Double.parseDouble(csvRoute[stStationLatIndex]);
-//          endStationLong = Double.parseDouble(csvRoute[stStationLongIndex]);
-//        } catch(NumberFormatException e) {
-//          continue;
-//        }
-//
-//        Station stopStation = getStationFromList(stations, endStationId);
-//        if (stopStation == null) {
-//          stopStation = new Station(endStationId, endStationName, endStationLat, endStationLong);
-//        }
-//
-//        int bikeId;
-//        try {
-//          bikeId = Integer.parseInt(csvRoute[bikeIdIndex]);
-//        } catch(NumberFormatException e) {
-//          bikeId = 0;
-//        }
-//        String userType = csvRoute[userTypeIndex];
-//
-//        int birthYear;
-//        try {
-//          birthYear = Integer.parseInt(csvRoute[birthYearIndex]);
-//        } catch(NumberFormatException e) {
-//          birthYear = 0;
-//        }
-//
-//        int gender;
-//        try {
-//          gender = Integer.parseInt(csvRoute[genderIndex]);
-//        } catch(NumberFormatException e) {
-//          gender = 0;
-//        }
-//
-//        //add new Route to Route array
-//        Routes.add(new Route(duration, startDate, startTime, stopDate, stopTime, startStation, stopStation,
-//            bikeId, userType, birthYear, gender));
-//
-//      }
-//
-//    } catch (FileNotFoundException e) {
-//      e.printStackTrace();
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    } finally {
-//      if (br != null) {
-//        try {
-//          br.close();
-//        } catch (IOException e) {
-//          e.printStackTrace();
-//        }
-//      }
-//    }
-//    return Routes;
-//  }
 
 
   /**
@@ -637,5 +451,50 @@ public class Reader {
     }
 
     return Routes;
+  }
+
+  /**
+   * Reads routes from a JSON file
+   *
+   * <p> Needs to be tested to ensure it works. </p>
+   *
+   * @param filename the name of file to open
+   * @return ArrayList<Station> Stations
+   * @throws FileNotFoundException if the file cannot be found
+   */
+  public ArrayList<Station> readStations(String filename) throws FileNotFoundException{
+
+    /**
+     id, stationName, availableDocs, totalDocks, latitude, longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode, location, altitude,
+     testStation, lastCommunicationTime, landMark
+     */
+
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader(filename));
+      StringBuilder sb = new StringBuilder();
+      String inputLine;
+
+      while ((inputLine = reader.readLine()) != null) {
+        sb.append(inputLine);
+      }
+      reader.close();
+
+      JSONObject jsonObj = new JSONObject(sb.toString());
+
+      JSONArray stationList = jsonObj.getJSONArray("stationBeanList");
+
+      ArrayList<Station> toReturn = new ArrayList<Station>();
+      return toReturn;
+    }
+
+    catch(FileNotFoundException e) {
+      System.out.println("Invalid file");
+      return null;
+    }
+
+    catch(IOException e) {
+      System.out.println("Error occurred while reading file");
+      return null;
+    }
   }
 }

@@ -167,4 +167,9 @@ public class ReaderTest {
     }
   }
 
+  @Test
+  public void readStations() throws FileNotFoundException {
+    ArrayList<Station> stations = reader.readStations("src/main/resources/file/stations.json");
+  }
+
 }

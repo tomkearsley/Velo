@@ -170,4 +170,9 @@ public class MySQL {
     return null;
   }
 
+  /** Breaks code
+  public static void main(String[] args) throws Exception{
+    getPublicPOILocation("Charging Bull");
+  }
+*/
 }
