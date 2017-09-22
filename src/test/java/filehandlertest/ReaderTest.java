@@ -136,25 +136,36 @@ public class ReaderTest {
    */
   @Test
   public void readRoutes() throws FileNotFoundException {
-    ArrayList<Route> routes = reader.readRoutes("src/test/testResources/TestInitialRoutes.csv");
+    ArrayList<Station> stations = new ArrayList<Station>();
+
+    Station startStation1, stopStation1, startStation2, stopStation2, startStation3, stopStation3;
+    startStation1 = new Station(164,"E 47 St & 2 Ave",40.75323098,-73.97032517);
+    stopStation1 = new Station(504,"1 Ave & E 15 St",40.73221853,-73.98165557);
+    startStation2 = new Station(531,"Forsyth St & Broome St",40.71893904,-73.99266288);
+    stopStation2 = new Station(499,"Broadway & W 60 St",40.76915505,-73.98191841);
+    startStation3 = new Station(345,"W 13 St & 6 Ave",40.73649403,-73.99704374);
+    stopStation3 = new Station(455,"1 Ave & E 44 St",40.75001986,-73.96905301);
+
+    stations.add(startStation1);
+    stations.add(stopStation1);
+    stations.add(startStation2);
+    stations.add(stopStation2);
+    stations.add(startStation3);
+    stations.add(stopStation3);
+
+    ArrayList<Route> routes = reader.readRoutes("src/test/testResources/TestInitialRoutes.csv", stations);
 
     // Expected routes
     Date startDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:00", "MM/dd/yyyy");
     Date stopDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:10", "MM/dd/yyyy");
-    Station startStation1 = new Station(164,"E 47 St & 2 Ave",40.75323098,-73.97032517);
-    Station stopStation1 = new Station(504,"1 Ave & E 15 St",40.73221853,-73.98165557);
     Route route1 = new Route(634, startDateTime1, stopDateTime1, startStation1, stopStation1,16950,"Customer",-1,0);
 
     Date startDateTime2 = new filehandler.Reader().StringToDate("7/1/13 0:01", "MM/dd/yyyy");
     Date stopDateTime2 = new filehandler.Reader().StringToDate("7/1/13 0:27", "MM/dd/yyyy");
-    Station startStation2 = new Station(531,"Forsyth St & Broome St",40.71893904,-73.99266288);
-    Station stopStation2 = new Station(499,"Broadway & W 60 St",40.76915505,-73.98191841);
     Route route2 = new Route(1580, startDateTime2, stopDateTime2, startStation2, stopStation2,16063,"Customer",-1,0);
 
     Date startDateTime3 = new filehandler.Reader().StringToDate("7/1/13 0:04", "MM/dd/yyyy");
     Date stopDateTime3 = new filehandler.Reader().StringToDate("7/1/13 0:25", "MM/dd/yyyy");
-    Station startStation3 = new Station(345,"W 13 St & 6 Ave",40.73649403,-73.99704374);
-    Station stopStation3 = new Station(455,"1 Ave & E 44 St",40.75001986,-73.96905301);
     Route route3 = new Route(1275, startDateTime3, stopDateTime3, startStation3, stopStation3,16236,"Subscriber",1983,1);
 
     ArrayList<Route> expectedRoutes = new ArrayList<Route>();
