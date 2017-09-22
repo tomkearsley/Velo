@@ -11,10 +11,10 @@ import java.util.ArrayList;
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
-  /**
   public static void main(String[] args) throws Exception {
-    getPublicPOILocation("Charging Bull");
-  }**/
+    //getPublicPOILocation("Charging Bull");
+    login("user1","password1");
+  }
 
 
 
@@ -86,14 +86,13 @@ public class MySQL {
   public static ArrayList<Double> getPublicPOILocation(String name) throws Exception{
     try {
       Connection conn = getConnection();
-      PreparedStatement statement = conn.prepareStatement("SELECT longitude,latitude FROM PublicPOI");
+      PreparedStatement statement = conn.prepareStatement("SELECT longitude,latitude,name FROM PublicPOI");
 
       ResultSet result = statement.executeQuery();
 
       ArrayList<Double> location = new ArrayList<Double>();
       while(result.next()) {
-        System.out.println(result.getString("longitude"));
-        if (result.getString("name") == name) {
+        if (result.getString("Name").equals(name)) {
           System.out.println(result.getDouble("longitude"));
           System.out.println(result.getDouble("latitude"));
 
@@ -108,6 +107,45 @@ public class MySQL {
     }catch (Exception e){System.out.println(e);}
     System.out.println("Record was not found.");
     return null;
+  }
+
+  /**
+   * Used within the login screen returns true if login is successful otherwise false.
+   * Additionally tells if username exists
+   * @param username Users entered username
+   * @param password Users entered password
+   * @return Boolean true if password and username is correct. Otherwise returns false
+   * @throws Exception
+   */
+  public static boolean login(String username,String password) throws Exception {
+    boolean usernameExists = false;
+    boolean successfulLogin = false;
+    try
+    {
+      Connection conn = getConnection();
+      PreparedStatement statement = conn.prepareStatement("SELECT username,password FROM Users");
+
+      ResultSet result = statement.executeQuery();
+      while(result.next()) {
+        //CHECK USERNAME EXISTS
+        if(result.getString("username").equals(username)){
+          usernameExists = true;
+          if (result.getString("password").equals(password)) {
+            successfulLogin = true;
+            System.out.println("Successfully Logged in");
+            return successfulLogin;
+          }
+          else {
+            System.out.println("Password is incorrect");
+            return successfulLogin;
+          }
+        }
+      }
+    } catch (Exception e) {System.out.println(e);}
+    if (usernameExists == false) {
+      System.out.println("Username does not exist!");
+    }
+    return successfulLogin;
   }
 
   /**
