@@ -211,10 +211,8 @@ public class Reader {
   }
 
   /**
-   * Reads retailers from a csv file
-   *
-   * <p> Needs to be tested to ensure it works. </p>
-   *
+   * Reads retailers from a csv file, and builds a list of retailer instances using the extracted
+   * attributes
    * @param filename the name of file to open
    * @return ArrayList<Retailer> Retailers
    * @throws FileNotFoundException if the file cannot be found

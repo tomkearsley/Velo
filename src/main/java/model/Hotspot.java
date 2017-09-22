@@ -55,9 +55,7 @@ public class Hotspot extends POI {
     this.postcode = postcode;
     this.type = type;
     this.SSID = SSID;
-    this.name = name;
     this.provider = provider;
-    this.remarks = remarks;
   }
 
   /*Hotspot methods*/
@@ -153,14 +151,6 @@ public class Hotspot extends POI {
 
   public void setSSID(String newSSID) {
     SSID = newSSID;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String newName) {
-    name = newName;
   }
 
   public String getProvider() {
