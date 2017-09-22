@@ -22,6 +22,6 @@ please run the GUIManager main() to begin the application.
 3. Discover highly rated routes and points of interest
 
 #####As an Analyst:
-1. View raw anonymized cyclist data en masse
+1. View raw anonymous cyclist data en masse
 2. Graph cyclist data
 3. Export cyclist data to .csv for further analysis outside of Vélo
