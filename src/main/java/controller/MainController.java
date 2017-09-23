@@ -8,14 +8,21 @@ import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Hotspot;
 import model.PublicPOI;
@@ -23,6 +30,7 @@ import model.Retailer;
 import model.Route;
 import model.Station;
 import model.UserPOI;
+import netscape.javascript.JSObject;
 
 /**
  * Initialises all of the ArrayLists used for temporary storage and @FXML items
@@ -50,8 +58,8 @@ public class MainController {
   private TextField rawDataFilterField;
   @FXML
   private WebView mapWebView;
-
-
+  @FXML
+  private Button testButton;
 
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -86,7 +94,14 @@ public class MainController {
     dataTypeChoiceBox.getItems().setAll(DataType.values());
 
     File f = new File("src/main/resources/googleMaps.html");
-    mapWebView.getEngine().load(f.toURI().toString());
+
+    WebEngine mapEngine = mapWebView.getEngine();
+
+    //double latitude = 40.785091;double longitude = -73.968285;String title = "Test Marker";String markerType = "default";
+
+    mapEngine.load(f.toURI().toString());
+    mapEngine.setJavaScriptEnabled(true);
+    //mapEngine.executeScript("test()");
   }
 
   /*

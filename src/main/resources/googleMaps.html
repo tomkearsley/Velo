@@ -9,12 +9,19 @@
     body { height: 100%; margin: 0; padding: 0 }
     #map-canvas { height: 100% }
   </style>
-  <script type="text/javascript" src="nashorn:mozilla_compat.js"></script>
+  <script type="text/javascript">
+    function test() {
+      alert("Test function");
+    }
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&callback=initMap">
+    </script>
   <script type="text/javascript"
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&sensor=false">
   </script>
   <script type="text/javascript">
     var map;
+    var bridge
     var markerNum = 0;
     var directionsService;
     var directionsDisplay;
@@ -106,6 +113,9 @@
             featureType: 'water',
             elementType: 'labels.text.stroke',
             stylers: [{color: '#17263c'}]
+          },
+          {
+            featureType: ''
           }]
       };
 
@@ -113,21 +123,25 @@
           mapOptions);
       map.setZoom(12);
 
+
       directionsService = new google.maps.DirectionsService;
       directionsDisplay = new google.maps.DirectionsRenderer;
 
       directionsDisplay.setMap(map);
-      //createMarker(40.785091, -73.968285,'Test Marker');
+      //createMarker(40.785091, -73.968285,'Test Marker',"default");
 
       //Create marker on click
       google.maps.event.addListener(map,'click',function(event) {
         markerNum++;
         createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"default");
       });
+
+      var bikeLayer = new google.maps.BicyclingLayer();
+      bikeLayer.setMap(map);
       //alert("Test");
       var location1 = [40.7829,-73.9654];
       var location2 = [40.7736,-73.9566];
-      displayRoute(location1[0],location1[1],location2[0],location2[1]);
+      //displayRoute(location1[0],location1[1],location2[0],location2[1]);
     }
 
     function createMarker(lat,lng,title,markerType) {
