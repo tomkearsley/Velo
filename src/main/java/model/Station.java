@@ -41,13 +41,13 @@ public class Station {
   private String streetAddress2;
 
   /***/
-  private int postalCode;
+  private String postalCode;
 
   /***/
   private String location;
 
   /***/
-  private int altitude;
+  private String altitude;
 
   /**Is a test station*/
   private boolean testStation;
@@ -148,11 +148,11 @@ public class Station {
     this.streetAddress2 = streetAddress2;
   }
 
-  public int getPostalCode() {
+  public String getPostalCode() {
     return postalCode;
   }
 
-  public void setPostalCode(int postalCode) {
+  public void setPostalCode(String postalCode) {
     this.postalCode = postalCode;
   }
 
@@ -164,11 +164,11 @@ public class Station {
     this.location = location;
   }
 
-  public int getAltitude() {
+  public String getAltitude() {
     return altitude;
   }
 
-  public void setAltitude(int altitude) {
+  public void setAltitude(String altitude) {
     this.altitude = altitude;
   }
 
@@ -204,7 +204,7 @@ public class Station {
     this.longitude = longitude;
   }
 
-  public Station(int ID, String name, int availableDocs, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, int postalCode, String location, int altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
+  public Station(int ID, String name, int availableDocs, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
     this.ID = ID;
     this.stationName = name;
     this.availableDocs = availableDocs;

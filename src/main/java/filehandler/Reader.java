@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.security.spec.ECField;
@@ -493,10 +494,7 @@ public class Reader {
    */
   public ArrayList<Station> readStations(String filename) throws FileNotFoundException{
 
-    /**
-     id, stationName, availableDocs, totalDocks, latitude, longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode, location, altitude,
-     testStation, lastCommunicationTime, landMark
-     */
+    ArrayList<Station> returnArray = new ArrayList<Station>();
 
     try {
       BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -512,8 +510,67 @@ public class Reader {
 
       JSONArray stationList = jsonObj.getJSONArray("stationBeanList");
 
-      ArrayList<Station> toReturn = new ArrayList<Station>();
-      return toReturn;
+      int listLength = stationList.length();
+
+      Station bufferStation;
+
+      JSONObject bufferObject;
+
+      int id;
+      String stationName;
+      int availableDocks;
+      int totalDocks;
+      double latitude;
+      double longitude;
+      String statusValue;
+      int statusKey;
+      int availableBikes;
+      String stAddress1;
+      String stAddress2;
+      String postalCode;
+      String location;
+      String altitude;
+      boolean testStation;
+      Date lastCommunicationTime;
+      String landMark;
+
+
+      /**
+       id, stationName, availableDocs, totalDocks, latitude, longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode,
+       location, altitude, testStation, lastCommunicationTime, landMark
+       */
+
+      for(int i = 0;i<listLength;i++) {
+          bufferObject = stationList.getJSONObject(i);
+          id = bufferObject.getInt("id");
+          stationName = bufferObject.getString("stationName");
+          availableDocks = bufferObject.getInt("availableDocks");
+          totalDocks = bufferObject.getInt("totalDocks");
+          latitude = bufferObject.getDouble("latitude");
+          longitude = bufferObject.getDouble("longitude");
+          statusValue = bufferObject.getString("statusValue");
+          statusKey = bufferObject.getInt("statusKey");
+          availableBikes = bufferObject.getInt("availableBikes");
+          stAddress1 = bufferObject.getString("stAddress1");
+          stAddress2 = bufferObject.getString("stAddress2");
+          postalCode = bufferObject.getString("postalCode");
+          location = bufferObject.getString("location");
+          altitude = bufferObject.getString("altitude");
+          testStation = bufferObject.getBoolean("testStation");
+          try {
+            lastCommunicationTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse(bufferObject.getString("lastCommunicationTime"));
+          }
+          catch(ParseException e) {
+            System.out.println("Unexpected date");
+            return null;
+          }
+          landMark = bufferObject.getString("landMark");
+          bufferStation = new Station(id,stationName,availableDocks,totalDocks,latitude,longitude,statusValue,statusKey,availableBikes,stAddress1,stAddress2,postalCode,location,altitude,testStation,lastCommunicationTime,landMark);
+
+          returnArray.add(bufferStation);
+          //bufferStation = new Station();
+      }
+      return returnArray;
     }
 
     catch(FileNotFoundException e) {
