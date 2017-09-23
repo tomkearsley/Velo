@@ -29,12 +29,12 @@ import model.UserPOI;
  */
 public class MainController {
 
-  ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
-  ArrayList<Retailer> retailers = new ArrayList<Retailer>();
-  ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
-  ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
-  ArrayList<Route> routes = new ArrayList<Route>();
-  ArrayList<Station> stations = new ArrayList<Station>();
+  private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
+  private ArrayList<Retailer> retailers = new ArrayList<Retailer>();
+  private ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
+  private ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
+  private ArrayList<Route> routes = new ArrayList<Route>();
+  private ArrayList<Station> stations = new ArrayList<Station>();
   //TODO use reader to populate these ArrayLists
 
   //Data table
@@ -58,12 +58,15 @@ public class MainController {
     try{
       hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots.csv");
       retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers.csv");
-
+      stations = rdr.readStations("src/main/resources/file/stations.json");
+      userPOIs = rdr.readUserPOIS("src/main/resources/file/UserPOIdata_smallsample.csv");
+      //publicPOIs = rdr.readPublicPOIS("src/main/resources/file/PublicPOIdata_smallsample.csv");
+      //routes = rdr.readRoutes("tripdata_smallsample.csv", stations);
     }
     catch(FileNotFoundException e){
       System.out.println("File not found");
       e.printStackTrace();
-      //TODO bring up warning window when that is implemented
+      return false;
     }
     return true;
   }
@@ -75,8 +78,11 @@ public class MainController {
    * TODO adapt to using database primarily with csv as fallback
    */
   public void initialize(){
-    populateArrayLists();
-    //dataViewRetailers(); /* some initial data so the table isn't empty on startup */
+    boolean arraylists_populated = populateArrayLists();
+    if(!arraylists_populated) {
+      //TODO bring up warning window when that is implemented
+    }
+    dataViewHotspots(); /* some initial data so the table isn't empty on startup */
     dataTypeChoiceBox.getItems().setAll(DataType.values());
 
     File f = new File("src/main/resources/googleMaps.html");
@@ -157,6 +163,7 @@ public class MainController {
 
     TableColumn<Hotspot, String> idCol = new TableColumn<Hotspot, String>("Name");
     idCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("name"));
+
     TableColumn<Hotspot, Double> latCol = new TableColumn<Hotspot, Double>("Latitude");
     latCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("latitude"));
     TableColumn<Hotspot, Double> longCol = new TableColumn<Hotspot, Double>("Longitude");
@@ -181,7 +188,6 @@ public class MainController {
     remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("description"));
 
     FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
-    //TODO ask tutor why Hotspot.get__ is not usable
     rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListHotspots.setPredicate(Hotspot -> {
         //if filter is empty, show all
@@ -267,7 +273,7 @@ public class MainController {
       });
     });
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(oListUserPOIs);
+    rawDataTable.setItems(fListUserPOIs);
   }
 
   public void dataViewStations() {
@@ -302,7 +308,7 @@ public class MainController {
       });
     });
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, idCol);
-    rawDataTable.setItems(oListStations);
+    rawDataTable.setItems(fListStations);
   }
 
   public void dataViewRoutes() {
@@ -348,7 +354,7 @@ public class MainController {
       });
     });
     rawDataTable.getColumns().setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol, userTypeCol, birthYearCol, genderCol);
-    rawDataTable.setItems(oListRoutes);
+    rawDataTable.setItems(fListRoutes);
   }
   public void dataViewSelected() {
     DataType selected = dataTypeChoiceBox.getValue();
