@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import model.Hotspot;
+import model.PublicPOI;
 import model.Retailer;
 import model.UserPOI;
 import model.Route;
@@ -369,6 +370,71 @@ public class Reader {
       }
     }
     return UserPOIs;
+  }
+
+  /**
+   * Reads Public Points of Interest from a csv file, and builds a list of PublicPOI instances using the extracted
+   * attributes
+   * @param filename the name of file to open
+   * @return ArrayList<PublicPOI> Public Points of Interest
+   * @throws FileNotFoundException if the file cannot be found
+   */
+  public ArrayList<PublicPOI> readPublicPOIS(String filename) throws FileNotFoundException {
+    int nameIndex = 0;
+
+    //Google uses latitude, longitude pairings.
+    int latitudeIndex = 1;
+    int longitudeIndex = 2;
+
+    int descriptionIndex = 3;
+
+    BufferedReader br = null;
+    String line;
+    ArrayList<PublicPOI> PublicPOIs = new ArrayList<PublicPOI>();
+
+    try {
+
+      br = new BufferedReader(new FileReader(filename));
+      while ((line = br.readLine()) != null) {
+        // Separate by comma
+        ArrayList<Integer> locs = findQuotedCommas(line);
+        line = changeQuotedCommas(line, locs);
+        String[] csvPOI = line.split(",", -1);
+        csvPOI = replaceQuotedCommas(csvPOI, locs);
+        csvPOI = removeBorderQuotes(csvPOI);
+
+        //Get name of POI
+        String name = csvPOI[nameIndex];
+
+        //Get location values
+        double latitude, longitude;
+        try {
+          latitude = Double.parseDouble(csvPOI[latitudeIndex]);
+          longitude = Double.parseDouble(csvPOI[longitudeIndex]);
+        } catch(NumberFormatException e) {
+          latitude = 2.0;
+          longitude = 0;
+        }
+
+        String description = csvPOI[descriptionIndex];
+
+        PublicPOIs.add(new PublicPOI(latitude, longitude, name,description));
+      }
+
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return PublicPOIs;
   }
 
   /**

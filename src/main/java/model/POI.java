@@ -54,13 +54,14 @@ public class POI implements Mappable {
   }
 
   @Override
-  public String toString() {
-    return "Name: " + name + "\nLocation: " + longitude + ", " + latitude + "\nDescription: " + description;
+  public String toString() {;
+    return "Name: " + name + "\nDescription: " + description;
   }
 
   @Override
-  public boolean equals(Object p) {
-    return this.toString().equals(p.toString());
+  public boolean equals(Object object) {
+    System.out.println(object.toString());
+    return this.toString().equals(object.toString());
   }
 }
 

@@ -72,14 +72,14 @@ public class Hotspot extends POI {
         ", Remarks: " + remarks;
   }
 
-  /** Used for the assert functions in JUnit testing
-   *
-   * @param hotspotToTest is the hotspot to be tested
-   * @return boolean
-   */
-  public boolean equals(Hotspot hotspotToTest){
-    return this.toString().equals(hotspotToTest.toString());
-  }
+//  /** Used for the assert functions in JUnit testing
+//   *
+//   * @param hotspotToTest is the hotspot to be tested
+//   * @return boolean
+//   */
+//  public boolean equals(Hotspot hotspotToTest){
+//    return this.toString().equals(hotspotToTest.toString());
+//  }
 
   public int getID() {
     return id;

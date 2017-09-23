@@ -1,6 +1,7 @@
 package filehandlertest;
 
 //TODO Replace assertTrue (blah.equals(blah2)) with assertEquals (overriding issue)
+import com.sun.corba.se.impl.interceptors.PICurrent;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import model.Hotspot;
 import model.POI;
+import model.PublicPOI;
 import model.Retailer;
 import model.Route;
 import model.Station;
@@ -120,6 +122,27 @@ public class ReaderTest {
     p1 = new UserPOI(40.7484,-73.9857,"Empire State Building","The Empire State Building is a 102-story skyscraper");
     p2 = new UserPOI(40.7829,-73.9654,"Central Park","Central Park is an urban park in Manhattan");
     p3 = new UserPOI(40.6892,-74.0445,"Statue Of Liberty","The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York Harbor");
+
+    expectedPOIs.add(p1);
+    expectedPOIs.add(p2);
+    expectedPOIs.add(p3);
+
+    for(int i = 0; i < expectedPOIs.size(); i++) {
+      assertTrue(expectedPOIs.get(i).equals(POIs.get(i)));
+    }
+  }
+
+  //TODO ADD JAVADOC
+  @Test
+  public void readPublicPOIS() throws FileNotFoundException {
+    ArrayList<PublicPOI> POIs = reader.readPublicPOIS("src/test/testResources/PublicPOIS.csv");
+    ArrayList<PublicPOI> expectedPOIs = new ArrayList<PublicPOI>();
+
+    PublicPOI p1, p2, p3;
+    //Location,Name,Description
+    p1 = new PublicPOI(40.689209,-74.044457,"Statue of Liberty","Iconic National Monument opened in 1886, offering guided tours, a museum & city views.");
+    p2 = new PublicPOI(40.758936,-73.985119,"Times Square","Bustling destination in the heart of the Theater District known for bright lights, shopping & shows.");
+    p3 = new PublicPOI(40.782857,-73.965355,"Central Park","Sprawling park with pedestrian paths & ballfields, plus a zoo, carousel, boat rentals & a reservoir.");
 
     expectedPOIs.add(p1);
     expectedPOIs.add(p2);

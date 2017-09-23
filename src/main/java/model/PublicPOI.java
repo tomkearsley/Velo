@@ -15,10 +15,17 @@ public class PublicPOI extends POI {
     this.longitude = longitude;
   }
 
-
+  @Override
   public String toString() {
-    return "Attraction: " + name + " " + description;
+    return  "Name: " + this.getName() + " Location: " + latitude + "," + longitude +
+    " Description: " + description;
   }
+
+//  @Override
+//  public boolean equals(Object poi) {
+//    System.out.println(poi.toString());
+//    return this.toString().equals(poi.toString());
+//  }
 
   public double getLatitude() {
     return latitude;
