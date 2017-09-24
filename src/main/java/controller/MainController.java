@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.api.client.util.StringUtils;
 import filehandler.Reader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -103,6 +104,15 @@ public class MainController {
     mapEngine.setJavaScriptEnabled(true);
     //mapEngine.executeScript("test()");
   }
+  private boolean isInteger(String s) {
+    try {
+      Integer i = Integer.parseInt(s);
+    }
+    catch(NumberFormatException nfe) {
+      return false;
+    }
+    return true;
+  }
 
   /*
   Action handlers
@@ -122,7 +132,6 @@ public class MainController {
   public void dataViewRetailers() {
     //converting the arraylist to an observable list
     ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
-    //TODO add filteredLists to other dataView__ methods, probably abstract these up a layer
     //each 2 line section creates one table heading and set of values
     //TODO lat and long from address?
     TableColumn<Retailer, String> nameCol = new TableColumn<Retailer, String>(
@@ -166,6 +175,13 @@ public class MainController {
         if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName()
             .toLowerCase().contains(lowerCaseFilter)) {
           return true;
+        }
+        //checking for zipcode. entire zipcode must be entered before a match is found
+        if (isInteger(lowerCaseFilter)) {
+          Integer input = Integer.parseInt(lowerCaseFilter);
+          if (input == Retailer.getZipcode()) {
+            return true;
+          }
         }
         return false;
       });
@@ -228,7 +244,9 @@ public class MainController {
         String lowerCaseFilter = newValue.toLowerCase();
         // Add more Hotspot.get__'s below to include more things in the search
 
-        if (Hotspot.getName().toLowerCase().contains(lowerCaseFilter)) {
+        if (Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter) || Hotspot.getType()
+            .toLowerCase().contains(lowerCaseFilter)|| Hotspot.getProvider()
+            .toLowerCase().contains(lowerCaseFilter)) {
           return true;
         }
         return false;
@@ -394,8 +412,16 @@ public class MainController {
         /**
          * Add more Route.get__'s below to include more things in the search
          */
-        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
+            Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
           return true;
+        }
+        //filtering by gender of rider or bike ID. needs to be an exact match before anything is shown
+        if (isInteger(lowerCaseFilter)) {
+          Integer input = Integer.parseInt(lowerCaseFilter);
+          if (Route.getBikeID() == input || Route.getGender() == input) {
+            return true;
+          }
         }
         return false;
       });
@@ -403,7 +429,7 @@ public class MainController {
 
     SortedList<Route> sListRoutes = new SortedList<Route>(fListRoutes);
     sListRoutes.comparatorProperty().bind(rawDataTable.comparatorProperty());
-    
+
     rawDataTable.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol,
             userTypeCol, birthYearCol, genderCol);
