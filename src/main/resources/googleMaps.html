@@ -26,6 +26,9 @@
     var directionsService;
     var directionsDisplay;
     var gMarkers = [];
+    var infowindow;
+    var geocoder;
+    var currentLocation;
     //alert(directionsService.toString());
     function initialize() {
       var mapOptions = {
@@ -128,6 +131,12 @@
       directionsService = new google.maps.DirectionsService;
       directionsDisplay = new google.maps.DirectionsRenderer;
 
+      infowindow = new google.maps.InfoWindow({
+        content: "Default text"
+      });
+
+      geocoder = new google.maps.Geocoder;
+
       directionsDisplay.setMap(map);
       //createMarker(40.785091, -73.968285,'Test Marker',"default");
 
@@ -137,8 +146,8 @@
         createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"default");
       });
 
-      var bikeLayer = new google.maps.BicyclingLayer();
-      bikeLayer.setMap(map);
+      //var bikeLayer = new google.maps.BicyclingLayer();
+      //bikeLayer.setMap(map);
       //alert("Test");
       var location1 = [40.7829,-73.9654];
       var location2 = [40.7736,-73.9566];
@@ -155,6 +164,14 @@
         title: title,
         icon: "image/" + markerType + ".png"
       });
+
+      geocodeLatLng(myLatLng);
+
+      marker.addListener('click', function() {
+        infowindow.setContent(String);
+        infowindow.open(map, marker);
+      });
+
       gMarkers.push(marker);
     }
 
@@ -181,6 +198,22 @@
         }
       });
       //alert("Test");
+    }
+
+    function geocodeLatLng(latlng) {
+      geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+          if (results[0]) {
+            alert(results[0].formatted_address);
+            currentLocation = results[0].formatted_address
+            return results[0].formatted_address;
+          } else {
+            alert('No results found');
+          }
+        } else {
+          alert('Geocoder failed due to: ' + status);
+        }
+      });
     }
 
     //initialize();
