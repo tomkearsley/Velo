@@ -512,7 +512,7 @@ public class Reader {
 
         // Birth year
         int birthYear;
-        if (csvRoute[birthYearIndex].equals("\\N")) {
+        if (csvRoute[birthYearIndex].equals("\\N") || csvRoute[birthYearIndex].equals("NULL")) {
           birthYear = -1;
         } else {
           birthYear = Integer.valueOf(csvRoute[birthYearIndex]);

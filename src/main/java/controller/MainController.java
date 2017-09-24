@@ -69,7 +69,7 @@ public class MainController {
       stations = rdr.readStations("src/main/resources/file/stations.json");
       userPOIs = rdr.readUserPOIS("src/main/resources/file/UserPOIdata_smallsample.csv");
       publicPOIs = rdr.readPublicPOIS("src/main/resources/file/PublicPOIdata_smallsample.csv");
-      //routes = rdr.readRoutes("src/main/resources/file/tripdata_smallsample.csv", stations);
+      routes = rdr.readRoutes("src/main/resources/file/tripdata_smallsample.csv", stations);
     }
     catch(FileNotFoundException e){
       System.out.println("File not found");
