@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -91,6 +93,15 @@ public class MainController {
     }
     dataViewHotspots(); /* some initial data so the table isn't empty on startup */
     dataTypeChoiceBox.getItems().setAll(DataType.values());
+    dataTypeChoiceBox.setValue(DataType.HOTSPOT);
+    dataTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(
+        new ChangeListener<DataType>() {
+          @Override
+          public void changed(ObservableValue<? extends DataType> observable, DataType oldValue,
+              DataType newValue) {
+            dataViewSelected();
+          }
+        });
 
     File f = new File("src/main/resources/googleMaps.html");
 
