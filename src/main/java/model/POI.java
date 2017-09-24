@@ -60,7 +60,6 @@ public class POI implements Mappable {
 
   @Override
   public boolean equals(Object object) {
-    System.out.println(object.toString());
     return this.toString().equals(object.toString());
   }
 }
