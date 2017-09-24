@@ -205,7 +205,8 @@ public class ReaderTest {
   public void readStations() throws FileNotFoundException {
     ArrayList<Station> stations = reader.readStations("src/main/resources/file/stations.json");
     for(Station x:stations) {
-      System.out.println(x.getID());
+      //Insert test cases here
+      //System.out.println(x.getID());
     }
   }
 
