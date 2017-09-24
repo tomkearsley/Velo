@@ -31,7 +31,9 @@ public class GUIManager extends Application {
   }
 
 
-  /** OTHER METHODS */
+  /**
+   * OTHER METHODS
+   */
 
   public void loginAuthenticated() throws Exception {
 
@@ -47,7 +49,6 @@ public class GUIManager extends Application {
     // Create error window
 
   }
-
 
 
 }

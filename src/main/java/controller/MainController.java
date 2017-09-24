@@ -63,7 +63,7 @@ public class MainController {
 
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
-    try{
+    try {
       hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots.csv");
       retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers.csv");
       stations = rdr.readStations("src/main/resources/file/stations.json");
@@ -81,13 +81,12 @@ public class MainController {
 
 
   /**
-   * Runs at startup
-   * Populates the model structure with data from .csv files using populateArrayLists()
-   * TODO adapt to using database primarily with csv as fallback
+   * Runs at startup Populates the model structure with data from .csv files using
+   * populateArrayLists() TODO adapt to using database primarily with csv as fallback
    */
-  public void initialize(){
+  public void initialize() {
     boolean arraylists_populated = populateArrayLists();
-    if(!arraylists_populated) {
+    if (!arraylists_populated) {
       //TODO bring up warning window when that is implemented
     }
     dataViewHotspots(); /* some initial data so the table isn't empty on startup */
@@ -110,22 +109,25 @@ public class MainController {
   public void viewData() {
     dataSplitPane.toFront();
   }
+
   public void viewMap() {
     mapViewPane.toFront();
   }
 
   /**
-   * converts the arrayList of retailers to an observableList
-   * creates columns and sets these columns and values to be displayed in rawDataTable
+   * converts the arrayList of retailers to an observableList creates columns and sets these columns
+   * and values to be displayed in rawDataTable
    */
   public void dataViewRetailers() {
     //converting the arraylist to an observable list
-    ObservableList<Retailer>  oListRetailers = FXCollections.observableArrayList(retailers);
+    ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
     //TODO add filteredLists to other dataView__ methods, probably abstract these up a layer
     //each 2 line section creates one table heading and set of values
     //TODO lat and long from address?
-    TableColumn<Retailer, String> nameCol = new TableColumn<Retailer, String>("Name");//title to be written above column
-    nameCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("name"));//looks for retailer.getName()
+    TableColumn<Retailer, String> nameCol = new TableColumn<Retailer, String>(
+        "Name");//title to be written above column
+    nameCol.setCellValueFactory(
+        new PropertyValueFactory<Retailer, String>("name"));//looks for retailer.getName()
     TableColumn<Retailer, String> addressCol = new TableColumn<Retailer, String>("Address");
     addressCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("address"));
     TableColumn<Retailer, String> floorCol = new TableColumn<Retailer, String>("Floor");
@@ -138,8 +140,10 @@ public class MainController {
     stateCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("state"));
     TableColumn<Retailer, String> blockCol = new TableColumn<Retailer, String>("Block");
     blockCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("block"));
-    TableColumn<Retailer, String> secondaryDescCol = new TableColumn<Retailer, String>("Secondary Description");
-    secondaryDescCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
+    TableColumn<Retailer, String> secondaryDescCol = new TableColumn<Retailer, String>(
+        "Secondary Description");
+    secondaryDescCol
+        .setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
 
     FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
     /**
@@ -158,20 +162,23 @@ public class MainController {
         /**
          * Add more Retailer.get__'s below to include more things in the search
          */
-        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName().toLowerCase().contains(lowerCaseFilter)) {
+        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName()
+            .toLowerCase().contains(lowerCaseFilter)) {
           return true;
         }
         return false;
-        });
       });
+    });
 
-    rawDataTable.getColumns().setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol, secondaryDescCol);
+    rawDataTable.getColumns()
+        .setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol,
+            secondaryDescCol);
     rawDataTable.setItems(fListRetailers);
   }
 
   /**
-   * converts the arrayList of hotspots to an ObservableList and creates TableColumns
-   * sets these as viewable in rawDataTable
+   * converts the arrayList of hotspots to an ObservableList and creates TableColumns sets these as
+   * viewable in rawDataTable
    */
   public void dataViewHotspots() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
@@ -211,7 +218,7 @@ public class MainController {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-         // Add more Hotspot.get__'s below to include more things in the search
+        // Add more Hotspot.get__'s below to include more things in the search
 
         if (Hotspot.getName().toLowerCase().contains(lowerCaseFilter)) {
           return true;
@@ -219,9 +226,12 @@ public class MainController {
         return false;
       });
     });
-    rawDataTable.getColumns().setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol, SSIDCol, providerCol, remarksCol); //something something
+    rawDataTable.getColumns()
+        .setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol,
+            SSIDCol, providerCol, remarksCol); //something something
     rawDataTable.setItems(fListHotspots);
   }
+
   public void dataViewPublicPOIs() {
     //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
@@ -229,9 +239,10 @@ public class MainController {
     latCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("latitude"));
     TableColumn<PublicPOI, Double> longCol = new TableColumn<PublicPOI, Double>("Longitude");
     longCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("longitude"));
-    TableColumn<PublicPOI, String>  nameCol = new TableColumn<PublicPOI, String>("Name");
+    TableColumn<PublicPOI, String> nameCol = new TableColumn<PublicPOI, String>("Name");
     nameCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("name"));
-    TableColumn<PublicPOI, String> descriptionCol = new TableColumn<PublicPOI, String>("Description");
+    TableColumn<PublicPOI, String> descriptionCol = new TableColumn<PublicPOI, String>(
+        "Description");
     descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("description"));
 
     FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<PublicPOI>(oListPublicPOIs);
@@ -255,6 +266,7 @@ public class MainController {
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
     rawDataTable.setItems(fListPublicPOIs);
   }
+
   //TODO fill out stubs
   public void dataViewUserPOIs() {
     //lat, long, name, description
@@ -264,7 +276,7 @@ public class MainController {
     latCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("latitude"));
     TableColumn<UserPOI, Double> longCol = new TableColumn<UserPOI, Double>("Longitude");
     longCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("longitude"));
-    TableColumn<UserPOI, String>  nameCol = new TableColumn<UserPOI, String>("Name");
+    TableColumn<UserPOI, String> nameCol = new TableColumn<UserPOI, String>("Name");
     nameCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("name"));
     TableColumn<UserPOI, String> descriptionCol = new TableColumn<UserPOI, String>("Description");
     descriptionCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("description"));
@@ -339,7 +351,7 @@ public class MainController {
     startDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("startDateTime"));
     TableColumn<Route, Date> endDateTimeCol = new TableColumn<Route, Date>("Stop Time");
     endDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("endDateTime"));
-    TableColumn<Route, Integer> bikeIDCol= new TableColumn<Route, Integer>("Bike ID");
+    TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
     bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
     TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
     userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
@@ -347,7 +359,6 @@ public class MainController {
     birthYearCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("birthYear"));
     TableColumn<Route, Integer> genderCol = new TableColumn<Route, Integer>("Gender");
     genderCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("gender"));
-
 
     FilteredList<Route> fListRoutes = new FilteredList<Route>(oListRoutes);
 
@@ -368,9 +379,12 @@ public class MainController {
         return false;
       });
     });
-    rawDataTable.getColumns().setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol, userTypeCol, birthYearCol, genderCol);
+    rawDataTable.getColumns()
+        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol,
+            userTypeCol, birthYearCol, genderCol);
     rawDataTable.setItems(fListRoutes);
   }
+
   public void dataViewSelected() {
     DataType selected = dataTypeChoiceBox.getValue();
     switch (selected) {
@@ -392,18 +406,19 @@ public class MainController {
       case ROUTE:
         dataViewRoutes();
         break;
-      }
     }
+  }
 
   /**
-   * Fetches a specified attribute of the retailer instance. Used for filtering of retailers
-   * using one function that can control the filter field through this parameter
+   * Fetches a specified attribute of the retailer instance. Used for filtering of retailers using
+   * one function that can control the filter field through this parameter
+   *
    * @param retailer The retailer instance to fetch attributes from
    * @param field The field char to be filtered ('n' for name, 'a' for address, etc...)
    * @return The string value of that attribute
    */
   public String getRetailerField(Retailer retailer, char field) {
-    switch(field) {
+    switch (field) {
       case 'n':
         return retailer.getName();
       case 'a':
@@ -425,14 +440,17 @@ public class MainController {
 
   /**
    * Filters the list of retailers to match a certain term in a given field
+   *
    * @param matchList The list of currently matched retailers (empty for filtering original list,
-   *                  populated for adding additional filtering (ie filtering by name, then state)
-   * @param field The field to be filtered on, standard is first character of field name ('n' for name)
-   * @param term  The field to search against. If the attribute is a string, searches for attribute containing
-   *              the term. If integer, searches for direct matches
-   * @return  The filtered list of retailers
+   * populated for adding additional filtering (ie filtering by name, then state)
+   * @param field The field to be filtered on, standard is first character of field name ('n' for
+   * name)
+   * @param term The field to search against. If the attribute is a string, searches for attribute
+   * containing the term. If integer, searches for direct matches
+   * @return The filtered list of retailers
    */
-  public ArrayList<Retailer> filterRetailers(ArrayList<Retailer> matchList, char field, String term) {
+  public ArrayList<Retailer> filterRetailers(ArrayList<Retailer> matchList, char field,
+      String term) {
     boolean firstRun = matchList.size() == 0;
     if (firstRun) {
       for (Retailer retailer : retailers) {

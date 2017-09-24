@@ -10,7 +10,7 @@ import netscape.javascript.JSObject;
 public class Bridge {
 
 
-  private JSObject window ;
+  private JSObject window;
 
   public Bridge(WebEngine engine) {
     engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {

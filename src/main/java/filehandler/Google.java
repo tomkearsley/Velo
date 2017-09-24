@@ -21,13 +21,15 @@ public class Google {
 
   // String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
   public static String toGoogleString(String string) {
-    return string.replaceAll(" ","+");
+    return string.replaceAll(" ", "+");
   }
 
 
   public static double[] stringToLocation(String string) {
     String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
-    String JsonString = "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string) + "&key=" + apiKey;
+    String JsonString =
+        "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string)
+            + "&key=" + apiKey;
     InputStream input = null;
     StringBuilder sb = new StringBuilder();
 
@@ -56,24 +58,22 @@ public class Google {
       double lat = locationObject.getDouble("lat");
       double lng = locationObject.getDouble("lng");
 
-      double[] location = {lat,lng};
+      double[] location = {lat, lng};
       //JSONObject resultArray = jsonObj.getJSONObject("results");
       //resultArray.getJSONObject("address_components");
       return location;
-    }
-    catch(MalformedURLException e) {
+    } catch (MalformedURLException e) {
       System.out.println("Something went wrong!\nCheck that you've entered a valid location");
       return null;
-    }
-    catch(IOException e) {
-      System.out.println("Something went wrong!\nThere was an error in reading the location. Please retry");
+    } catch (IOException e) {
+      System.out.println(
+          "Something went wrong!\nThere was an error in reading the location. Please retry");
       return null;
-    }
-    catch(JSONException e) {
-      System.out.println("Something went wrong!\nThere was an error in parsing the location details. Please retry");
+    } catch (JSONException e) {
+      System.out.println(
+          "Something went wrong!\nThere was an error in parsing the location details. Please retry");
       return null;
-    }
-    catch(Exception e) {
+    } catch (Exception e) {
       System.out.print("Whoops! Something went wrong:\n" + e);
       return null;
     }
