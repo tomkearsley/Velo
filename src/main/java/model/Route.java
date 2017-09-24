@@ -1,4 +1,5 @@
 package model;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import model.Station;
@@ -10,37 +11,49 @@ import java.util.Date;
 public class Route {
 
 
-  /**The trip duration in seconds*/
+  /**
+   * The trip duration in seconds
+   */
   private int duration;
 
-  /**The time the route was started*/
+  /**
+   * The time the route was started
+   */
   private Date startDate;
 
-  /**The time the route was stopped*/
+  /**
+   * The time the route was stopped
+   */
   private Date stopDate;
 
-  /**Start station*/
+  /**
+   * Start station
+   */
   private Station startStation;
 
-  /**Stop station*/
+  /**
+   * Stop station
+   */
   private Station stopStation;
 
-  /**Bike ID*/
+  /**
+   * Bike ID
+   */
   private int bikeID;
 
-  /**User type
-   * Either "customer" or "subscriber"
+  /**
+   * User type Either "customer" or "subscriber"
    */
   private String userType;
 
-  /**User birth year*/
+  /**
+   * User birth year
+   */
   private int birthYear;
 
-  /**User gender
-   * 0 - male
-   * 1 - female
-   * 2 - not specified
-   * */
+  /**
+   * User gender 0 - male 1 - female 2 - not specified
+   */
   private int gender;
 
 
@@ -61,11 +74,11 @@ public class Route {
     startDate = newStartDate;
   }
 
-  public Date getstopDate() {
+  public Date getStopDate() {
     return stopDate;
   }
 
-  public void setstopDate(Date newstopDate) {
+  public void setStopDate(Date newstopDate) {
     stopDate = newstopDate;
   }
 
@@ -117,7 +130,17 @@ public class Route {
     gender = newGender;
   }
 
-  public Route(int duration, Date startDate, Date stopDate, Station startStation, Station stopStation,
+  //Extra getters for tableview usability
+  public String getStartStationName() {
+    return startStation.getName();
+  }
+
+  public String getStopStationName() {
+    return stopStation.getName();
+  }
+
+  public Route(int duration, Date startDate, Date stopDate, Station startStation,
+      Station stopStation,
       int bikeID, String userType, int birthYear, int gender) {
     this.duration = duration;
     this.startDate = startDate;
@@ -130,7 +153,7 @@ public class Route {
     this.gender = gender;
   }
 
-  public String toString(){
+  public String toString() {
     return "Route duration: " + duration + " startDateTime: " + startDate + " stopDateTime: " +
         stopDate + " startStation: " + startStation + " stopStation: " + stopStation + " bikeID: " +
         bikeID + " userType: " + userType + " birthYear: " + birthYear + " gender: " + gender;
