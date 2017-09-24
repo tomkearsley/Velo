@@ -23,6 +23,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
@@ -63,6 +64,10 @@ public class MainController {
   private WebView mapWebView;
   @FXML
   private Button testButton;
+  @FXML
+  private Pane userPane;
+  @FXML
+  private Pane fileHandlerPane;
 
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -123,6 +128,13 @@ public class MainController {
 
   public void viewMap() {
     mapViewPane.toFront();
+  }
+
+  public void viewUser() {
+    userPane.toFront();
+  }
+  public void viewFileHandler() {
+    fileHandlerPane.toFront();
   }
 
   /**
