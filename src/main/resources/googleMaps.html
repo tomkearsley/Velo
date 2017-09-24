@@ -132,7 +132,7 @@
       directionsDisplay = new google.maps.DirectionsRenderer;
 
       infowindow = new google.maps.InfoWindow({
-        content: "Default text"
+        content: "Loading location info..."
       });
 
       geocoder = new google.maps.Geocoder;
@@ -165,10 +165,8 @@
         icon: "image/" + markerType + ".png"
       });
 
-      geocodeLatLng(myLatLng);
-
       marker.addListener('click', function() {
-        infowindow.setContent(String);
+        geocodeLatLng(myLatLng,infowindow);
         infowindow.open(map, marker);
       });
 
@@ -200,13 +198,12 @@
       //alert("Test");
     }
 
-    function geocodeLatLng(latlng) {
+    function geocodeLatLng(latlng,infowindow) {
       geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
           if (results[0]) {
-            alert(results[0].formatted_address);
-            currentLocation = results[0].formatted_address
-            return results[0].formatted_address;
+            //alert(results[0].formatted_address);
+            infowindow.setContent(results[0].formatted_address);
           } else {
             alert('No results found');
           }
