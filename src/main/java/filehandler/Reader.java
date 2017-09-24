@@ -524,8 +524,8 @@ public class Reader {
 
         // Convert to Dates
         try {
-          Date startDateTime = StringToDate(csvRoute[startDateTimeIndex], "MM/dd/yyyy");
-          Date stopDateTime = StringToDate(csvRoute[stopDateTimeIndex], "MM/dd/yyyy");
+          Date startDateTime = StringToDate(csvRoute[startDateTimeIndex], "MM/dd/yyyy HH:mm");
+          Date stopDateTime = StringToDate(csvRoute[stopDateTimeIndex], "MM/dd/yyyy HH:mm");
 
           //add newRetailer to Retailers array
           Routes.add(
