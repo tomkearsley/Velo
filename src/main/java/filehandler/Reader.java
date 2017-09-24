@@ -31,8 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * The class Reader defines the object type Reader
- * It is used to read data from text files
+ * The class Reader defines the object type Reader It is used to read data from text files
  *
  * TODO remove OpenCSV once all reader tests verified working with comma issues
  */
@@ -40,17 +39,13 @@ public class Reader {
 
   /**
    * Converts from a String to a Date type
-   * @param newDate
-   * @return
-   * @throws Exception
    */
   public Date StringToDate(String newDate, String pattern) {
     Date date;
     try {
       date = new SimpleDateFormat(pattern).parse(newDate);
       return date;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       System.out.println(e);
       return null;
     }
@@ -58,13 +53,14 @@ public class Reader {
 
   /**
    * Finds commas embedded in quotes and adds the index of such commas to a list
+   *
    * @param string The string to find quoted commas within
    * @return An ArrayList of integers - The comma indexes
    */
   private ArrayList<Integer> findQuotedCommas(String string) {
     boolean quoteReached = false;
     ArrayList<Integer> locs = new ArrayList<Integer>();
-    for (int i=0; i<string.length(); i++) {
+    for (int i = 0; i < string.length(); i++) {
       if (string.charAt(i) == '"') {
         quoteReached = !quoteReached;
       }
@@ -76,8 +72,9 @@ public class Reader {
   }
 
   /**
-   * Replaces the commas embedded in quotes with a space to keep the string length constant while allowing
-   * for proper splitting
+   * Replaces the commas embedded in quotes with a space to keep the string length constant while
+   * allowing for proper splitting
+   *
    * @param string The string to be adjusted
    * @param locs The list of offending comma indexes
    * @return The string after replacing offending commas
@@ -85,7 +82,7 @@ public class Reader {
   private String changeQuotedCommas(String string, ArrayList<Integer> locs) {
     String newString = "";
     int locCount = 0;
-    for (int i=0; i<string.length(); i++) {
+    for (int i = 0; i < string.length(); i++) {
       if (locCount < locs.size() && i == locs.get(locCount)) {
         locCount++;
         newString += " ";
@@ -99,6 +96,7 @@ public class Reader {
   /**
    * Replaces the temporary space character with the original commas after splitting by valid commas
    * Thus allowing splitting of a string by valid commas while allowing commas in the final fields
+   *
    * @param csv The list of strings from a POI
    * @param locs The list of offending comma indexes
    * @return The list of strings with original commas replaced
@@ -106,9 +104,9 @@ public class Reader {
   private String[] replaceQuotedCommas(String[] csv, ArrayList<Integer> locs) {
     int charCount = 0;
     int locCount = 0;
-    for (int i=0; i<csv.length; i++) {
+    for (int i = 0; i < csv.length; i++) {
       String newString = "";
-      for (int o=0; o<csv[i].length(); o++) {
+      for (int o = 0; o < csv[i].length(); o++) {
         if (locCount < locs.size() && charCount == locs.get(locCount)) {
           newString += ',';
           locCount++;
@@ -124,14 +122,16 @@ public class Reader {
   }
 
   /**
-   * Removes double quotes from Strings that are embedded within them, as they were only functional for dealing
-   * with non-splitting commas within the csv
+   * Removes double quotes from Strings that are embedded within them, as they were only functional
+   * for dealing with non-splitting commas within the csv
+   *
    * @param csv The csv to search through
    * @return The csv with border quotes removed
    */
   private String[] removeBorderQuotes(String[] csv) {
-    for (int i=0; i<csv.length; i++) {
-      if (csv[i].length() > 0 && csv[i].charAt(0) == '"' && csv[i].charAt(csv[i].length() - 1) == '"') {
+    for (int i = 0; i < csv.length; i++) {
+      if (csv[i].length() > 0 && csv[i].charAt(0) == '"'
+          && csv[i].charAt(csv[i].length() - 1) == '"') {
         csv[i] = csv[i].substring(1, csv[i].length() - 1);
       }
     }
@@ -139,15 +139,16 @@ public class Reader {
   }
 
   /**
-   * Searches a list of stations and returns a station instance if a station with the same ID is found.
-   * else returns null
-   * @param stations  ArrayList of stations to search
-   * @param id        ID of the station being searched for
-   * @return          The matching Station instance (or null)
+   * Searches a list of stations and returns a station instance if a station with the same ID is
+   * found. else returns null
+   *
+   * @param stations ArrayList of stations to search
+   * @param id ID of the station being searched for
+   * @return The matching Station instance (or null)
    */
   private Station getStationFromList(ArrayList<Station> stations, int id) {
     for (Station station : stations) {
-      if(station.getID() == id) {
+      if (station.getID() == id) {
         return station;
       }
     }
@@ -156,8 +157,7 @@ public class Reader {
 
 
   /**
-   * Reads WiFi hotspots from a csv file
-   * Uses BufferedReader
+   * Reads WiFi hotspots from a csv file Uses BufferedReader
    *
    * TODO Needs to be tested to ensure it works.
    *
@@ -241,6 +241,7 @@ public class Reader {
   /**
    * Reads retailers from a csv file, and builds a list of retailer instances using the extracted
    * attributes
+   *
    * @param filename the name of file to open
    * @return ArrayList<Retailer> Retailers
    * @throws FileNotFoundException if the file cannot be found
@@ -283,7 +284,7 @@ public class Reader {
         int zipcode;
         try {
           zipcode = Integer.parseInt(csvRetailer[zipcodeIndex]);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
           zipcode = -1;
         }
         String block = csvRetailer[blockIndex];
@@ -314,8 +315,9 @@ public class Reader {
   }
 
   /**
-   * Reads User Points of Interest from a csv file, and builds a list of UserPOI instances using the extracted
-   * attributes
+   * Reads User Points of Interest from a csv file, and builds a list of UserPOI instances using the
+   * extracted attributes
+   *
    * @param filename the name of file to open
    * @return ArrayList<UserPOI> User Points of Interest
    * @throws FileNotFoundException if the file cannot be found
@@ -353,7 +355,7 @@ public class Reader {
 
         String description = csvPOI[descriptionIndex];
 
-        UserPOIs.add(new UserPOI(latitude, longitude, name,description));
+        UserPOIs.add(new UserPOI(latitude, longitude, name, description));
       }
 
     } catch (FileNotFoundException e) {
@@ -373,8 +375,9 @@ public class Reader {
   }
 
   /**
-   * Reads Public Points of Interest from a csv file, and builds a list of PublicPOI instances using the extracted
-   * attributes
+   * Reads Public Points of Interest from a csv file, and builds a list of PublicPOI instances using
+   * the extracted attributes
+   *
    * @param filename the name of file to open
    * @return ArrayList<PublicPOI> Public Points of Interest
    * @throws FileNotFoundException if the file cannot be found
@@ -411,14 +414,14 @@ public class Reader {
         try {
           latitude = Double.parseDouble(csvPOI[latitudeIndex]);
           longitude = Double.parseDouble(csvPOI[longitudeIndex]);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
           latitude = 2.0;
           longitude = 0;
         }
 
         String description = csvPOI[descriptionIndex];
 
-        PublicPOIs.add(new PublicPOI(latitude, longitude, name,description));
+        PublicPOIs.add(new PublicPOI(latitude, longitude, name, description));
       }
 
     } catch (FileNotFoundException e) {
@@ -446,7 +449,8 @@ public class Reader {
    * @return ArrayList<Route> Routes
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations) throws FileNotFoundException {
+  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations)
+      throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int durationIndex = 0;
@@ -470,7 +474,6 @@ public class Reader {
     int birthYearIndex = 13;
     int genderIndex = 14;
 
-
     // Initialize scanner and Retailers array
     BufferedReader br = null;
     String line;
@@ -489,7 +492,7 @@ public class Reader {
         // startStation
         int startStationID = Integer.parseInt(csvRoute[startStationIDIndex]);
         Station startStation = getStationFromList(stations, startStationID);
-        if(startStation == null) {
+        if (startStation == null) {
           startStation = new Station(startStationID,
               String.valueOf(csvRoute[startStationNameIndex]),
               Double.valueOf(csvRoute[startStationLatitudeIndex]),
@@ -499,7 +502,7 @@ public class Reader {
         // stopStation
         int stopStationID = Integer.parseInt(csvRoute[stopStationIDIndex]);
         Station stopStation = getStationFromList(stations, stopStationID);
-        if(stopStation == null) {
+        if (stopStation == null) {
           stopStation = new Station(stopStationID,
               String.valueOf(csvRoute[stopStationNameIndex]),
               Double.valueOf(csvRoute[stopStationLatitudeIndex]),
@@ -525,9 +528,10 @@ public class Reader {
           Date stopDateTime = StringToDate(csvRoute[stopDateTimeIndex], "MM/dd/yyyy");
 
           //add newRetailer to Retailers array
-          Routes.add(new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID, userType, birthYear, gender));
-        }
-        catch (Exception e) {
+          Routes.add(
+              new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID,
+                  userType, birthYear, gender));
+        } catch (Exception e) {
           System.out.println(e);
         }
       }
@@ -558,7 +562,7 @@ public class Reader {
    * @return ArrayList<Station> Stations
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Station> readStations(String filename) throws FileNotFoundException{
+  public ArrayList<Station> readStations(String filename) throws FileNotFoundException {
 
     ArrayList<Station> returnArray = new ArrayList<Station>();
 
@@ -600,51 +604,48 @@ public class Reader {
       Date lastCommunicationTime;
       String landMark;
 
-
       /**
        id, stationName, availableDocs, totalDocks, latitude, longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode,
        location, altitude, testStation, lastCommunicationTime, landMark
        */
 
-      for(int i = 0;i<listLength;i++) {
-          bufferObject = stationList.getJSONObject(i);
-          id = bufferObject.getInt("id");
-          stationName = bufferObject.getString("stationName");
-          availableDocks = bufferObject.getInt("availableDocks");
-          totalDocks = bufferObject.getInt("totalDocks");
-          latitude = bufferObject.getDouble("latitude");
-          longitude = bufferObject.getDouble("longitude");
-          statusValue = bufferObject.getString("statusValue");
-          statusKey = bufferObject.getInt("statusKey");
-          availableBikes = bufferObject.getInt("availableBikes");
-          stAddress1 = bufferObject.getString("stAddress1");
-          stAddress2 = bufferObject.getString("stAddress2");
-          postalCode = bufferObject.getString("postalCode");
-          location = bufferObject.getString("location");
-          altitude = bufferObject.getString("altitude");
-          testStation = bufferObject.getBoolean("testStation");
-          try {
-            lastCommunicationTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse(bufferObject.getString("lastCommunicationTime"));
-          }
-          catch(ParseException e) {
-            System.out.println("Unexpected date");
-            return null;
-          }
-          landMark = bufferObject.getString("landMark");
-          bufferStation = new Station(id,stationName,availableDocks,totalDocks,latitude,longitude,statusValue,statusKey,availableBikes,stAddress1,stAddress2,postalCode,location,altitude,testStation,lastCommunicationTime,landMark);
+      for (int i = 0; i < listLength; i++) {
+        bufferObject = stationList.getJSONObject(i);
+        id = bufferObject.getInt("id");
+        stationName = bufferObject.getString("stationName");
+        availableDocks = bufferObject.getInt("availableDocks");
+        totalDocks = bufferObject.getInt("totalDocks");
+        latitude = bufferObject.getDouble("latitude");
+        longitude = bufferObject.getDouble("longitude");
+        statusValue = bufferObject.getString("statusValue");
+        statusKey = bufferObject.getInt("statusKey");
+        availableBikes = bufferObject.getInt("availableBikes");
+        stAddress1 = bufferObject.getString("stAddress1");
+        stAddress2 = bufferObject.getString("stAddress2");
+        postalCode = bufferObject.getString("postalCode");
+        location = bufferObject.getString("location");
+        altitude = bufferObject.getString("altitude");
+        testStation = bufferObject.getBoolean("testStation");
+        try {
+          lastCommunicationTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a")
+              .parse(bufferObject.getString("lastCommunicationTime"));
+        } catch (ParseException e) {
+          System.out.println("Unexpected date");
+          return null;
+        }
+        landMark = bufferObject.getString("landMark");
+        bufferStation = new Station(id, stationName, availableDocks, totalDocks, latitude,
+            longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode,
+            location, altitude, testStation, lastCommunicationTime, landMark);
 
-          returnArray.add(bufferStation);
-          //bufferStation = new Station();
+        returnArray.add(bufferStation);
+        //bufferStation = new Station();
       }
       return returnArray;
-    }
-
-    catch(FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       System.out.println("Invalid file");
       return null;
-    }
-
-    catch(IOException e) {
+    } catch (IOException e) {
       System.out.println("Error occurred while reading file");
       return null;
     }

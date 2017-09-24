@@ -14,7 +14,7 @@
       alert("Test function");
     }
   </script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&callback=initMap">
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&callback=initMap&libraries=places">
     </script>
   <script type="text/javascript"
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&sensor=false">
@@ -25,6 +25,7 @@
     var markerNum = 0;
     var directionsService;
     var directionsDisplay;
+    var gMarkers = [];
     //alert(directionsService.toString());
     function initialize() {
       var mapOptions = {
@@ -154,6 +155,13 @@
         title: title,
         icon: "image/" + markerType + ".png"
       });
+      gMarkers.push(marker);
+    }
+
+    function clearMarkers() {
+      for(var i = 0;i<gMarkers.length;i++) {
+        gMarkers[i].setMap(null);
+      }
     }
 
     function displayRoute(startLat,startLng,endLat,endLng) {
