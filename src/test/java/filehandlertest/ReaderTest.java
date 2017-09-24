@@ -179,16 +179,16 @@ public class ReaderTest {
     ArrayList<Route> routes = reader.readRoutes("src/test/testResources/TestInitialRoutes.csv", stations);
 
     // Expected routes
-    Date startDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:00", "MM/dd/yyyy");
-    Date stopDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:10", "MM/dd/yyyy");
+    Date startDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:00", "MM/dd/yyyy HH:mm");
+    Date stopDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:10", "MM/dd/yyyy HH:mm");
     Route route1 = new Route(634, startDateTime1, stopDateTime1, startStation1, stopStation1,16950,"Customer",-1,0);
 
-    Date startDateTime2 = new filehandler.Reader().StringToDate("7/1/13 0:01", "MM/dd/yyyy");
-    Date stopDateTime2 = new filehandler.Reader().StringToDate("7/1/13 0:27", "MM/dd/yyyy");
+    Date startDateTime2 = new filehandler.Reader().StringToDate("7/1/13 0:01", "MM/dd/yyyy HH:mm");
+    Date stopDateTime2 = new filehandler.Reader().StringToDate("7/1/13 0:27", "MM/dd/yyyy HH:mm");
     Route route2 = new Route(1580, startDateTime2, stopDateTime2, startStation2, stopStation2,16063,"Customer",-1,0);
 
-    Date startDateTime3 = new filehandler.Reader().StringToDate("7/1/13 0:04", "MM/dd/yyyy");
-    Date stopDateTime3 = new filehandler.Reader().StringToDate("7/1/13 0:25", "MM/dd/yyyy");
+    Date startDateTime3 = new filehandler.Reader().StringToDate("7/1/13 0:04", "MM/dd/yyyy HH:mm");
+    Date stopDateTime3 = new filehandler.Reader().StringToDate("7/1/13 0:25", "MM/dd/yyyy HH:mm");
     Route route3 = new Route(1275, startDateTime3, stopDateTime3, startStation3, stopStation3,16236,"Subscriber",1983,1);
 
     ArrayList<Route> expectedRoutes = new ArrayList<Route>();
