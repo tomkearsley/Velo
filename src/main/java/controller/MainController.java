@@ -8,6 +8,7 @@ import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -169,11 +170,18 @@ public class MainController {
         return false;
       });
     });
+    /**
+     * Sorting:
+     * wrapping the filtered list in a sorted list allows the user to click on the title
+     * of a column and sort the entries in alphanumeric order
+     */
+    SortedList<Retailer> sListRetailers = new SortedList<Retailer>(fListRetailers);
+    sListRetailers.comparatorProperty().bind(rawDataTable.comparatorProperty());
 
     rawDataTable.getColumns()
         .setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol,
             secondaryDescCol);
-    rawDataTable.setItems(fListRetailers);
+    rawDataTable.setItems(sListRetailers);
   }
 
   /**
@@ -226,10 +234,13 @@ public class MainController {
         return false;
       });
     });
+
+    SortedList<Hotspot> sListHotspots = new SortedList<Hotspot>(fListHotspots);
+    sListHotspots.comparatorProperty().bind(rawDataTable.comparatorProperty());
     rawDataTable.getColumns()
         .setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol,
             SSIDCol, providerCol, remarksCol); //something something
-    rawDataTable.setItems(fListHotspots);
+    rawDataTable.setItems(sListHotspots);
   }
 
   public void dataViewPublicPOIs() {
@@ -263,8 +274,11 @@ public class MainController {
       });
     });
 
+    SortedList<PublicPOI> sListPublicPOIs = new SortedList<PublicPOI>(fListPublicPOIs);
+    sListPublicPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
+
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(fListPublicPOIs);
+    rawDataTable.setItems(sListPublicPOIs);
   }
 
   public void dataViewUserPOIs() {
@@ -298,8 +312,12 @@ public class MainController {
         return false;
       });
     });
+
+    SortedList<UserPOI> sListUserPOIs = new SortedList<UserPOI>(fListUserPOIs);
+    sListUserPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
+
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(fListUserPOIs);
+    rawDataTable.setItems(sListUserPOIs);
   }
 
   public void dataViewStations() {
@@ -333,13 +351,16 @@ public class MainController {
         return false;
       });
     });
+
+    SortedList<Station> sListStations = new SortedList<Station>(fListStations);
+    sListStations.comparatorProperty().bind(rawDataTable.comparatorProperty());
+
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, idCol);
-    rawDataTable.setItems(fListStations);
+    rawDataTable.setItems(sListStations);
   }
 
   public void dataViewRoutes() {
     //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
-    //in-between points??
     ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
 
     TableColumn<Route, Station> startStationCol = new TableColumn<Route, Station>("Start Station");
@@ -347,13 +368,10 @@ public class MainController {
         .setCellValueFactory(new PropertyValueFactory<Route, Station>("startStationName"));
     TableColumn<Route, Station> stopStationCol = new TableColumn<Route, Station>("Stop Station");
     stopStationCol.setCellValueFactory(new PropertyValueFactory<Route, Station>("stopStationName"));
-
     TableColumn<Route, Date> startDateTimeCol = new TableColumn<Route, Date>("Start Time");
     startDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("startDate"));
-
     TableColumn<Route, Date> endDateTimeCol = new TableColumn<Route, Date>("Stop Time");
     endDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("stopDate"));
-
     TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
     bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
     TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
@@ -382,10 +400,14 @@ public class MainController {
         return false;
       });
     });
+
+    SortedList<Route> sListRoutes = new SortedList<Route>(fListRoutes);
+    sListRoutes.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    
     rawDataTable.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol,
             userTypeCol, birthYearCol, genderCol);
-    rawDataTable.setItems(fListRoutes);
+    rawDataTable.setItems(sListRoutes);
   }
 
   public void dataViewSelected() {
