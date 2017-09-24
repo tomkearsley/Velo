@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.api.client.util.StringUtils;
 import filehandler.Reader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +11,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -23,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
@@ -63,6 +66,10 @@ public class MainController {
   private WebView mapWebView;
   @FXML
   private Button testButton;
+  @FXML
+  private Pane userPane;
+  @FXML
+  private Pane fileHandlerPane;
 
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -113,6 +120,15 @@ public class MainController {
     mapEngine.setJavaScriptEnabled(true);
     //mapEngine.executeScript("test()");
   }
+  private boolean isInteger(String s) {
+    try {
+      Integer i = Integer.parseInt(s);
+    }
+    catch(NumberFormatException nfe) {
+      return false;
+    }
+    return true;
+  }
 
   /*
   Action handlers
@@ -125,6 +141,13 @@ public class MainController {
     mapViewPane.toFront();
   }
 
+  public void viewUser() {
+    userPane.toFront();
+  }
+  public void viewFileHandler() {
+    fileHandlerPane.toFront();
+  }
+
   /**
    * converts the arrayList of retailers to an observableList creates columns and sets these columns
    * and values to be displayed in rawDataTable
@@ -132,7 +155,6 @@ public class MainController {
   public void dataViewRetailers() {
     //converting the arraylist to an observable list
     ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
-    //TODO add filteredLists to other dataView__ methods, probably abstract these up a layer
     //each 2 line section creates one table heading and set of values
     //TODO lat and long from address?
     TableColumn<Retailer, String> nameCol = new TableColumn<Retailer, String>(
@@ -177,14 +199,28 @@ public class MainController {
             .toLowerCase().contains(lowerCaseFilter)) {
           return true;
         }
+        //checking for zipcode. entire zipcode must be entered before a match is found
+        if (isInteger(lowerCaseFilter)) {
+          Integer input = Integer.parseInt(lowerCaseFilter);
+          if (input == Retailer.getZipcode()) {
+            return true;
+          }
+        }
         return false;
       });
     });
+    /**
+     * Sorting:
+     * wrapping the filtered list in a sorted list allows the user to click on the title
+     * of a column and sort the entries in alphanumeric order
+     */
+    SortedList<Retailer> sListRetailers = new SortedList<Retailer>(fListRetailers);
+    sListRetailers.comparatorProperty().bind(rawDataTable.comparatorProperty());
 
     rawDataTable.getColumns()
         .setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol,
             secondaryDescCol);
-    rawDataTable.setItems(fListRetailers);
+    rawDataTable.setItems(sListRetailers);
   }
 
   /**
@@ -231,16 +267,21 @@ public class MainController {
         String lowerCaseFilter = newValue.toLowerCase();
         // Add more Hotspot.get__'s below to include more things in the search
 
-        if (Hotspot.getName().toLowerCase().contains(lowerCaseFilter)) {
+        if (Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter) || Hotspot.getType()
+            .toLowerCase().contains(lowerCaseFilter)|| Hotspot.getProvider()
+            .toLowerCase().contains(lowerCaseFilter)) {
           return true;
         }
         return false;
       });
     });
+
+    SortedList<Hotspot> sListHotspots = new SortedList<Hotspot>(fListHotspots);
+    sListHotspots.comparatorProperty().bind(rawDataTable.comparatorProperty());
     rawDataTable.getColumns()
         .setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol,
             SSIDCol, providerCol, remarksCol); //something something
-    rawDataTable.setItems(fListHotspots);
+    rawDataTable.setItems(sListHotspots);
   }
 
   public void dataViewPublicPOIs() {
@@ -274,8 +315,11 @@ public class MainController {
       });
     });
 
+    SortedList<PublicPOI> sListPublicPOIs = new SortedList<PublicPOI>(fListPublicPOIs);
+    sListPublicPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
+
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(fListPublicPOIs);
+    rawDataTable.setItems(sListPublicPOIs);
   }
 
   public void dataViewUserPOIs() {
@@ -309,8 +353,12 @@ public class MainController {
         return false;
       });
     });
+
+    SortedList<UserPOI> sListUserPOIs = new SortedList<UserPOI>(fListUserPOIs);
+    sListUserPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
+
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(fListUserPOIs);
+    rawDataTable.setItems(sListUserPOIs);
   }
 
   public void dataViewStations() {
@@ -344,13 +392,16 @@ public class MainController {
         return false;
       });
     });
+
+    SortedList<Station> sListStations = new SortedList<Station>(fListStations);
+    sListStations.comparatorProperty().bind(rawDataTable.comparatorProperty());
+
     rawDataTable.getColumns().setAll(nameCol, latCol, longCol, idCol);
-    rawDataTable.setItems(fListStations);
+    rawDataTable.setItems(sListStations);
   }
 
   public void dataViewRoutes() {
     //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
-    //in-between points??
     ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
 
     TableColumn<Route, Station> startStationCol = new TableColumn<Route, Station>("Start Station");
@@ -358,13 +409,10 @@ public class MainController {
         .setCellValueFactory(new PropertyValueFactory<Route, Station>("startStationName"));
     TableColumn<Route, Station> stopStationCol = new TableColumn<Route, Station>("Stop Station");
     stopStationCol.setCellValueFactory(new PropertyValueFactory<Route, Station>("stopStationName"));
-
     TableColumn<Route, Date> startDateTimeCol = new TableColumn<Route, Date>("Start Time");
     startDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("startDate"));
-
     TableColumn<Route, Date> endDateTimeCol = new TableColumn<Route, Date>("Stop Time");
     endDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("stopDate"));
-
     TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
     bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
     TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
@@ -387,16 +435,28 @@ public class MainController {
         /**
          * Add more Route.get__'s below to include more things in the search
          */
-        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
+            Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
           return true;
+        }
+        //filtering by gender of rider or bike ID. needs to be an exact match before anything is shown
+        if (isInteger(lowerCaseFilter)) {
+          Integer input = Integer.parseInt(lowerCaseFilter);
+          if (Route.getBikeID() == input || Route.getGender() == input) {
+            return true;
+          }
         }
         return false;
       });
     });
+
+    SortedList<Route> sListRoutes = new SortedList<Route>(fListRoutes);
+    sListRoutes.comparatorProperty().bind(rawDataTable.comparatorProperty());
+
     rawDataTable.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol,
             userTypeCol, birthYearCol, genderCol);
-    rawDataTable.setItems(fListRoutes);
+    rawDataTable.setItems(sListRoutes);
   }
 
   public void dataViewSelected() {
