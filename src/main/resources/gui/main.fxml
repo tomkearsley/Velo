@@ -117,12 +117,6 @@
                         </GridPane>
                      </children>
                   </Pane>
-                  <AnchorPane fx:id="mapViewPane">
-                     <children>
-                        <WebView id="mapWebView" fx:id="mapWebView" minHeight="-1.0" minWidth="-1.0" prefWidth="681.0" />
-                        <Button id="testButton" fx:id="testButton" layoutX="359.0" layoutY="400.0" mnemonicParsing="false" onAction="#testABC" text="PRESS ME" />
-                     </children>
-                  </AnchorPane>
                   <SplitPane fx:id="dataSplitPane" dividerPositions="0.9" orientation="VERTICAL" prefHeight="398.0" prefWidth="417.0">
                      <items>
                     <TableView id="mapBrowser" fx:id="rawDataTable">
@@ -142,6 +136,15 @@
                         </HBox>
                      </items>
                   </SplitPane>
+                  <AnchorPane fx:id="mapViewPane">
+                     <children>
+                        <WebView id="mapWebView" fx:id="mapWebView" layoutX="2.0" minHeight="-1.0" minWidth="-1.0" prefHeight="533.0" prefWidth="679.0" />
+                        <Button id="displayHotspotButton" fx:id="displayHotspotButton" layoutX="11.0" layoutY="550.0" mnemonicParsing="false" onAction="#displayHotspots" prefHeight="25.0" prefWidth="150.0" text="Display Hotspots" />
+                        <Button id="hideHotspotButton" fx:id="hideHotspotButton" layoutX="169.0" layoutY="549.0" mnemonicParsing="false" onAction="#hideMarkers" prefHeight="25.0" prefWidth="153.0" text="Hide Markers" />
+                        <Button id="showMarkersButton" fx:id="showMarkersButton" layoutX="332.0" layoutY="549.0" mnemonicParsing="false" onAction="#showMarkers" prefHeight="17.0" prefWidth="149.0" text="Show Markers" />
+                        <Button id="deleteMarkersButton" fx:id="deleteMarkersButton1" layoutX="493.0" layoutY="549.0" mnemonicParsing="false" onAction="#deleteMarkers" prefHeight="25.0" prefWidth="153.0" text="Delete Markers" />
+                     </children>
+                  </AnchorPane>
                </children>
             </StackPane>
       </children></AnchorPane>

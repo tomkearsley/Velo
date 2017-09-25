@@ -150,11 +150,26 @@ public class MainController {
     return true;
   }
 
-  public void testABC() throws IOException{
+  public void displayHotspots() throws IOException{
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
     window.call("loadHotspots",rdr.readHotspots("src/main/resources/file/InitialHotspots.csv"));
+  }
+
+  public void hideMarkers() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideMarkers");
+  }
+
+  public void showMarkers() {
+    window.setMember("aBridge",aBridge);
+    window.call("showMarkers");
+  }
+
+  public void deleteMarkers() {
+    window.setMember("aBridge",aBridge);
+    window.call("deleteMarkers");
   }
 
   /*

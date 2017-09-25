@@ -211,9 +211,9 @@ public class Station {
     this.longitude = longitude;
   }
 
-  public Station(int ID, String name, int availableDocks, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String city,String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
+  public Station(int ID, String stationName, int availableDocks, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String city,String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
     this.ID = ID;
-    this.stationName = name;
+    this.stationName = stationName;
     this.availableDocks = availableDocks;
     this.totalDocks = totalDocks;
     this.latitude = latitude;

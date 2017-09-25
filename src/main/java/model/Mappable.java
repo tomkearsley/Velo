@@ -8,7 +8,6 @@ import javax.swing.ImageIcon;
 public interface Mappable {
   double latitude = 0;
   double longitude = 0;
-  ImageIcon Logo = new ImageIcon();
   String info = "";
 
   /*

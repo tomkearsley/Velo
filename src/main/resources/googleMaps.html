@@ -175,9 +175,23 @@
       gMarkers.push(marker);
     }
 
-    function clearMarkers() {
+    function hideMarkers() {
+      aBridge.outputValue("Hiding markers");
       for(var i = 0;i<gMarkers.length;i++) {
         gMarkers[i].setMap(null);
+      }
+    }
+
+    function deleteMarkers() {
+      aBridge.outputValue("Deleting markers");
+      hideMarkers();
+      gMarkers = [];
+    }
+
+    function showMarkers() {
+      aBridge.outputValue("Showing markers");
+      for (var i = 0; i < gMarkers.length; i++) {
+        gMarkers[i].setMap(map);
       }
     }
 
@@ -215,15 +229,10 @@
       });
     }
 
-    function atest() {
-      var test = String(aBridge.testFunction2("testString"));
-      aBridge.testValue(test);
-      createMarker(40.7829,-73.9654,test,"default");
-    }
-
     function loadHotspots(infoArray) {
       var lat,lng,title;
-      aBridge.testValue("loadHotspots being run");
+      aBridge.outputValue("Displaying hotspots");
+      deleteMarkers();
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
         lat = aBridge.getLat(infoArray.get(i));
