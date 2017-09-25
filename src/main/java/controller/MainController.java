@@ -4,6 +4,7 @@ import com.google.api.client.util.StringUtils;
 import filehandler.Reader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.beans.value.ChangeListener;
@@ -39,10 +40,13 @@ import model.Station;
 import model.UserPOI;
 import netscape.javascript.JSObject;
 
+
 /**
  * Initialises all of the ArrayLists used for temporary storage and @FXML items
  */
 public class MainController {
+
+
 
   private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
   private ArrayList<Retailer> retailers = new ArrayList<Retailer>();
@@ -146,10 +150,11 @@ public class MainController {
     return true;
   }
 
-  public void testABC() {
+  public void testABC() throws IOException{
+    Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
-    window.call("atest","abc");
+    window.call("loadHotspots",rdr.readHotspots("src/main/resources/file/InitialHotspots.csv"));
   }
 
   /*
