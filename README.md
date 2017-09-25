@@ -10,7 +10,7 @@ Vélo is the best way for New York City rental bicyclists to explore the city.
 ##Installation
 
 1. Download the Vélo.jar file
-2. Execute it y'all
+2. Double click the file to execute it
 
 For the lecturers and tutors who have access to the IntelliJ project files, 
 please run the GUIManager main() to begin the application.
