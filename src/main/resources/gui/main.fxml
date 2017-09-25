@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <items>
     <AnchorPane>
          <children>
@@ -120,6 +120,7 @@
                   <AnchorPane fx:id="mapViewPane">
                      <children>
                         <WebView id="mapWebView" fx:id="mapWebView" minHeight="-1.0" minWidth="-1.0" prefWidth="681.0" />
+                        <Button id="testButton" fx:id="testButton" layoutX="359.0" layoutY="400.0" mnemonicParsing="false" onAction="#testABC" text="PRESS ME" />
                      </children>
                   </AnchorPane>
                   <SplitPane fx:id="dataSplitPane" dividerPositions="0.9" orientation="VERTICAL" prefHeight="398.0" prefWidth="417.0">

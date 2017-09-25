@@ -14,7 +14,7 @@ public class Station {
   private String stationName;
 
   /**Number of available docks*/
-  private int availableDocs;
+  private int availableDocks;
 
   /**Number of total docks*/
   private int totalDocks;
@@ -39,6 +39,9 @@ public class Station {
 
   /***/
   private String streetAddress2;
+
+  /***/
+  private String city;
 
   /***/
   private String postalCode;
@@ -93,11 +96,11 @@ public class Station {
   }
 
   public int getAvailableDocs() {
-    return availableDocs;
+    return availableDocks;
   }
 
-  public void setAvailableDocs(int availableDocs) {
-    this.availableDocs = availableDocs;
+  public void setAvailableDocks(int availableDocks) {
+    this.availableDocks = availableDocks;
   }
 
   public int getTotalDocks() {
@@ -147,6 +150,10 @@ public class Station {
   public void setStreetAddress2(String streetAddress2) {
     this.streetAddress2 = streetAddress2;
   }
+
+  public String getCity() {return city;}
+
+  public void setCity(String city) {this.city = city; }
 
   public String getPostalCode() {
     return postalCode;
@@ -204,10 +211,10 @@ public class Station {
     this.longitude = longitude;
   }
 
-  public Station(int ID, String name, int availableDocs, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
+  public Station(int ID, String name, int availableDocks, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String city,String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
     this.ID = ID;
     this.stationName = name;
-    this.availableDocs = availableDocs;
+    this.availableDocks = availableDocks;
     this.totalDocks = totalDocks;
     this.latitude = latitude;
     this.longitude = longitude;
@@ -216,11 +223,27 @@ public class Station {
     this.availableBikes = availableBikes;
     this.streetAddress1 = streetAddress1;
     this.streetAddress2 = streetAddress2;
+    this.city = city;
     this.postalCode = postalCode;
     this.location = location;
     this.altitude = altitude;
     this.testStation = testStation;
     this.lastCommunicationTime = lastCommunicationTime;
     this.landMark = landMark;
+  }
+
+  @Override
+  public String toString() {
+    return "ID: " + ID + "\nstationName: " + stationName + "\navailableDocks: " + availableDocks + "\ntotalDocks: " + totalDocks + "\nlatitude:" +
+    latitude + "\nlongitude: " + longitude + "\nstatusValue: " + statusValue + "\nstatusKey: " + statusKey + "\navailableBikes" + availableBikes +
+    "\nstreetAddress1" + streetAddress1 + "\nstreetAddress2" + streetAddress2 + "\ncity: " + city + "\npostalCode" + postalCode + "\nlocation: " + location +
+    "\naltitude: " + altitude + "\ntestStation:" + testStation + "\nlastCommunicationTime: " + lastCommunicationTime + "\nlandMark" + landMark;
+  }
+
+  public String test() {
+    return ID + "," + stationName + "," + availableDocks + "," + totalDocks + "," +
+        latitude + "," + longitude + "," + statusValue + "," + statusKey + "," + availableBikes +
+        "," + streetAddress1 + "," + streetAddress2 + "," + postalCode + "," + location +
+        "," + altitude + "," + testStation + "," + lastCommunicationTime + "," + landMark;
   }
 }

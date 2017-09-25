@@ -3,6 +3,8 @@ package filehandlertest;
 //TODO Replace assertTrue (blah.equals(blah2)) with assertEquals (overriding issue)
 import com.sun.corba.se.impl.interceptors.PICurrent;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -202,12 +204,27 @@ public class ReaderTest {
   }
 
   @Test
-  public void readStations() throws FileNotFoundException {
+  public void readStations() throws FileNotFoundException, ParseException{
     ArrayList<Station> stations = reader.readStations("src/main/resources/file/stations.json");
-    for(Station x:stations) {
-      //Insert test cases here
-      //System.out.println(x.getID());
+
+    ArrayList<Station> compareStations = new ArrayList<Station>();
+
+    Date date1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse("2017-09-20 10:14:27 PM");
+    Date date2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse("2017-09-20 10:13:52 PM");
+    Date date3 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse("2017-09-20 10:14:02 PM");
+
+    Station station1 = new Station(72,"W 52 St & 11 Ave",28,39,40.76727216,-73.99392888,"In Service",1,10,"W 52 St & 11 Ave","","","","","",false,date1,"");
+    Station station2 = new Station(79,"Franklin St & W Broadway",18,33,40.71911552,-74.00666661,"In Service",1,14,"Franklin St & W Broadway","","","","","",false,date2,"");
+    Station station3 = new Station(82,"St James Pl & Pearl St",3,27,40.71117416,-74.00016545,"In Service",1,24,"St James Pl & Pearl St","","","","","",false,date3,"");
+
+    compareStations.add(station1);
+    compareStations.add(station2);
+    compareStations.add(station3);
+
+    for(int i = 0;i < compareStations.size()-1;i++) {
+      //System.out.println(stations.get(i).toString());
+      //System.out.println(compareStations.get(i).toString());
+      assertTrue(stations.get(i).toString().equals(compareStations.get(i).toString()));
     }
   }
-
 }

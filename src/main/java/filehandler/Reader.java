@@ -597,6 +597,7 @@ public class Reader {
       int availableBikes;
       String stAddress1;
       String stAddress2;
+      String city;
       String postalCode;
       String location;
       String altitude;
@@ -622,6 +623,7 @@ public class Reader {
         availableBikes = bufferObject.getInt("availableBikes");
         stAddress1 = bufferObject.getString("stAddress1");
         stAddress2 = bufferObject.getString("stAddress2");
+        city = bufferObject.getString("city");
         postalCode = bufferObject.getString("postalCode");
         location = bufferObject.getString("location");
         altitude = bufferObject.getString("altitude");
@@ -635,7 +637,7 @@ public class Reader {
         }
         landMark = bufferObject.getString("landMark");
         bufferStation = new Station(id, stationName, availableDocks, totalDocks, latitude,
-            longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode,
+            longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, city, postalCode,
             location, altitude, testStation, lastCommunicationTime, landMark);
 
         returnArray.add(bufferStation);

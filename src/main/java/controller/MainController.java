@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -71,6 +72,10 @@ public class MainController {
   @FXML
   private Pane fileHandlerPane;
 
+  private JSObject window;
+
+  private Bridge aBridge = new Bridge();
+
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try {
@@ -113,11 +118,22 @@ public class MainController {
     File f = new File("src/main/resources/googleMaps.html");
 
     WebEngine mapEngine = mapWebView.getEngine();
+    mapEngine.setJavaScriptEnabled(true);
+
+      mapEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+        if (newState == State.SUCCEEDED) {
+          window = (JSObject) mapEngine.executeScript("window");
+          window.setMember("aBridge", aBridge);
+          System.out.println("Initialisation complete");
+        }
+      });
 
     //double latitude = 40.785091;double longitude = -73.968285;String title = "Test Marker";String markerType = "default";
 
     mapEngine.load(f.toURI().toString());
     mapEngine.setJavaScriptEnabled(true);
+
+    //testABC();
     //mapEngine.executeScript("test()");
   }
   private boolean isInteger(String s) {
@@ -128,6 +144,12 @@ public class MainController {
       return false;
     }
     return true;
+  }
+
+  public void testABC() {
+    //Run both lines of code
+    window.setMember("aBridge",aBridge);
+    window.call("atest","abc");
   }
 
   /*

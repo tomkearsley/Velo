@@ -21,7 +21,7 @@
   </script>
   <script type="text/javascript">
     var map;
-    var bridge
+    var aBridge;
     var markerNum = 0;
     var directionsService;
     var directionsDisplay;
@@ -146,6 +146,8 @@
         createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"default");
       });
 
+
+
       //var bikeLayer = new google.maps.BicyclingLayer();
       //bikeLayer.setMap(map);
       //alert("Test");
@@ -211,6 +213,11 @@
           alert('Geocoder failed due to: ' + status);
         }
       });
+    }
+
+    function atest(logo) {
+      createMarker(40.7829,-73.9654,"Test Marker",logo);
+      aBridge.atest("test");
     }
 
     //initialize();
