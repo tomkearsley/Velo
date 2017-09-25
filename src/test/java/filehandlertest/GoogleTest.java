@@ -15,5 +15,4 @@ public class GoogleTest {
       double[] testALocation = Google.stringToLocation("Upper Manhattan");
       assertTrue(Arrays.equals(testLocation,testALocation));
     }
-
 }

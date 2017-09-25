@@ -9,7 +9,7 @@ public interface Mappable {
   double latitude = 0;
   double longitude = 0;
   String info = "";
-
+  ImageIcon Logo = new ImageIcon();
   /*
   double[] getLocation();
   void setLocation(double focusLocation[]);
