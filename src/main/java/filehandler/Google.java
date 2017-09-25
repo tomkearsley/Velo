@@ -25,7 +25,7 @@ public class Google {
 
 
   public static double[] stringToLocation(String string) {
-    String apiKey = "AIzaSyD_iIkRqntinnZupQBcn7Ka1HsE3n0MuX8";
+    String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
     String JsonString =
         "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string)
             + "&key=" + apiKey;

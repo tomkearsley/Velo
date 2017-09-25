@@ -13,8 +13,6 @@ public class GoogleTest {
     public void testConversion() {
       double[] testLocation = {40.8240478, -73.9447643};  //Fix values
       double[] testALocation = Google.stringToLocation("Upper Manhattan");
-      for(int i = 0;i<testLocation.length;i++) {
-        assertTrue(testALocation[i] == testALocation[i]);
-      }
+      assertTrue(Arrays.equals(testLocation,testALocation));
     }
 }
