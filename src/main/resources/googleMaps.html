@@ -224,14 +224,14 @@
     function loadHotspots(infoArray) {
       var lat,lng,title;
       aBridge.testValue("loadHotspots being run");
-      for(var i = 0; i < 5; i++) {
-        aBridge.testValue("test");
+      for(var i = 0; i < infoArray.size(); i++) {
+        //aBridge.testValue("test");
         lat = aBridge.getLat(infoArray.get(i));
-        aBridge.testValue("test1");
+        //aBridge.testValue("test1");
         lng = aBridge.getLng(infoArray.get(i));
-        aBridge.testValue("test2");
+        //aBridge.testValue("test2");
         title = aBridge.getTitle(infoArray.get(i));
-        aBridge.testValue("test3");
+        //aBridge.testValue("test3");
         createMarker(lat,lng,title,"wifi");
       }
     }
