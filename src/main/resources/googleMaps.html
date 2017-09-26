@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Google Maps</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <style type="text/css">
+    html { height: 100% }
+    body { height: 100%; margin: 0; padding: 0 }
+    #map-canvas { height: 100% }
+  </style>
+  <script type="text/javascript">
+    function test() {
+      alert("Test function");
+    }
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&callback=initMap&libraries=places">
+    </script>
+  <script type="text/javascript"
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&sensor=false">
+  </script>
+  <script type="text/javascript">
+    var map;
+    var aBridge;
+    var markerNum = 0;
+    var directionsService;
+    var directionsDisplay;
+    var gMarkers = [];
+    var infowindow;
+    var geocoder;
+    var currentLocation;
+    //alert(directionsService.toString());
+    function initialize() {
+      var mapOptions = {
+        center: new google.maps.LatLng(40.785091, -73.968285),
+        disableDefaultUI: true,
+        zoomControl: true,
+        //streetViewControl: true,
+        rotateControl: true,    //Doesn't work :(
+        zoom: 4,
+        //The below code enables night mode. Design decision, comment out if we don't like it
+        styles: [
+          {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
+          {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
+          {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+          {
+            featureType: 'administrative.locality',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#d59563'}]
+          },
+          {
+            featureType: 'poi',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#d59563'}]
+          },
+          {
+            featureType: 'poi.park',
+            elementType: 'geometry',
+            stylers: [{color: '#263c3f'}]
+          },
+          {
+            featureType: 'poi.park',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#6b9a76'}]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry',
+            stylers: [{color: '#38414e'}]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry.stroke',
+            stylers: [{color: '#212a37'}]
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#9ca5b3'}]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry',
+            stylers: [{color: '#746855'}]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry.stroke',
+            stylers: [{color: '#1f2835'}]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#f3d19c'}]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'geometry',
+            stylers: [{color: '#2f3948'}]
+          },
+          {
+            featureType: 'transit.station',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#d59563'}]
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry',
+            stylers: [{color: '#17263c'}]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.fill',
+            stylers: [{color: '#515c6d'}]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.stroke',
+            stylers: [{color: '#17263c'}]
+          },
+          {
+            featureType: ''
+          }]
+      };
+
+      map = new google.maps.Map(document.getElementById("map-canvas"),
+          mapOptions);
+      map.setZoom(12);
+
+
+      directionsService = new google.maps.DirectionsService;
+      directionsDisplay = new google.maps.DirectionsRenderer;
+
+      infowindow = new google.maps.InfoWindow({
+        content: "Loading location info..."
+      });
+
+      geocoder = new google.maps.Geocoder;
+
+      directionsDisplay.setMap(map);
+      //createMarker(40.785091, -73.968285,'Test Marker',"default");
+
+      //Create marker on click
+      google.maps.event.addListener(map,'click',function(event) {
+        markerNum++;
+        createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"default");
+      });
+
+
+
+      //var bikeLayer = new google.maps.BicyclingLayer();
+      //bikeLayer.setMap(map);
+      //alert("Test");
+      var location1 = [40.7829,-73.9654];
+      var location2 = [40.7736,-73.9566];
+      //displayRoute(location1[0],location1[1],location2[0],location2[1]);
+    }
+
+    function createMarker(lat,lng,title,markerType) {
+      //Images should be ~ 23 * 23.
+      var myLatLng = new google.maps.LatLng(lat, lng);
+      //alert("lat: " + lat + "\nlng: " + lng + "\nLocation: " + myLatLng);
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map:map,
+        title: title,
+        icon: "image/" + markerType + ".png"
+      });
+
+      marker.addListener('click', function() {
+        geocodeLatLng(myLatLng,infowindow);
+        infowindow.open(map, marker);
+      });
+
+      gMarkers.push(marker);
+    }
+
+    function hideMarkers() {
+      aBridge.outputValue("Hiding markers");
+      for(var i = 0;i<gMarkers.length;i++) {
+        gMarkers[i].setMap(null);
+      }
+    }
+
+    function deleteMarkers() {
+      aBridge.outputValue("Deleting markers");
+      hideMarkers();
+      gMarkers = [];
+    }
+
+    function showMarkers() {
+      aBridge.outputValue("Showing markers");
+      for (var i = 0; i < gMarkers.length; i++) {
+        gMarkers[i].setMap(map);
+      }
+    }
+
+    function displayRoute(startLat,startLng,endLat,endLng) {
+      //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      var startLocation = startLat + "," + startLng;
+      var endLocation = endLat + "," + endLng;
+      directionsService.route({
+        origin: startLocation,
+        destination: endLocation,
+        travelMode: 'BICYCLING'
+      }, function(response, status) {
+        //alert("as");
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+      //alert("Test");
+    }
+
+    function geocodeLatLng(latlng,infowindow) {
+      geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+          if (results[0]) {
+            //alert(results[0].formatted_address);
+            infowindow.setContent(results[0].formatted_address);
+          } else {
+            alert('No results found');
+          }
+        } else {
+          alert('Geocoder failed due to: ' + status);
+        }
+      });
+    }
+
+    function loadHotspots(infoArray) {
+      var lat,lng,title;
+      aBridge.outputValue("Displaying hotspots");
+      for(var i = 0; i < infoArray.size(); i++) {
+        //aBridge.testValue("test");
+        lat = aBridge.getLat(infoArray.get(i));
+        //aBridge.testValue("test1");
+        lng = aBridge.getLng(infoArray.get(i));
+        //aBridge.testValue("test2");
+        title = aBridge.getTitle(infoArray.get(i));
+        //aBridge.testValue("test3");
+        createMarker(lat,lng,title,"wifi");
+      }
+    }
+
+    //initialize();
+    google.maps.event.addDomListener(window, 'load', initialize);
+    //google.maps.event.addListener(window, 'click', function(event) {
+    //  alert(event.latLng);  // in event.latLng  you have the coordinates of click
+    //});
+  </script>
+</head>
+<body>
+<div id="map-canvas"/>
+</body>
+</html>
