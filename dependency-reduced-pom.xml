@@ -4,7 +4,7 @@
   <groupId>seng202.team9</groupId>
   <artifactId>SENG202Team9</artifactId>
   <name>SENG202Team9</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>v1.0</version>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>
@@ -23,12 +23,19 @@
           <transformers>
             <transformer>
               <manifestEntries>
-                <Main-Class>window.App</Main-Class>
+                <Main-Class>controller.GUIManager</Main-Class>
                 <X-Compile-Source-JDK>1.8</X-Compile-Source-JDK>
                 <X-Compile-Target-JDK>1.8</X-Compile-Target-JDK>
               </manifestEntries>
             </transformer>
           </transformers>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
     </plugins>
@@ -37,8 +44,14 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.12</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>hamcrest-core</artifactId>
+          <groupId>org.hamcrest</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>
