@@ -5,6 +5,8 @@ import filehandler.Reader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.beans.value.ChangeListener;
@@ -83,12 +85,12 @@ public class MainController {
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try {
-      hotspots = rdr.readHotspots("src/main/resources/file/InitialHotspots.csv");
-      retailers = rdr.readRetailers("src/main/resources/file/InitialRetailers.csv");
-      stations = rdr.readStations("src/main/resources/file/stations.json");
-      userPOIs = rdr.readUserPOIS("src/main/resources/file/UserPOIdata_smallsample.csv");
-      publicPOIs = rdr.readPublicPOIS("src/main/resources/file/PublicPOIdata_smallsample.csv");
-      routes = rdr.readRoutes("src/main/resources/file/tripdata_smallsample.csv", stations);
+      hotspots = rdr.readHotspots("/file/InitialHotspots.csv");
+      retailers = rdr.readRetailers("/file/InitialRetailers.csv");
+      stations = rdr.readStations("/file/stations.json");
+      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv");
+      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv");
+      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations);
     } catch (FileNotFoundException e) {
       System.out.println("File not found");
       e.printStackTrace();
@@ -119,7 +121,7 @@ public class MainController {
           }
         });
 
-    File f = new File("src/main/resources/googleMaps.html");
+    URL url = getClass().getResource("/googleMaps.html");
 
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
@@ -134,7 +136,7 @@ public class MainController {
 
     //double latitude = 40.785091;double longitude = -73.968285;String title = "Test Marker";String markerType = "default";
 
-    mapEngine.load(f.toURI().toString());
+    mapEngine.load(url.toExternalForm());
     mapEngine.setJavaScriptEnabled(true);
 
     //testABC();
@@ -154,7 +156,7 @@ public class MainController {
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
-    window.call("loadHotspots",rdr.readHotspots("src/main/resources/file/InitialHotspots.csv"));
+    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv"));
   }
 
   public void hideMarkers() {

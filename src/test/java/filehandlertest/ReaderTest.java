@@ -1,7 +1,6 @@
 package filehandlertest;
 
 //TODO Replace assertTrue (blah.equals(blah2)) with assertEquals (overriding issue)
-import com.sun.corba.se.impl.interceptors.PICurrent;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +9,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import model.Hotspot;
-import model.POI;
 import model.PublicPOI;
 import model.Retailer;
 import model.Route;
@@ -51,7 +49,7 @@ public class ReaderTest {
    */
   @Test
   public void readHotspots() throws FileNotFoundException {
-    ArrayList<Hotspot> hotspots = reader.readHotspots("src/test/testResources/TestInitialHotspots.csv");
+    ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv");
 
     Hotspot hotspot998 = new Hotspot(998, 40.745968, -73.994039,
         "179 WEST 26 STREET", "MN17", "New York", 10001,
@@ -78,7 +76,7 @@ public class ReaderTest {
    */
   @Test
   public void readRetailers() throws FileNotFoundException{
-    List<Retailer> Retailers = reader.readRetailers("src/test/testResources/retailers.csv");
+    List<Retailer> Retailers = reader.readRetailers("/test/retailers.csv");
     Retailer r1, r2, r3;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "8-32", "Casual Eating & Takeout",
@@ -99,7 +97,7 @@ public class ReaderTest {
 
   @Test
   public void readRetailerWithEmptyEndingCells() throws FileNotFoundException{
-    List<Retailer> Retailers = reader.readRetailers("src/test/testResources/retailerEmptyEnds.csv");
+    List<Retailer> Retailers = reader.readRetailers("/test/retailerEmptyEnds.csv");
     Retailer r1, r2;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "", "",
@@ -116,7 +114,7 @@ public class ReaderTest {
   //TODO ADD JAVADOC
   @Test
   public void readUserPOIS() throws FileNotFoundException {
-    ArrayList<UserPOI> POIs = reader.readUserPOIS("src/test/testResources/POIS.csv");
+    ArrayList<UserPOI> POIs = reader.readUserPOIS("/test/POIS.csv");
     ArrayList<UserPOI> expectedPOIs = new ArrayList<UserPOI>();
 
     UserPOI p1, p2, p3;
@@ -137,7 +135,7 @@ public class ReaderTest {
   //TODO ADD JAVADOC
   @Test
   public void readPublicPOIS() throws FileNotFoundException {
-    ArrayList<PublicPOI> POIs = reader.readPublicPOIS("src/test/testResources/PublicPOIS.csv");
+    ArrayList<PublicPOI> POIs = reader.readPublicPOIS("/test/PublicPOIS.csv");
     ArrayList<PublicPOI> expectedPOIs = new ArrayList<PublicPOI>();
 
     PublicPOI p1, p2, p3;
@@ -178,7 +176,7 @@ public class ReaderTest {
     stations.add(startStation3);
     stations.add(stopStation3);
 
-    ArrayList<Route> routes = reader.readRoutes("src/test/testResources/TestInitialRoutes.csv", stations);
+    ArrayList<Route> routes = reader.readRoutes("/test/TestInitialRoutes.csv", stations);
 
     // Expected routes
     Date startDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:00", "MM/dd/yyyy HH:mm");
@@ -205,7 +203,7 @@ public class ReaderTest {
 
   @Test
   public void readStations() throws FileNotFoundException, ParseException{
-    ArrayList<Station> stations = reader.readStations("src/main/resources/file/stations.json");
+    ArrayList<Station> stations = reader.readStations("/file/stations.json");
 
     ArrayList<Station> compareStations = new ArrayList<Station>();
 

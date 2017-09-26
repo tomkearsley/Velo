@@ -165,7 +165,7 @@ public class Reader {
    * @return ArrayList<Hotspot> Hotspots
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Hotspot> readHotspots(String filename) throws FileNotFoundException {
+    public ArrayList<Hotspot> readHotspots(String filename) throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int idIndex = 0;
@@ -188,7 +188,7 @@ public class Reader {
 
     try {
 
-      br = new BufferedReader(new FileReader(filename));
+      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
       while ((line = br.readLine()) != null) {
 
         // Separate by comma
@@ -266,7 +266,7 @@ public class Reader {
 
     try {
 
-      br = new BufferedReader(new FileReader(filename));
+      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
       while ((line = br.readLine()) != null) {
         // Separate by comma
         ArrayList<Integer> locs = findQuotedCommas(line);
@@ -337,7 +337,7 @@ public class Reader {
 
     try {
 
-      br = new BufferedReader(new FileReader(filename));
+      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
       while ((line = br.readLine()) != null) {
         // Separate by comma
         ArrayList<Integer> locs = findQuotedCommas(line);
@@ -397,7 +397,7 @@ public class Reader {
 
     try {
 
-      br = new BufferedReader(new FileReader(filename));
+      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
       while ((line = br.readLine()) != null) {
         // Separate by comma
         ArrayList<Integer> locs = findQuotedCommas(line);
@@ -481,7 +481,7 @@ public class Reader {
 
     try {
 
-      br = new BufferedReader(new FileReader(filename));
+      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
       while ((line = br.readLine()) != null) {
         // Separate by comma
         String[] csvRoute = line.split(",");
@@ -567,7 +567,7 @@ public class Reader {
     ArrayList<Station> returnArray = new ArrayList<Station>();
 
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(filename));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
       StringBuilder sb = new StringBuilder();
       String inputLine;
 

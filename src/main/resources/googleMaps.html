@@ -232,7 +232,6 @@
     function loadHotspots(infoArray) {
       var lat,lng,title;
       aBridge.outputValue("Displaying hotspots");
-      deleteMarkers();
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
         lat = aBridge.getLat(infoArray.get(i));
