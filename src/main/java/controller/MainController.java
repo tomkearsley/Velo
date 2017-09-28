@@ -49,7 +49,7 @@ import netscape.javascript.JSObject;
 public class MainController {
 
 
-
+  // POI ArrayList attributes
   private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
   private ArrayList<Retailer> retailers = new ArrayList<Retailer>();
   private ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
@@ -58,30 +58,24 @@ public class MainController {
   private ArrayList<Station> stations = new ArrayList<Station>();
   //TODO use reader to populate these ArrayLists
 
-  //Data table
-  @FXML
-  private TableView rawDataTable;
-  @FXML
-  private SplitPane dataSplitPane;
-  @FXML
-  private AnchorPane mapViewPane;
-  @FXML
-  private ChoiceBox<DataType> dataTypeChoiceBox;
-  @FXML
-  private TextField rawDataFilterField;
-  @FXML
-  private WebView mapWebView;
-  @FXML
-  private Button testButton;
-  @FXML
-  private Pane userPane;
-  @FXML
-  private Pane fileHandlerPane;
+  //FXML attributes
+  @FXML private TableView rawDataTable;
+  @FXML private SplitPane dataSplitPane;
+  @FXML private AnchorPane mapViewPane;
+  @FXML private ChoiceBox<DataType> dataTypeChoiceBox;
+  @FXML private TextField rawDataFilterField;
+  @FXML private WebView mapWebView;
+  @FXML private Pane userPane;
+  @FXML private Pane fileHandlerPane;
 
+  //Other attributes
   private JSObject window;
-
   private Bridge aBridge = new Bridge();
 
+  /** TODO add javadoc
+   *
+   * @return
+   */
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try {
