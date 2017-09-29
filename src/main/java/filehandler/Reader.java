@@ -39,6 +39,9 @@ public class Reader {
 
   /**
    * Converts from a String to a Date type
+   * @param newDate inputDate
+   * @param pattern Date pattern that we want to read
+   * @return The Date representation of the string passed in as a parameter
    */
   public Date StringToDate(String newDate, String pattern) {
     Date date;
@@ -162,7 +165,7 @@ public class Reader {
    * TODO Needs to be tested to ensure it works.
    *
    * @param filename the name of file to open
-   * @return ArrayList<Hotspot> Hotspots
+   * @return ArrayList Hotspots
    * @throws FileNotFoundException if the file cannot be found
    */
     public ArrayList<Hotspot> readHotspots(String filename) throws FileNotFoundException {
@@ -243,7 +246,7 @@ public class Reader {
    * attributes
    *
    * @param filename the name of file to open
-   * @return ArrayList<Retailer> Retailers
+   * @return ArrayList Retailers
    * @throws FileNotFoundException if the file cannot be found
    */
   public ArrayList<Retailer> readRetailers(String filename) throws FileNotFoundException {
@@ -319,7 +322,7 @@ public class Reader {
    * extracted attributes
    *
    * @param filename the name of file to open
-   * @return ArrayList<UserPOI> User Points of Interest
+   * @return ArrayList User Points of Interest
    * @throws FileNotFoundException if the file cannot be found
    */
   public ArrayList<UserPOI> readUserPOIS(String filename) throws FileNotFoundException {
@@ -379,7 +382,7 @@ public class Reader {
    * the extracted attributes
    *
    * @param filename the name of file to open
-   * @return ArrayList<PublicPOI> Public Points of Interest
+   * @return ArrayList Public Points of Interest
    * @throws FileNotFoundException if the file cannot be found
    */
   public ArrayList<PublicPOI> readPublicPOIS(String filename) throws FileNotFoundException {
@@ -446,7 +449,8 @@ public class Reader {
    * <p> Needs to be tested to ensure it works. </p>
    *
    * @param filename the name of file to open
-   * @return ArrayList<Route> Routes
+   * @param stations The stations to read the routes from
+   * @return ArrayList Routes
    * @throws FileNotFoundException if the file cannot be found
    */
   public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations)
@@ -559,7 +563,7 @@ public class Reader {
    * <p> Needs to be tested to ensure it works. </p>
    *
    * @param filename the name of file to open
-   * @return ArrayList<Station> Stations
+   * @return ArrayList Stations
    * @throws FileNotFoundException if the file cannot be found
    */
   public ArrayList<Station> readStations(String filename) throws FileNotFoundException {

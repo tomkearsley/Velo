@@ -28,7 +28,7 @@ public class MySQL {
    * @param description Short description of POI
    * @throws Exception Thrown if insert fails, too many values, incorrect format ect.
    */
-  public static void PublicPOIInsert(double longitude, double latitude, String name,
+  public static void insertPublicPOI(double longitude, double latitude, String name,
       String description) throws Exception {
     try {
       Connection conn = getConnection();
@@ -51,7 +51,7 @@ public class MySQL {
    * @param latitude Latitude of Hotspot
    * @param identifier Hotspots Identifier. Words + number
    */
-  public static void HotspotsInsert(double longitude, double latitude, String identifier) {
+  public static void insertHotspot(double longitude, double latitude, String identifier) {
     try {
       Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
@@ -71,7 +71,7 @@ public class MySQL {
    * @param username Username for said user
    * @param password Password for given user
    */
-  public static void UserInsert(String username, String password) {
+  public static void insertUser(String username, String password) {
     try {
       Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
@@ -128,6 +128,7 @@ public class MySQL {
    *
    * @param username Users entered username
    * @param password Users entered password
+   * @throws Exception In case connection falses due to unknown reasons
    * @return Boolean true if password and username is correct. Otherwise returns false
    */
   public static boolean login(String username, String password) throws Exception {

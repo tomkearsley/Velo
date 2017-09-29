@@ -45,7 +45,7 @@ public class ReaderTest {
 
   /**
    * Test the Reader to ensure it extracts Hotspot csv data correctly
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException In case the file can' be found
    */
   @Test
   public void readHotspots() throws FileNotFoundException {
@@ -73,6 +73,7 @@ public class ReaderTest {
   /**
    * Tests the Reader to verify that it collects the right Retailer information from a csv
    * and does not miss any entries
+   * @throws FileNotFoundException Throws exception if file is not found
    */
   @Test
   public void readRetailers() throws FileNotFoundException{
@@ -155,7 +156,7 @@ public class ReaderTest {
 
   /**
    * Test the Reader to ensure it extracts Route csv data correctly
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException Throws exception if file can't be found
    */
   @Test
   public void readRoutes() throws FileNotFoundException {
