@@ -1,21 +1,51 @@
 package filehandler;
 
+import model.Retailer;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.lang.Exception;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import model.Retailer;
 
 /**
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
 
-  public static void main(String[] args) throws Exception {
-    //getPublicPOILocation("Charging Bull");
-    login("user1", "password1");
+  /**public static void main(String[] args) throws Exception {
+  Reader reader = new Reader();
+
+    ArrayList<Retailer> retailers = reader.readRetailers("/file/InitialRetailers.csv");
+    int size = retailers.size();
+
+    for (int i = 0; i < 10; i++) {
+      //System.out.println(retailers.get(i).getFloor());
+      insertRetailer(retailers.get(i).getName(),retailers.get(i).getAddress(),
+          retailers.get(i).getFloor(),retailers.get(i).getCity(),retailers.get(i).getZipcode(),
+          retailers.get(i).getState(),retailers.get(i).getBlock(),
+          retailers.get(i).getSecondaryDescription());
+    }
+  }**/
+
+  public static void insertRetailer(String name,String address,String floor,String city,int zipCode,
+  String state,String block,String secondaryDescription)  throws Exception{
+    try {
+      Connection conn = getConnection();
+      PreparedStatement inserted = conn.prepareStatement(
+          "INSERT INTO Retailers (name,address,floor,city,zipCode,state,block,secondaryDescription) "
+              + "VALUES ('" + name + "','" + address + "','" + floor + "','" + city + "', " + zipCode + ",'"+ state + "', '" + block + "','" + secondaryDescription + "')");
+      inserted.executeUpdate(); //UPDATE = SEND QUERY = Retrieve
+    } catch (Exception e) {
+      System.out.println(e);
+    } finally {
+      System.out.println("Insert Completed");
+    }
+
   }
+
 
   // DATA INSERTING
 
@@ -186,9 +216,4 @@ public class MySQL {
     return null;
   }
 
-  /** Breaks code
-   public static void main(String[] args) throws Exception{
-   getPublicPOILocation("Charging Bull");
-   }
-   */
 }
