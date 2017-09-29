@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -34,6 +35,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -58,21 +60,41 @@ public class MainController {
   private ArrayList<Station> stations = new ArrayList<Station>();
   //TODO use reader to populate these ArrayLists
 
-  //Data table
+  //Data tables
   @FXML
-  private TableView rawDataTable;
+  private TableView dataTableHotspot;
   @FXML
-  private SplitPane dataSplitPane;
+  private TableView dataTableRetailer;
+  @FXML
+  private TableView dataTablePublicPOI;
+  @FXML
+  private TableView dataTableUserPOI;
+  @FXML
+  private TableView dataTableStation;
+  @FXML
+  private TableView dataTableRoute;
+
+  //filter fields. one for each tableview
+  @FXML
+  private TextField HotspotFilterField;
+  @FXML
+  private TextField RetailerFilterField;
+  @FXML
+  private TextField PublicPOIFilterField;
+  @FXML
+  private TextField UserPOIFilterField;
+  @FXML
+  private TextField StationFilterField;
+  @FXML
+  private TextField RouteFilterField;
+
+
+  @FXML
+  private TabPane dataTabPane;
   @FXML
   private AnchorPane mapViewPane;
   @FXML
-  private ChoiceBox<DataType> dataTypeChoiceBox;
-  @FXML
-  private TextField rawDataFilterField;
-  @FXML
   private WebView mapWebView;
-  @FXML
-  private Button testButton;
   @FXML
   private Pane userPane;
   @FXML
@@ -109,17 +131,18 @@ public class MainController {
     if (!arraylists_populated) {
       //TODO bring up warning window when that is implemented
     }
-    dataViewHotspots(); /* some initial data so the table isn't empty on startup */
-    dataTypeChoiceBox.getItems().setAll(DataType.values());
-    dataTypeChoiceBox.setValue(DataType.HOTSPOT);
-    dataTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<DataType>() {
-          @Override
-          public void changed(ObservableValue<? extends DataType> observable, DataType oldValue,
-              DataType newValue) {
-            dataViewSelected();
-          }
-        });
+
+    //create tables
+    initRetailerTable();
+    initHotspotTable();
+    initPublicPOITable();
+    initUserPOITable();
+    initStationTable();
+    initRouteTable();
+    //Ostrich
+
+
+
 
     URL url = getClass().getResource("/googleMaps.html");
 
@@ -178,7 +201,7 @@ public class MainController {
   Action handlers
    */
   public void viewData() {
-    dataSplitPane.toFront();
+    dataTabPane.toFront();
   }
 
   public void viewMap() {
@@ -188,6 +211,7 @@ public class MainController {
   public void viewUser() {
     userPane.toFront();
   }
+
   public void viewFileHandler() {
     fileHandlerPane.toFront();
   }
@@ -196,7 +220,7 @@ public class MainController {
    * converts the arrayList of retailers to an observableList creates columns and sets these columns
    * and values to be displayed in rawDataTable
    */
-  public void dataViewRetailers() {
+  public void initRetailerTable() {
     //converting the arraylist to an observable list
     ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
     //each 2 line section creates one table heading and set of values
@@ -228,7 +252,7 @@ public class MainController {
      * if this returns true, the object is shown. If the filter field is empty,
      * or the attributes below match, then the object is shown
      */
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+    RetailerFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListRetailers.setPredicate(Retailer -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -259,19 +283,19 @@ public class MainController {
      * of a column and sort the entries in alphanumeric order
      */
     SortedList<Retailer> sListRetailers = new SortedList<Retailer>(fListRetailers);
-    sListRetailers.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    sListRetailers.comparatorProperty().bind(dataTableRetailer.comparatorProperty());
 
-    rawDataTable.getColumns()
+    dataTableRetailer.getColumns()
         .setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol,
             secondaryDescCol);
-    rawDataTable.setItems(sListRetailers);
+    dataTableRetailer.setItems(sListRetailers);
   }
 
   /**
    * converts the arrayList of hotspots to an ObservableList and creates TableColumns sets these as
    * viewable in rawDataTable
    */
-  public void dataViewHotspots() {
+  public void initHotspotTable() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
 
     TableColumn<Hotspot, String> idCol = new TableColumn<Hotspot, String>("Name");
@@ -301,7 +325,7 @@ public class MainController {
     remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("description"));
 
     FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+    HotspotFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListHotspots.setPredicate(Hotspot -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -321,14 +345,14 @@ public class MainController {
     });
 
     SortedList<Hotspot> sListHotspots = new SortedList<Hotspot>(fListHotspots);
-    sListHotspots.comparatorProperty().bind(rawDataTable.comparatorProperty());
-    rawDataTable.getColumns()
+    sListHotspots.comparatorProperty().bind(dataTableHotspot.comparatorProperty());
+    dataTableHotspot.getColumns()
         .setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol,
             SSIDCol, providerCol, remarksCol); //something something
-    rawDataTable.setItems(sListHotspots);
+    dataTableHotspot.setItems(sListHotspots);
   }
 
-  public void dataViewPublicPOIs() {
+  public void initPublicPOITable() {
     //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
     TableColumn<PublicPOI, Double> latCol = new TableColumn<PublicPOI, Double>("Latitude");
@@ -342,7 +366,7 @@ public class MainController {
     descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("description"));
 
     FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<PublicPOI>(oListPublicPOIs);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+    PublicPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListPublicPOIs.setPredicate(PublicPOI -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -360,13 +384,13 @@ public class MainController {
     });
 
     SortedList<PublicPOI> sListPublicPOIs = new SortedList<PublicPOI>(fListPublicPOIs);
-    sListPublicPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    sListPublicPOIs.comparatorProperty().bind(dataTablePublicPOI.comparatorProperty());
 
-    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(sListPublicPOIs);
+    dataTablePublicPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
+    dataTablePublicPOI.setItems(sListPublicPOIs);
   }
 
-  public void dataViewUserPOIs() {
+  public void initUserPOITable() {
     //lat, long, name, description
     ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(userPOIs);
 
@@ -380,7 +404,7 @@ public class MainController {
     descriptionCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("description"));
 
     FilteredList<UserPOI> fListUserPOIs = new FilteredList<UserPOI>(oListUserPOIs);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+    UserPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListUserPOIs.setPredicate(UserPOI -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -399,13 +423,13 @@ public class MainController {
     });
 
     SortedList<UserPOI> sListUserPOIs = new SortedList<UserPOI>(fListUserPOIs);
-    sListUserPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    sListUserPOIs.comparatorProperty().bind(dataTableUserPOI.comparatorProperty());
 
-    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(sListUserPOIs);
+    dataTableUserPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
+    dataTableUserPOI.setItems(sListUserPOIs);
   }
 
-  public void dataViewStations() {
+  public void initStationTable() {
     //latitude, longitude, name, ID
     ObservableList<Station> oListStations = FXCollections.observableArrayList(stations);
 
@@ -419,7 +443,7 @@ public class MainController {
     idCol.setCellValueFactory(new PropertyValueFactory<Station, Integer>("ID"));
 
     FilteredList<Station> fListStations = new FilteredList<Station>(oListStations);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+    StationFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListStations.setPredicate(Station -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -438,13 +462,13 @@ public class MainController {
     });
 
     SortedList<Station> sListStations = new SortedList<Station>(fListStations);
-    sListStations.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    sListStations.comparatorProperty().bind(dataTableStation.comparatorProperty());
 
-    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, idCol);
-    rawDataTable.setItems(sListStations);
+    dataTableStation.getColumns().setAll(nameCol, latCol, longCol, idCol);
+    dataTableStation.setItems(sListStations);
   }
 
-  public void dataViewRoutes() {
+  public void initRouteTable() {
     //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
     ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
 
@@ -468,7 +492,7 @@ public class MainController {
 
     FilteredList<Route> fListRoutes = new FilteredList<Route>(oListRoutes);
 
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+    RouteFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListRoutes.setPredicate(Route -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -495,35 +519,11 @@ public class MainController {
     });
 
     SortedList<Route> sListRoutes = new SortedList<Route>(fListRoutes);
-    sListRoutes.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
 
-    rawDataTable.getColumns()
+    dataTableRoute.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol,
             userTypeCol, birthYearCol, genderCol);
-    rawDataTable.setItems(sListRoutes);
-  }
-
-  public void dataViewSelected() {
-    DataType selected = dataTypeChoiceBox.getValue();
-    switch (selected) {
-      case HOTSPOT:
-        dataViewHotspots();
-        break;
-      case RETAILER:
-        dataViewRetailers();
-        break;
-      case PUBLICPOI:
-        dataViewPublicPOIs();
-        break;
-      case USERPOI:
-        dataViewUserPOIs();
-        break;
-      case STATION:
-        dataViewStations();
-        break;
-      case ROUTE:
-        dataViewRoutes();
-        break;
-    }
+    dataTableRoute.setItems(sListRoutes);
   }
 }
