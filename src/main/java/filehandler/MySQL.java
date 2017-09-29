@@ -128,6 +128,7 @@ public class MySQL {
    *
    * @param username Users entered username
    * @param password Users entered password
+   * @throws Exception In case connection falses due to unknown reasons
    * @return Boolean true if password and username is correct. Otherwise returns false
    */
   public static boolean login(String username, String password) throws Exception {

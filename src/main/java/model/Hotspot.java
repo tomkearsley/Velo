@@ -42,7 +42,20 @@ public class Hotspot extends POI {
   private String remarks;
 
 
-  /** Full constructor */
+  /** Full constructor
+   * @param id ID of hotspot
+   * @param latitude Latitude coordinate of hotspot
+   * @param longitude Longitude coordinate of hotspot
+   * @param locationAddress Address of hotspot
+   * @param borough  Borough where hotspot is located
+   * @param city City where hotspot is located
+   * @param postcode Postcode of hotspot
+   * @param type Type of hotspot
+   * @param SSID Name of the wifi being broadcast
+   * @param name Name of the actual physical device
+   * @param provider Name of the internet-provider
+   * @param remarks Remarks about the hotspot
+   * */
   public Hotspot(int id, double latitude, double longitude, String locationAddress, String borough,
       String city, int postcode, String type, String SSID, String name, String provider, String remarks) {
     super(name, remarks);

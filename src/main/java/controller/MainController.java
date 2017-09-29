@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,12 +23,15 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -67,6 +71,14 @@ public class MainController {
   @FXML private WebView mapWebView;
   @FXML private Pane userPane;
   @FXML private Pane fileHandlerPane;
+  @FXML private ImageView wifi_icon_primary;
+  @FXML private ImageView retailer_icon_primary;
+  @FXML private ImageView poi_icon_primary;
+  @FXML private ImageView wifi_icon_secondary;
+  @FXML private ImageView retailer_icon_secondary;
+  @FXML private ImageView poi_icon_secondary;
+  @FXML private ImageView station_icon_primary;
+  @FXML private ImageView station_icon_secondary;
 
   //Other attributes
   private JSObject window;
@@ -93,13 +105,30 @@ public class MainController {
     return true;
   }
 
+  public void setImages() throws URISyntaxException{
+    wifi_icon_primary.setImage(new Image(getClass().getResource("/image/wifi-icon.png").toURI().toString()));
+    retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
+    poi_icon_primary.setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
+    station_icon_primary.setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
+
+    wifi_icon_secondary.setVisible(false);
+    retailer_icon_secondary.setVisible(false);
+    poi_icon_secondary.setVisible(false);
+    station_icon_secondary.setVisible(false);
+
+    wifi_icon_secondary.setImage(new Image(getClass().getResource("/image/wifi-pressed-icon.png").toURI().toString()));
+    retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
+    poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
+    station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
+  }
 
   /**
    * Runs at startup Populates the model structure with data from .csv files using
    * populateArrayLists() TODO adapt to using database primarily with csv as fallback
    */
-  public void initialize() {
+  public void initialize() throws URISyntaxException{
     boolean arraylists_populated = populateArrayLists();
+
     if (!arraylists_populated) {
       //TODO bring up warning window when that is implemented
     }
@@ -120,7 +149,9 @@ public class MainController {
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
 
-      mapEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+    setImages();
+
+    mapEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
         if (newState == State.SUCCEEDED) {
           window = (JSObject) mapEngine.executeScript("window");
           window.setMember("aBridge", aBridge);
