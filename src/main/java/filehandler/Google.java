@@ -23,8 +23,7 @@ public class Google {
     return string.replaceAll(" ", "+");
   }
 
-
-  public static double[] stringToLocation(String string) {
+  public static JSONObject urlToJson(String string){
     String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
     String JsonString =
         "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string)
@@ -40,28 +39,9 @@ public class Google {
         sb.append(inputLine);
       }
       in.close();
+    }
 
-      JSONObject jsonObj = new JSONObject(sb.toString());
-
-      //Double latitude =   jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("latitude");
-      //Double longitude = jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("longitude");
-
-      JSONArray resultArray = jsonObj.getJSONArray("results");
-      //JSONObject result1 = resultArray.getJSONObject(1);
-      JSONObject addressObject = resultArray.getJSONObject(0);
-
-      JSONObject geometryObject = addressObject.getJSONObject("geometry");
-
-      JSONObject locationObject = geometryObject.getJSONObject("location");
-
-      double lat = locationObject.getDouble("lat");
-      double lng = locationObject.getDouble("lng");
-
-      double[] location = {lat, lng};
-      //JSONObject resultArray = jsonObj.getJSONObject("results");
-      //resultArray.getJSONObject("address_components");
-      return location;
-    } catch (MalformedURLException e) {
+    catch (MalformedURLException e) {
       System.out.println("Something went wrong!\nCheck that you've entered a valid location");
       return null;
     } catch (IOException e) {
@@ -76,6 +56,34 @@ public class Google {
       System.out.print("Whoops! Something went wrong:\n" + e);
       return null;
     }
+
+    return new JSONObject(sb.toString());
+  }
+
+  public static double[] jsonToLocation(JSONObject jsonObj) {
+    JSONArray resultArray = jsonObj.getJSONArray("results");
+    //JSONObject result1 = resultArray.getJSONObject(1);
+    JSONObject addressObject = resultArray.getJSONObject(0);
+
+    JSONObject geometryObject = addressObject.getJSONObject("geometry");
+
+    JSONObject locationObject = geometryObject.getJSONObject("location");
+
+    double lat = locationObject.getDouble("lat");
+    double lng = locationObject.getDouble("lng");
+
+    double[] location = {lat, lng};
+    //JSONObject resultArray = jsonObj.getJSONObject("results");
+    //resultArray.getJSONObject("address_components");
+    return location;
+  }
+
+  public static double[] stringToLocation(String string) {
+      JSONObject jsonObj = urlToJson(string);
+      return jsonToLocation(jsonObj);
+
+      //Double latitude =   jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("latitude");
+      //Double longitude = jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("longitude");
   }
 
   public static void main(String[] args) {
