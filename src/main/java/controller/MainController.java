@@ -30,6 +30,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -62,7 +63,13 @@ public class MainController {
   private ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
   private ArrayList<Route> routes = new ArrayList<Route>();
   private ArrayList<Station> stations = new ArrayList<Station>();
-  //TODO use reader to populate these ArrayLists
+  //local variables for toggling detailed view in table view
+  private boolean hotspotIsDetailed = false;
+  private boolean retailerIsDetailed = false;
+  //private boolean userPOIIsDetailed = false;
+  //private boolean publicPOIIsDetailed = false;
+  private boolean routeIsDetailed = false;
+  //private boolean stationIsDetailed = false;
 
   //Data tables
   @FXML
@@ -117,9 +124,9 @@ public class MainController {
   private JSObject window;
   private Bridge aBridge = new Bridge();
 
-  /** TODO add javadoc
-   *
-   * @return
+  /**
+   * populates arrayLists used for temporary local storage
+   * @return true if populating was successful, otherwise false
    */
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
@@ -201,6 +208,13 @@ public class MainController {
     //testABC();
     //mapEngine.executeScript("test()");
   }
+
+  /**
+   * helper function for filter boxes. If the input string s is an integer,
+   * returns true. Otherwise, false
+   * @param s
+   * @return
+   */
   private boolean isInteger(String s) {
     try {
       Integer i = Integer.parseInt(s);
@@ -252,6 +266,65 @@ public class MainController {
     fileHandlerPane.toFront();
   }
 
+  public void toggleDetailsHotspot() {
+    //simple view: id, locAddress, borough, city, type, provider, remarks
+    //advanced view: include above and lat, long, postcode, SSID
+    if(hotspotIsDetailed) {
+      //it is detailed, so remove columns
+      dataTableHotspot.getColumns().remove(7, 11);
+    } else {
+      TableColumn<Hotspot, Double> latCol = new TableColumn<Hotspot, Double>("Latitude");
+      latCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("latitude"));
+      TableColumn<Hotspot, Double> longCol = new TableColumn<Hotspot, Double>("Longitude");
+      longCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("longitude"));
+      TableColumn<Hotspot, String> postCodeCol = new TableColumn<Hotspot, String>("postcode");
+      postCodeCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("postcode"));
+      TableColumn<Hotspot, String> SSIDCol = new TableColumn<Hotspot, String>("SSID");
+      SSIDCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("SSID"));
+      dataTableHotspot.getColumns().addAll(latCol, longCol, postCodeCol, SSIDCol);
+    }
+    hotspotIsDetailed = !hotspotIsDetailed;
+  }
+
+  public void toggleDetailsRetailer() {
+    //simple:
+    //detailed:
+    if(retailerIsDetailed) {
+      dataTableRetailer.getColumns().remove(3, 8);
+    } else {
+      TableColumn<Retailer, String> floorCol = new TableColumn<Retailer, String>("Floor");
+      floorCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("floor"));
+      TableColumn<Retailer, String> cityCol = new TableColumn<Retailer, String>("City");
+      cityCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("city"));
+      TableColumn<Retailer, String> zipcodeCol = new TableColumn<Retailer, String>("Zipcode");
+      zipcodeCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("zipcode"));
+      TableColumn<Retailer, String> stateCol = new TableColumn<Retailer, String>("State");
+      stateCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("state"));
+      TableColumn<Retailer, String> blockCol = new TableColumn<Retailer, String>("Block");
+      blockCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("block"));
+      dataTableRetailer.getColumns().addAll(floorCol, cityCol, zipcodeCol, stateCol, blockCol);
+    }
+
+    retailerIsDetailed = !retailerIsDetailed;
+  }
+
+  public void toggleDetailsRoute() {
+    if(routeIsDetailed) {
+      dataTableRoute.getColumns().remove(4, 8);
+    }
+    else {
+      TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
+      bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
+      TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
+      userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
+      TableColumn<Route, Integer> birthYearCol = new TableColumn<Route, Integer>("Birth Year");
+      birthYearCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("birthYear"));
+      TableColumn<Route, Integer> genderCol = new TableColumn<Route, Integer>("Gender");
+      genderCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("gender"));
+      dataTableRoute.getColumns().addAll(bikeIDCol, userTypeCol, birthYearCol, genderCol);
+    }
+    routeIsDetailed = !routeIsDetailed;
+  }
   /**
    * converts the arrayList of retailers to an observableList creates columns and sets these columns
    * and values to be displayed in rawDataTable
@@ -267,20 +340,12 @@ public class MainController {
         new PropertyValueFactory<Retailer, String>("name"));//looks for retailer.getName()
     TableColumn<Retailer, String> addressCol = new TableColumn<Retailer, String>("Address");
     addressCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("address"));
-    TableColumn<Retailer, String> floorCol = new TableColumn<Retailer, String>("Floor");
-    floorCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("floor"));
-    TableColumn<Retailer, String> cityCol = new TableColumn<Retailer, String>("City");
-    cityCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("city"));
-    TableColumn<Retailer, String> zipcodeCol = new TableColumn<Retailer, String>("Zipcode");
-    zipcodeCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("zipcode"));
-    TableColumn<Retailer, String> stateCol = new TableColumn<Retailer, String>("State");
-    stateCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("state"));
-    TableColumn<Retailer, String> blockCol = new TableColumn<Retailer, String>("Block");
-    blockCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("block"));
+
     TableColumn<Retailer, String> secondaryDescCol = new TableColumn<Retailer, String>(
         "Secondary Description");
     secondaryDescCol
         .setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
+
 
     FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
     /**
@@ -320,10 +385,11 @@ public class MainController {
      */
     SortedList<Retailer> sListRetailers = new SortedList<Retailer>(fListRetailers);
     sListRetailers.comparatorProperty().bind(dataTableRetailer.comparatorProperty());
-
+//simple: name, address, description
+    //detailed: above and floor, city, zipcode, state, block
+    //sets up simple view
     dataTableRetailer.getColumns()
-        .setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol,
-            secondaryDescCol);
+        .setAll(nameCol, addressCol, secondaryDescCol);
     dataTableRetailer.setItems(sListRetailers);
   }
 
@@ -337,22 +403,17 @@ public class MainController {
     TableColumn<Hotspot, String> idCol = new TableColumn<Hotspot, String>("Name");
     idCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("name"));
 
-    TableColumn<Hotspot, Double> latCol = new TableColumn<Hotspot, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("latitude"));
-    TableColumn<Hotspot, Double> longCol = new TableColumn<Hotspot, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("longitude"));
+
     TableColumn<Hotspot, String> locAddressCol = new TableColumn<Hotspot, String>("Address");
     locAddressCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("locationAddress"));
     TableColumn<Hotspot, String> boroughCol = new TableColumn<Hotspot, String>("Borough");
     boroughCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("borough"));
     TableColumn<Hotspot, String> cityCol = new TableColumn<Hotspot, String>("City");
     cityCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("city"));
-    TableColumn<Hotspot, String> postCodeCol = new TableColumn<Hotspot, String>("postcode");
-    postCodeCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("postcode"));
+
     TableColumn<Hotspot, String> typeCol = new TableColumn<Hotspot, String>("Type");
     typeCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("type"));
-    TableColumn<Hotspot, String> SSIDCol = new TableColumn<Hotspot, String>("SSID");
-    SSIDCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("SSID"));
+
     TableColumn<Hotspot, String> nameCol = new TableColumn<Hotspot, String>("Name");
     nameCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("name"));
     TableColumn<Hotspot, String> providerCol = new TableColumn<Hotspot, String>("Provider");
@@ -382,9 +443,11 @@ public class MainController {
 
     SortedList<Hotspot> sListHotspots = new SortedList<Hotspot>(fListHotspots);
     sListHotspots.comparatorProperty().bind(dataTableHotspot.comparatorProperty());
+
+    //sets up simple view.
     dataTableHotspot.getColumns()
-        .setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol,
-            SSIDCol, providerCol, remarksCol); //something something
+        .setAll(idCol, locAddressCol, boroughCol, cityCol, typeCol, providerCol, remarksCol);
+
     dataTableHotspot.setItems(sListHotspots);
   }
 
@@ -517,14 +580,6 @@ public class MainController {
     startDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("startDate"));
     TableColumn<Route, Date> endDateTimeCol = new TableColumn<Route, Date>("Stop Time");
     endDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("stopDate"));
-    TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
-    bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
-    TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
-    userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
-    TableColumn<Route, Integer> birthYearCol = new TableColumn<Route, Integer>("Birth Year");
-    birthYearCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("birthYear"));
-    TableColumn<Route, Integer> genderCol = new TableColumn<Route, Integer>("Gender");
-    genderCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("gender"));
 
     FilteredList<Route> fListRoutes = new FilteredList<Route>(oListRoutes);
 
@@ -556,10 +611,12 @@ public class MainController {
 
     SortedList<Route> sListRoutes = new SortedList<Route>(fListRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
-
+    //simple: start and end stations, start and end times
+    //TODO finish simple/advanced views for routes
+    //TODO calculate duration of a trip and put it in a column..?
+    //sets up simple view
     dataTableRoute.getColumns()
-        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol,
-            userTypeCol, birthYearCol, genderCol);
+        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol);
     dataTableRoute.setItems(sListRoutes);
   }
 }
