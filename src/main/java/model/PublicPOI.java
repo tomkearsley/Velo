@@ -9,7 +9,7 @@ public class PublicPOI extends POI {
   private double longitude;
 
 
-  public PublicPOI(double longitude, double latitude, String name, String description) {
+  public PublicPOI(double latitude, double longitude, String name, String description) {
     super(name, description);
     this.latitude = latitude;
     this.longitude = longitude;
