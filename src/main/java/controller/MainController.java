@@ -1,46 +1,32 @@
 package controller;
 
-import com.google.api.client.util.StringUtils;
 import filehandler.Reader;
-import java.io.File;
+import helper.Bridge;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker.State;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -454,6 +440,19 @@ public class MainController {
     dataTableRetailer.getColumns()
         .setAll(nameCol, addressCol, secondaryDescCol);
     dataTableRetailer.setItems(sListRetailers);
+
+    /**
+     * on click behaviour
+     */
+    dataTableRetailer.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          System.out.println(dataTableRetailer.getSelectionModel().getSelectedItem());
+        }
+
+      }
+    });
   }
 
   /**
