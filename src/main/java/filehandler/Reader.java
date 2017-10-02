@@ -165,24 +165,25 @@ public class Reader {
    * TODO Needs to be tested to ensure it works.
    *
    * @param filename the name of file to open
+   * @param fileType The format of the input csv (0 - DataGov format, 1 - Exported csv Format)
    * @return ArrayList Hotspots
    * @throws FileNotFoundException if the file cannot be found
    */
-    public ArrayList<Hotspot> readHotspots(String filename) throws FileNotFoundException {
+  public ArrayList<Hotspot> readHotspots(String filename, int fileType) throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int idIndex = 0;
-    int typeIndex = 3;
-    int providerIndex = 4;
-    int nameIndex = 5;
-    int locationAddressIndex = 6;
-    int latitudeIndex = 7;
-    int longitudeIndex = 8;
-    int remarksIndex = 12;
-    int cityIndex = 13;
-    int ssidIndex = 14;
-    int boroughIndex = 19;
-    int postcodeIndex = 22;
+    int typeIndex = fileType == 1 ? 1:3;
+    int providerIndex = fileType == 1 ? 2:4;
+    int nameIndex = fileType == 1 ? 3:5;
+    int locationAddressIndex = fileType == 1 ? 4:6;
+    int latitudeIndex = fileType == 1 ? 5:7;
+    int longitudeIndex = fileType == 1 ? 6:8;
+    int remarksIndex = fileType == 1 ? 7:12;
+    int cityIndex = fileType == 1 ? 8:13;
+    int ssidIndex = fileType == 1 ? 9:14;
+    int boroughIndex = fileType == 1 ? 10:19;
+    int postcodeIndex = fileType == 1 ? 11:22;
 
     // Initialize scanner and Hotspots array
     BufferedReader br = null;

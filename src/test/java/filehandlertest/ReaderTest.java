@@ -49,7 +49,7 @@ public class ReaderTest {
    */
   @Test
   public void readHotspots() throws FileNotFoundException {
-    ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv");
+    ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv", 0);
 
     Hotspot hotspot998 = new Hotspot(998, 40.745968, -73.994039,
         "179 WEST 26 STREET", "MN17", "New York", 10001,

@@ -119,7 +119,7 @@ public class MainController {
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try {
-      hotspots = rdr.readHotspots("/file/InitialHotspots.csv");
+      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
       retailers = rdr.readRetailers("/file/InitialRetailers.csv");
       stations = rdr.readStations("/file/stations.json");
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv");
@@ -291,7 +291,7 @@ public class MainController {
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
-    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv"));
+    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0));
     testPretty();
   }
 
