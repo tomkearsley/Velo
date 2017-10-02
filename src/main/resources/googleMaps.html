@@ -175,6 +175,28 @@
       gMarkers.push(marker);
     }
 
+    function prettyMarker(lat,lng,info,markerType) {
+      map.setZoom(17); // 15 = Streets, 20 = Buildings. 17 seems middle-ground enough
+      var myLatLng = new google.maps.LatLng(lat, lng);
+      //alert("lat: " + lat + "\nlng: " + lng + "\nLocation: " + myLatLng);
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map:map,
+        title: info,
+        icon: "image/" + markerType + ".png"
+      });
+
+      map.setCenter(myLatLng); //Sets focus to marker
+
+      marker.addListener('click', function() {
+        infowindow.setContent(info);
+        infowindow.open(map, marker);
+      });
+
+      infowindow.setContent(info);
+      infowindow.open(map,marker);
+    }
+
     function hideMarkers() {
       aBridge.outputValue("Hiding markers");
       for(var i = 0;i<gMarkers.length;i++) {

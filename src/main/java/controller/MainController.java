@@ -223,6 +223,7 @@ public class MainController {
   public void toggleButton8() {
     toggleButton(7);
   }
+
   /**
    * Runs at startup Populates the model structure with data from .csv files using
    * populateArrayLists() TODO adapt to using database primarily with csv as fallback
@@ -241,7 +242,7 @@ public class MainController {
     initUserPOITable();
     initStationTable();
     initRouteTable();
-    //Ostrich
+    //Ostrich - Is this meant to be me? - Imas
 
 
 
@@ -257,7 +258,7 @@ public class MainController {
         if (newState == State.SUCCEEDED) {
           window = (JSObject) mapEngine.executeScript("window");
           window.setMember("aBridge", aBridge);
-          System.out.println("Initialisation complete");
+          System.out.println("Initialisation complete"); // Maybe don't let them switch to map view until this is initialised or just default to table view to give time for this to load.
         }
       });
 
@@ -291,6 +292,7 @@ public class MainController {
     //Run both lines of code
     window.setMember("aBridge",aBridge);
     window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv"));
+    testPretty();
   }
 
   public void hideMarkers() {
@@ -308,6 +310,14 @@ public class MainController {
     window.call("deleteMarkers");
   }
 
+  public void prettyMarker(double lat,double lng,String info,String markerType) {
+    window.setMember("aBridge",aBridge);
+    window.call("prettyMarker",lat,lng,info,markerType);
+  }
+
+  public void testPretty() {
+    prettyMarker(40.714728,-73.998672,"Test string","wifi");
+  }
   /*
   Action handlers
    */
