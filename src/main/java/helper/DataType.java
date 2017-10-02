@@ -1,4 +1,4 @@
-package controller;
+package helper;
 
 public enum DataType {
   HOTSPOT("Hotspot"),
