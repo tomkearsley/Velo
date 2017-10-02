@@ -61,17 +61,17 @@ public class MainController {
 
   //Data tables
   @FXML
-  private TableView dataTableHotspot;
+  private TableView<Hotspot> dataTableHotspot;
   @FXML
-  private TableView dataTableRetailer;
+  private TableView<Retailer> dataTableRetailer;
   @FXML
-  private TableView dataTablePublicPOI;
+  private TableView<PublicPOI> dataTablePublicPOI;
   @FXML
-  private TableView dataTableUserPOI;
+  private TableView<UserPOI> dataTableUserPOI;
   @FXML
-  private TableView dataTableStation;
+  private TableView<Station> dataTableStation;
   @FXML
-  private TableView dataTableRoute;
+  private TableView<Route> dataTableRoute;
 
   //filter fields. one for each tableview
   @FXML
@@ -448,7 +448,7 @@ public class MainController {
       @Override
       public void handle(MouseEvent event) {
         if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-          System.out.println(dataTableRetailer.getSelectionModel().getSelectedItem());
+          helper.tableOnClickPopup.create("Retailer", "you've clicked a thing!", dataTableRetailer.getSelectionModel().getSelectedItem());
         }
 
       }
