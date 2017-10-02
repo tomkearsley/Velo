@@ -185,6 +185,12 @@ public class MainController {
   }
 
   public void toggleButton2() {
+    try {
+      displayHotspots();
+    }
+    catch (IOException e) {
+      System.out.println("Error occurred while reading hotspots");
+    }
     toggleButton(1);
   }
 
@@ -201,6 +207,12 @@ public class MainController {
   }
 
   public void toggleButton6() {
+    try {
+      hideMarkers();
+    }
+    catch (Exception e) {
+      System.out.println("Internal error, please report to app devs");
+    }
     toggleButton(5);
   }
 
