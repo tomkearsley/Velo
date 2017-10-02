@@ -71,6 +71,8 @@ public class MainController {
   private boolean routeIsDetailed = false;
   //private boolean stationIsDetailed = false;
 
+  private ArrayList<ImageView> buttons = new ArrayList<ImageView>();
+
   //Data tables
   @FXML
   private TableView dataTableHotspot;
@@ -146,22 +148,83 @@ public class MainController {
   }
 
   public void setImages() throws URISyntaxException{
-    wifi_icon_primary.setImage(new Image(getClass().getResource("/image/wifi-icon.png").toURI().toString()));
+    wifi_icon_primary.setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
     retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
     poi_icon_primary.setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
     station_icon_primary.setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
+
+    wifi_icon_secondary.setImage(new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
+    retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
+    poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
+    station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
+
+    buttons.add(retailer_icon_primary);
+    buttons.add(wifi_icon_primary);
+    buttons.add(poi_icon_primary);
+    buttons.add(station_icon_primary);
+
+    buttons.add(retailer_icon_secondary);
+    buttons.add(wifi_icon_secondary);
+    buttons.add(poi_icon_secondary);
+    buttons.add(station_icon_secondary);
+
+    /*
+    wifi_icon_primary.setVisible(false);
+    retailer_icon_primary.setVisible(false);
+    poi_icon_primary.setVisible(false);
+    station_icon_primary.setVisible(false);
+    */
 
     wifi_icon_secondary.setVisible(false);
     retailer_icon_secondary.setVisible(false);
     poi_icon_secondary.setVisible(false);
     station_icon_secondary.setVisible(false);
-
-    wifi_icon_secondary.setImage(new Image(getClass().getResource("/image/wifi-pressed-icon.png").toURI().toString()));
-    retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
-    poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
-    station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
   }
 
+  public void toggleButton(int buttonNo) {
+    System.out.println("Toggling button" + (buttonNo + 1));
+    buttons.get(buttonNo).setVisible(false);
+    int halfButtonSize = buttons.size()/2;
+    //Check if button is primary or on-click
+    if(buttonNo >= halfButtonSize) {
+      buttons.get(buttonNo - halfButtonSize).setVisible(true);
+    }
+    else {
+      buttons.get(buttonNo + halfButtonSize).setVisible(true);
+    }
+  }
+
+  public void toggleButton1() {
+    toggleButton(0);
+  }
+
+  public void toggleButton2() {
+    toggleButton(1);
+  }
+
+  public void toggleButton3() {
+    toggleButton(2);
+  }
+
+  public void toggleButton4() {
+    toggleButton(3);
+  }
+
+  public void toggleButton5() {
+    toggleButton(4);
+  }
+
+  public void toggleButton6() {
+    toggleButton(5);
+  }
+
+  public void toggleButton7() {
+    toggleButton(6);
+  }
+
+  public void toggleButton8() {
+    toggleButton(7);
+  }
   /**
    * Runs at startup Populates the model structure with data from .csv files using
    * populateArrayLists() TODO adapt to using database primarily with csv as fallback
