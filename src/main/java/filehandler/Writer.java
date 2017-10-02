@@ -1,13 +1,8 @@
 package filehandler;
 
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import model.Hotspot;
@@ -97,7 +92,7 @@ public class Writer {
    * @param filename  The file to write to
    * @throws IOException  If there is an error opening the file
    */
-  public void writePOIsToFile (List<? extends POI> POIs, String filename) throws IOException {
+  private void writePOIsToFile (List<? extends POI> POIs, String filename) throws IOException {
     FileWriter outFile = new FileWriter(filename, true);
     BufferedWriter writer = new BufferedWriter(outFile);
 
