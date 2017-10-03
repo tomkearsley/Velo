@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -51,11 +52,11 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="firstName" promptText="First Name" />
-                  <TextField fx:id="lastName" promptText="Last Name" GridPane.columnIndex="1" />
+                  <TextField fx:id="firstName" onAction="#clearFirstNameStyle" promptText="First Name" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <TextField fx:id="lastName" onAction="#clearLastNameStyle" promptText="Last Name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
-            <GridPane GridPane.rowIndex="1">
+            <GridPane GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -73,8 +74,22 @@
                   <RadioButton fx:id="other" mnemonicParsing="false" text="Other" toggleGroup="$gender" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
-            <DatePicker fx:id="birthdate" prefHeight="27.0" prefWidth="340.0" promptText="Birthdate" GridPane.rowIndex="2" />
             <GridPane GridPane.rowIndex="3">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="239.0" minWidth="10.0" prefWidth="170.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="167.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ComboBox fx:id="heightFeet" onAction="#clearHeightFeetStyle" prefHeight="27.0" prefWidth="190.0" promptText="Height (ft)" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <ComboBox fx:id="heightInches" onAction="#clearHeightInchesStyle" prefHeight="27.0" prefWidth="199.0" promptText="Height (in)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+               </children>
+            </GridPane>
+            <TextField fx:id="username" onAction="#clearUsernameStyle" promptText="Username" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <PasswordField fx:id="password" onAction="#clearPasswordStyle" promptText="Password" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+            <GridPane GridPane.rowIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -83,14 +98,12 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="height" prefHeight="27.0" prefWidth="160.0" promptText="Height (e.g. 5'11&quot;)" />
-                  <TextField fx:id="weight" promptText="Weight (e.g. 165 lbs)" GridPane.columnIndex="1" />
+                  <DatePicker fx:id="birthDate" onAction="#clearBirthDateStyle" prefHeight="27.0" prefWidth="340.0" promptText="Birthdate" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <TextField fx:id="weight" onAction="#clearWeightStyle" prefHeight="2.0" prefWidth="5.0" promptText="Weight (lbs)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
-            <TextField fx:id="username" promptText="Username" GridPane.rowIndex="4" />
-            <PasswordField fx:id="password" promptText="Password" GridPane.rowIndex="5" />
          </children>
       </GridPane>
-      <Button fx:id="continue" alignment="CENTER" mnemonicParsing="false" onAction="#createUser" text="Continue" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <Button fx:id="continue" alignment="CENTER" mnemonicParsing="false" onAction="#createCyclist" text="Continue" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

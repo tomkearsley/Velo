@@ -1,119 +1,114 @@
 package controller;
 
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import model.Cyclist;
+import filehandler.MySQL;
 
 public class JoinController {
 
-  // Join window attributes
-
+  // Window attributes
   @FXML private GridPane gridPane;
   @FXML private TextField firstName;
   @FXML private TextField lastName;
   @FXML private ToggleGroup gender;
-  @FXML private RadioButton male;
-  @FXML private RadioButton female;
-  @FXML private RadioButton other;
-  @FXML private DatePicker birthdate;
-  @FXML private TextField height;
+  @FXML private DatePicker birthDate;
+  @FXML private ComboBox heightFeet;
+  @FXML private ComboBox heightInches;
   @FXML private TextField weight;
   @FXML private TextField username;
   @FXML private TextField password;
-  @FXML private Button continueB;
 
 
   // Methods
-  /** Initialize the window
-   *
-   */
+  /** Initialize the window*/
   public void initialize() {
+
+    // Set helper tool tips
+    firstName.setTooltip(new Tooltip("Upper and lowercase letters only"));
+    lastName.setTooltip(new Tooltip("Upper and lowercase letters only"));
+    birthDate.setTooltip(new Tooltip("Must be before today"));
+    heightFeet.setTooltip(new Tooltip("Numbers only"));
+    heightInches.setTooltip(new Tooltip("Numbers only"));
+    weight.setTooltip(new Tooltip("Numbers with decimal points only"));
+    username.setTooltip(new Tooltip("50 character limit and must be unique"));
+    password.setTooltip(new Tooltip("80 character limit"));
+
+    //TODO make enter press the continue button
 //    gridPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
 //      @Override
 //      public void handle(KeyEvent keyEvent) {
 //        if (keyEvent.getCode() == KeyCode.ENTER)  {
-//          createUser();
+//          createCyclist();
 //        }
 //      }
 //    });
-  }
 
-  /** Attempts to create a bicyclist user using form fields
-   *
-   */
-  public void createUser() {
+    ObservableList feet = FXCollections.observableArrayList(
+        "1", "2", "3", "4", "5", "6", "7", "8"
+    );
+    ObservableList inches = FXCollections.observableArrayList(
+        "0","1","2","3","4","5","6","7","8","9","10","11","12"
+    );
 
-    // TODO Validate data fields using method below, throw warning window if format error
-    boolean validFields = validateDataFields();
-    if (validFields) {
-      // TODO create the user
-
-      // If user created successfully, tell GUIManager
-      try {
-        System.out.println("User created");
-        GUIManager.getInstanceGUIManager().userCreated();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
+    heightFeet.getItems().addAll(feet);
+    heightInches.getItems().addAll(inches);
 
   }
 
-  /** Checks to make sure every field in the window has valid input
-   * @return boolean True if details correct, False otherwise
-   */
-  private boolean validateDataFields() {
+  /** Attempts to create a bicyclist user using form fields */
+  @FXML
+  private void createCyclist() {
 
-    boolean validNewFirstName = true;
-    boolean validNewLastName = true;
-    boolean validHeight = true;
-    boolean validWeight = true;
-    boolean validUsername = true;
-    boolean availableUsername = true;
-    boolean validPassword = true;
+    boolean validData = true;
+    String newFirstName = "";
+    String newLastName = "";
+    String newUsername = "";
+    String newPassword = "";
+    LocalDate newBirthDate = LocalDate.now();
+    int newGenderInt = -1;
+    double newWeight = -1.0;
+    int newHeight = -1;
 
-    String newFirstNameWarning = "First name must be only upper and lowercase letters";
-    String newLastNameWarning = "Last name must be only upper and lowercase letters";
-    String heightWarning = "Height must be in the format {numer}'{number}\"";
-    String weightWarning = "Weight must be a number";
-    String usernameWarning = "Username must be only upper and lower case letters";
-    String usernameTakenWarning = "That username has already been taken";
 
     // Test first name
-    // TODO Check for characters other than letters
-    // TODO Format the string for title
-    String newFirstName = firstName.getText();
-    if (!newFirstName.matches("[A-Za-z]*")) {
-      validNewFirstName = false;
+    if (isValidFirstName()) {
+      newFirstName = toDisplayCase(firstName.getText());
     } else {
-      newFirstName = toDisplayCase(newFirstName);
+      validData = false;
+      firstName.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
+      // TODO set border red
     }
 
     // Test last name
-    // TODO Check for characters other than letters
-    // TODO Format the string for title
-    String newLastName = lastName.getText();
-    if (!newLastName.matches("[A-Za-z]*")) {
-      validNewLastName = false;
+    if (isValidLastName()) {
+      newLastName = toDisplayCase(lastName.getText());
     } else {
-      newLastName = toDisplayCase(newLastName);
+      validData = false;
+      lastName.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
+      // TODO set border red
     }
 
     // Test radio button
-    String newGender = gender.getSelectedToggle().toString();
-    int newGenderInt;
-    switch (newGender) {
+    switch (gender.getSelectedToggle().toString()) {
       case "male":
         newGenderInt = 0;
         break;
@@ -125,56 +120,206 @@ public class JoinController {
         break;
     }
 
-    // Get birthdate
-    LocalDate newBirthdate = birthdate.getValue();
+    // Test birth date
+    if (isValidBirthDate()) {
+      newBirthDate = birthDate.getValue();
+    } else {
+      validData = false;
+      birthDate.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
+    }
 
     // Test height
-    // TODO Check if format is int'int"
-    // TODO Check if under 8'11"
-    String newHeight = height.getText();
-    if (!newLastName.matches("[0-9]'([0-9]|[0-1][0-2])]\"")) {
-      validNewLastName = false;
+    if (isValidHeightFeet()) {
+      int newHeightFeet = Integer.valueOf(heightFeet.getValue().toString());
+      newHeight += (newHeightFeet * 12);
+    } else {
+      validData = false;
+      heightFeet.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
+    }
+
+    if (isValidHeightInches()) {
+      int newHeightInches = Integer.valueOf(heightInches.getValue().toString());
+      newHeight += newHeightInches;
+    } else {
+      validData = false;
+      heightInches.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
     }
 
     // Test weight
-    // TODO Check if format is simply an int
-    // TODO Check if less than what 500lbs?
-    double newWeight = Double.valueOf(weight.getText());
+    if (isValidWeight()) {
+      newWeight = Double.valueOf(weight.getText());
+    } else {
+      validData = false;
+      weight.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
+    }
 
     // Test username
-    // TODO make sure it's unique
-    // TODO length limit
-    String newUsername = username.getText();
-    if (newUsername.matches("[A-Za-z]*")) {
-      validUsername = false;
+    if (isValidUsername()) {
+      newUsername = username.getText();
+    } else {
+      validData = false;
+      username.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
     }
 
     // Test password
-    // TODO length limit
-    String newPassword = password.getText();
-    if (password.getLength() > 80) {
-      validPassword = false;
-    }
-
-
-    // If anything is false, return false
-    if (!(validNewFirstName && validNewLastName && validHeight && validWeight && validUsername && availableUsername && validPassword)) {
-
-      Alert alert = new Alert(AlertType.WARNING, "Delete ?", ButtonType.OK);
-      alert.showAndWait();
-
-      if (alert.getResult() == ButtonType.OK) {
-        //do stuff
-      }
-
-      return false;
+    if (isValidPassword()) {
+      newPassword = password.getText();
     } else {
-      return true;
+      validData = false;
+      password.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
     }
 
+
+    if (validData) {
+
+      // TODO test if username available via MySQL
+      // TODO insertCyclist to database (exception username already exists)
+      // Everything's good, insert cyclist to database
+      Cyclist newCyclist = new Cyclist(
+          newFirstName, newLastName, newUsername, newPassword,
+          newBirthDate, newGenderInt, newWeight, newHeight
+      );
+      System.out.println(newCyclist);
+
+      // If user created successfully, tell GUIManager
+      try {
+        System.out.println("User created");
+        GUIManager.getInstanceGUIManager().userCreated();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else {
+      Alert alert = new Alert(AlertType.WARNING, "Invalid input. Hover over the erroneous field for help.", ButtonType.OK);
+      alert.showAndWait();
+    }
   }
 
-  public static String toDisplayCase(String s) {
+  /** Determines if the firstName element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidFirstName() {
+    return firstName.getText().matches("[A-Za-z]*") && !firstName.getText().isEmpty();
+  }
+
+  /** Determines if the lastName element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidLastName() {
+    return lastName.getText().matches("[A-Za-z]*") && !lastName.getText().isEmpty();
+  }
+
+  /** Determines if the birthDate element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidBirthDate() {
+    return birthDate.getValue() != null && birthDate.getValue().isBefore(LocalDate.now());
+  }
+
+  /** Determines if the heightFeet element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidHeightFeet() {
+    return heightFeet.getValue() != null;
+  }
+
+  /** Determines if the heightInches element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidHeightInches() {
+    return heightInches.getValue() != null;
+  }
+
+  /** Determines if the weight element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidWeight() {
+    return weight.getText().matches("[0-9]*") && !weight.getText().isEmpty();
+  }
+
+  /** Determines if the username element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidUsername() {
+    return username.getText().matches("[A-Za-z]*") && username.getText().length() <= 50 && !username.getText().isEmpty();
+  }
+
+  /** Determines if the password element's input is valid
+   *
+   * @return true if valid; else false
+   */
+  private boolean isValidPassword() {
+    return password.getLength() > 80;
+  }
+
+  /** Clears the CSS style for the firstName element */
+  @FXML
+  private void clearFirstNameStyle() {
+    firstName.setStyle("-fx-background-color: null");
+    firstName.setStyle("-fx-border-color: null");
+  }
+
+  /** Clears the CSS style for the lastName element */
+  @FXML
+  private void clearLastNameStyle() {
+    lastName.setStyle("-fx-background-color: null");
+    lastName.setStyle("-fx-border-color: null");
+  }
+
+  /** Clears the CSS style for the birthDate element */
+  @FXML
+  private void clearBirthDateStyle() {
+    birthDate.setStyle("-fx-background-color: null");
+    birthDate.setStyle("-fx-border-color: null");
+  }
+
+  /** Clears the CSS style for the heightFeet element */
+  @FXML
+  private void clearHeightFeetStyle() {
+    heightFeet.setStyle("-fx-background-color: null");
+    heightFeet.setStyle("-fx-border-color: null");
+  }
+
+  /** Clears the CSS style for the heightInches element */
+  @FXML
+  private void clearHeightInchesStyle() {
+    heightInches.setStyle("-fx-background-color: null");
+    heightInches.setStyle("-fx-border-color: null");
+  }
+
+  /** Clears the CSS style for the weight element */
+  @FXML
+  private void clearWeightStyle() {
+    weight.setStyle("-fx-background-color: null");
+    weight.setStyle("-fx-border-color: null");
+  }
+
+  /** Clears the CSS style for the username element */
+  @FXML
+  private void clearUsernameStyle() {
+    username.setStyle("-fx-background-color: null");
+    username.setStyle("-fx-border-color: null");
+  }
+
+  /** Clears the CSS style for the password element */
+  @FXML
+  private void clearPasswordStyle() {
+    password.setStyle("-fx-background-color: null");
+    password.setStyle("-fx-border-color: null");
+  }
+
+  /** Capitalises text in title or diplay format
+   * The first letter is capitalised, all others lowercase
+   * @param s the string to be capitalised
+   * @return capitalised string
+   */
+  private static String toDisplayCase(String s) {
 
     final String ACTIONABLE_DELIMITERS = " '-/"; // these cause the character following
     // to be capitalized

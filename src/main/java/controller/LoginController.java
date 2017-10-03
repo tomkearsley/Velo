@@ -19,6 +19,7 @@ public class LoginController {
   @FXML private Hyperlink join;
 
 
+  // TODO make enter press the log in button
 //  // Methods
 //  /** Initialize the window */
 //  public void initialize() {
