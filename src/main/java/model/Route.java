@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * The class Route defines the object type for bicycle routes
  */
-public class Route {
+public class Route implements Mappable{
 
 
   /**

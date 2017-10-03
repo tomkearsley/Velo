@@ -5,13 +5,13 @@ import java.util.Date;
 /**
  * The class Station defines the object type for CitiBike rental locations
  */
-public class Station {
+public class Station extends POI{
 
   /**Station ID*/
   private int ID;
 
   /**Station name*/
-  private String stationName;
+  //private String stationName;
 
   /**Number of available docks*/
   private int availableDocks;
@@ -72,11 +72,11 @@ public class Station {
   }
 
   public String getName() {
-    return stationName;
+    return name;
   }
 
   public void setName(String newName) {
-    stationName = newName;
+    name = newName;
   }
 
   public double getLatitude() {
@@ -204,16 +204,19 @@ public class Station {
   }
 
   //Constructors
+
   public Station(int ID, String name, double latitude, double longitude) {
+    super(name, "");
     this.ID = ID;
-    this.stationName = name;
+    //this.stationName = name;
     this.latitude = latitude;
     this.longitude = longitude;
   }
 
-  public Station(int ID, String stationName, int availableDocks, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String city,String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
+  public Station(int ID, String name, int availableDocks, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String city,String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
+    super(name, "");
     this.ID = ID;
-    this.stationName = stationName;
+    //this.stationName = stationName;
     this.availableDocks = availableDocks;
     this.totalDocks = totalDocks;
     this.latitude = latitude;
@@ -234,14 +237,14 @@ public class Station {
 
   @Override
   public String toString() {
-    return "ID: " + ID + "\nstationName: " + stationName + "\navailableDocks: " + availableDocks + "\ntotalDocks: " + totalDocks + "\nlatitude:" +
+    return "ID: " + ID + "\nstationName: " + name + "\navailableDocks: " + availableDocks + "\ntotalDocks: " + totalDocks + "\nlatitude:" +
     latitude + "\nlongitude: " + longitude + "\nstatusValue: " + statusValue + "\nstatusKey: " + statusKey + "\navailableBikes" + availableBikes +
     "\nstreetAddress1" + streetAddress1 + "\nstreetAddress2" + streetAddress2 + "\ncity: " + city + "\npostalCode" + postalCode + "\nlocation: " + location +
     "\naltitude: " + altitude + "\ntestStation:" + testStation + "\nlastCommunicationTime: " + lastCommunicationTime + "\nlandMark" + landMark;
   }
 
   public String test() {
-    return ID + "," + stationName + "," + availableDocks + "," + totalDocks + "," +
+    return ID + "," + name + "," + availableDocks + "," + totalDocks + "," +
         latitude + "," + longitude + "," + statusValue + "," + statusKey + "," + availableBikes +
         "," + streetAddress1 + "," + streetAddress2 + "," + postalCode + "," + location +
         "," + altitude + "," + testStation + "," + lastCommunicationTime + "," + landMark;
