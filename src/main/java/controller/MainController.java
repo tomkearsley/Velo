@@ -472,7 +472,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Retailer selected_item = dataTableRetailer.getSelectionModel().getSelectedItem();
-          helper.tableOnClickPopup.create("Retailer", "you've clicked a thing!",selected_item);
+          helper.tableOnClickPopup.create("Retailer", "",selected_item);
           if(tableOnClickPopup.return_value) {
             double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
             //TODO change this when retailers have lat/long fields
@@ -546,9 +546,35 @@ public class MainController {
         .setAll(idCol, locAddressCol, boroughCol, cityCol, typeCol, providerCol, remarksCol);
 
     dataTableHotspot.setItems(sListHotspots);
-  }
 
+    /**
+     * on click behaviour
+     */
+    dataTableHotspot.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Hotspot selected_item = dataTableHotspot.getSelectionModel().getSelectedItem();
+          helper.tableOnClickPopup.create("Hotspot", "", selected_item);
+          if(tableOnClickPopup.return_value) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getLocationAddress(), "wifi");
+              viewMap();
+            }
+            catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * converts the arrayList of retailers to an observable list, wraps it in filtered and sorted lists
+   * sets dataTablePublicPOI to display these items as well as enabling filtering, sorting, and on-click behaviour
+   */
   public void initPublicPOITable() {
+
     //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
     TableColumn<PublicPOI, Double> latCol = new TableColumn<PublicPOI, Double>("Latitude");
@@ -584,6 +610,28 @@ public class MainController {
 
     dataTablePublicPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
     dataTablePublicPOI.setItems(sListPublicPOIs);
+
+    /**
+     * on click behaviour
+     */
+    dataTablePublicPOI.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          PublicPOI selected_item = dataTablePublicPOI.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("Public POI", "", selected_item);
+          if(tableOnClickPopup.return_value) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              viewMap();
+            }
+            catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
   }
 
   public void initUserPOITable() {
@@ -623,6 +671,25 @@ public class MainController {
 
     dataTableUserPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
     dataTableUserPOI.setItems(sListUserPOIs);
+
+    dataTableUserPOI.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          UserPOI selected_item = dataTableUserPOI.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("User POI", "", selected_item);
+          if(tableOnClickPopup.return_value) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              viewMap();
+            }
+            catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
   }
 
   public void initStationTable() {
@@ -662,6 +729,25 @@ public class MainController {
 
     dataTableStation.getColumns().setAll(nameCol, latCol, longCol, idCol);
     dataTableStation.setItems(sListStations);
+
+    dataTableStation.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Station selected_item = dataTableStation.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("Public POI", "", selected_item);
+          if(tableOnClickPopup.return_value) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              viewMap();
+            }
+            catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
   }
 
   public void initRouteTable() {
@@ -715,5 +801,25 @@ public class MainController {
     dataTableRoute.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol);
     dataTableRoute.setItems(sListRoutes);
+
+    dataTableRoute.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Route selected_item = dataTableRoute.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("Public POI", "", selected_item);
+          if(tableOnClickPopup.return_value) {
+            try {
+              prettyMarker(selected_item.getStartStation().getLatitude(), selected_item.getStartStation().getLongitude(), selected_item.getStartStationName(), "wifi" );
+              prettyMarker(selected_item.getStopStation().getLatitude(), selected_item.getStopStation().getLongitude(), selected_item.getStopStationName(), "wifi");
+              viewMap();
+            }
+            catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
   }
 }
