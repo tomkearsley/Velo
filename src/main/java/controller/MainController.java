@@ -2,6 +2,7 @@ package controller;
 
 import filehandler.Reader;
 import helper.Bridge;
+import helper.tableOnClickPopup;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -470,9 +471,16 @@ public class MainController {
       @Override
       public void handle(MouseEvent event) {
         if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-          helper.tableOnClickPopup.create("Retailer", "you've clicked a thing!", dataTableRetailer.getSelectionModel().getSelectedItem());
+          Retailer selected_item = dataTableRetailer.getSelectionModel().getSelectedItem();
+          helper.tableOnClickPopup.create("Retailer", "you've clicked a thing!",selected_item);
+          if(tableOnClickPopup.return_value) {
+            double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
+            //TODO change this when retailers have lat/long fields
+            //TODO update the marker type to not be wifi
+            prettyMarker(loc[0], loc[1], "<b>Test</b>","wifi");
+            viewMap();
+          }
         }
-
       }
     });
   }
