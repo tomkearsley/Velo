@@ -1,6 +1,12 @@
 package controller;
 
+import static com.sun.org.apache.xalan.internal.utils.SecuritySupport.getResourceAsStream;
+
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
+import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import window.Join;
 import window.Login;
@@ -20,6 +26,7 @@ public class GUIManager extends Application {
 
   // Methods
   public static void main(String[] args) {
+
     launch(args);
   }
 
@@ -28,6 +35,7 @@ public class GUIManager extends Application {
     instanceGUIManager = this; // set the static object GUIManager
 
     this.primaryStage = primaryStage;
+    // primaryStage.getIcons().add(new Image("velo-icon.png")); // TODO add icon to app
     loginWindow.start(primaryStage);
   }
 
