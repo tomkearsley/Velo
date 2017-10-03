@@ -25,7 +25,11 @@
     var markerNum = 0;
     var directionsService;
     var directionsDisplay;
-    var gMarkers = [];
+    var allMarkers = [];
+    var retailerMarkers = [];
+    var hotspotMarkers = [];
+    var POIMarkers = [];
+    var stationMarkers = [];
     var infowindow;
     var geocoder;
     var currentLocation;
@@ -171,8 +175,21 @@
         geocodeLatLng(myLatLng,infowindow);
         infowindow.open(map, marker);
       });
-
-      gMarkers.push(marker);
+      allMarkers.push(marker);
+      switch(markerType) {
+        case "hotspot":
+          hotspotMarkers.push(marker);
+          break;
+        case "station":
+          stationMarkers.push(marker);
+          break;
+        case "POI":
+          POIMarkers.push(marker);
+          break;
+        case "retailer":
+          retailerMarkers.push(marker);
+          break;
+      }
     }
 
     function prettyMarker(lat,lng,info,markerType) {
@@ -195,25 +212,36 @@
 
       infowindow.setContent(info);
       infowindow.open(map,marker);
-    }
 
-    function hideMarkers() {
-      aBridge.outputValue("Hiding markers");
-      for(var i = 0;i<gMarkers.length;i++) {
-        gMarkers[i].setMap(null);
+      allMarkers.push(marker);
+
+      switch(markerType) {
+        case "hotspot":
+          hotspotMarkers.push(marker);
+          break;
+        case "station":
+          stationMarkers.push(marker);
+          break;
+        case "POI":
+          POIMarkers.push(marker);
+          break;
+        case "retailer":
+          retailerMarkers.push(marker);
+          break;
       }
     }
 
-    function deleteMarkers() {
-      aBridge.outputValue("Deleting markers");
-      hideMarkers();
-      gMarkers = [];
+    function hideMarkers(markerArray) {
+      aBridge.outputValue("Hiding markers");
+      for(var i = 0;i<markerArray.length;i++) {
+        markerArray[i].setMap(null);
+      }
     }
 
-    function showMarkers() {
+    function showMarkers(markerArray) {
       aBridge.outputValue("Showing markers");
-      for (var i = 0; i < gMarkers.length; i++) {
-        gMarkers[i].setMap(map);
+      for (var i = 0; i < markerArray.length; i++) {
+        markerArray[i].setMap(map);
       }
     }
 
@@ -256,14 +284,69 @@
       aBridge.outputValue("Displaying hotspots");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
-        lat = aBridge.getLat(infoArray.get(i));
+        lat = aBridge.getHotspotLat(infoArray.get(i));
         //aBridge.testValue("test1");
-        lng = aBridge.getLng(infoArray.get(i));
+        lng = aBridge.getHotspotLng(infoArray.get(i));
         //aBridge.testValue("test2");
-        title = aBridge.getTitle(infoArray.get(i));
+        title = aBridge.getHotspotTitle(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"wifi");
+        createMarker(lat,lng,title,"hotspot");
       }
+    }
+
+    function loadStations(infoArray) {
+      var lat,lng,title;
+      aBridge.outputValue("Displaying stations");
+      for(var i = 0; i < infoArray.size(); i++) {
+        //aBridge.testValue("test");
+        lat = aBridge.getStationLat(infoArray.get(i));
+        //aBridge.testValue("test1");
+        lng = aBridge.getStationLng(infoArray.get(i));
+        //aBridge.testValue("test2");
+        title = aBridge.getStationTitle(infoArray.get(i));
+        //aBridge.testValue("test3");
+        createMarker(lat,lng,title,"station");
+      }
+    }
+
+    function hideAllMarkers() {
+      hideMarkers(allMarkers);
+    }
+
+    function showAllMarkers() {
+      showMarkers(allMarkers);
+    }
+
+    function hideStations() {
+      hideMarkers(stationMarkers);
+    }
+
+    function showStations() {
+      showMarkers(stationMarkers);
+    }
+
+    function hidePOIS() {
+      hideMarkers(POIMarkers);
+    }
+
+    function showPOIS() {
+      showMarkers(POIMarkers);
+    }
+
+    function hideRetailers() {
+      hideMarkers(retailerMarkers);
+    }
+
+    function showRetailers() {
+      showMarkers(retailerMarkers);
+    }
+
+    function hideHotspots() {
+      hideMarkers(hotspotMarkers);
+    }
+
+    function showHotspots() {
+      showMarkers(hotspotMarkers);
     }
 
     //initialize();

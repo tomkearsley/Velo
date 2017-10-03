@@ -60,6 +60,10 @@ public class MainController {
   //private boolean publicPOIIsDetailed = false;
   private boolean routeIsDetailed = false;
   //private boolean stationIsDetailed = false;
+  private boolean hotspotsLoaded = false;
+  private boolean stationsLoaded = false;
+  private boolean POISLoaded = false;
+  private boolean retailersLoaded = false;
 
   private ArrayList<ImageView> buttons = new ArrayList<ImageView>();
 
@@ -195,7 +199,12 @@ public class MainController {
 
   public void toggleButton2() {
     try {
-      displayHotspots();
+      if(hotspotsLoaded) {
+        showHotspots();
+      }
+      else {
+        loadHotspots();
+      }
     }
     catch (IOException e) {
       System.out.println("Error occurred while reading hotspots");
@@ -208,6 +217,17 @@ public class MainController {
   }
 
   public void toggleButton4() {
+    try {
+      if(stationsLoaded) {
+        showStations();
+      }
+      else {
+        loadStations();
+      }
+    }
+    catch (IOException e) {
+      System.out.println("Error occurred while reading stations");
+    }
     toggleButton(3);
   }
 
@@ -217,7 +237,7 @@ public class MainController {
 
   public void toggleButton6() {
     try {
-      hideMarkers();
+      hideHotspots();
     }
     catch (Exception e) {
       System.out.println("Internal error, please report to app devs");
@@ -230,6 +250,12 @@ public class MainController {
   }
 
   public void toggleButton8() {
+    try {
+      hideStations();
+    }
+    catch (Exception e) {
+      System.out.println("Internal error, please report to app devs");
+    }
     toggleButton(7);
   }
 
@@ -301,38 +327,93 @@ public class MainController {
     return true;
   }
 
-  public void displayHotspots() throws IOException{
+  public void loadHotspots() throws IOException{
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
-    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0)); //TODO get current hotspots instead of reading (so imported data is included)
-    testPretty();
+    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0));
+    hotspotsLoaded = true;
+    //testPretty();
   }
 
+  public void loadStations() throws IOException{
+    Reader rdr = new Reader();
+    window.setMember("aBridge",aBridge);
+    window.call("loadStations",rdr.readStations("/file/stations.json"));
+    stationsLoaded = true;
+  }
+
+  public void loadPOIS() throws IOException{
+    Reader rdr = new Reader();
+    window.setMember("aBridge",aBridge);
+    window.call("loadPOIS",rdr.readUserPOIS("/file/POIS.csv"));
+    POISLoaded = true;
+  }
+
+  public void loadRetailers() throws IOException{
+    Reader rdr = new Reader();
+    window.setMember("aBridge",aBridge);
+    window.call("loadRetailers",rdr.readRetailers("/file/InitialRetailers.json"));
+    retailersLoaded = true;
+  }
+
+  public void showHotspots() {
+    window.setMember("aBridge",aBridge);
+    window.call("showHotspots");
+  }
+
+  public void hideHotspots() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideHotspots");
+  }
+
+  public void showStations() {
+    window.setMember("aBridge",aBridge);
+    window.call("showStations");
+  }
+
+  public void hideStations() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideStations");
+  }
+
+  public void showRetailers() {
+    window.setMember("aBridge",aBridge);
+    window.call("showRetailers");
+  }
+
+  public void hideRetailers() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideRetailers");
+  }
+
+  public void showPOIS() {
+    window.setMember("aBridge",aBridge);
+    window.call("showPOIS");
+  }
+
+  public void hidePOIS() {
+    window.setMember("aBridge",aBridge);
+    window.call("hidePOIS");
+  }
+
+  //What is this method for?
   public ArrayList<Hotspot> getHotspots() {
     return hotspots;
   }
 
-  public void hideMarkers() {
+  public void hideAllMarkers() {
     window.setMember("aBridge",aBridge);
-    window.call("hideMarkers");
+    window.call("hideAllMarkers");
   }
 
-  public void showMarkers() {
-    window.setMember("aBridge",aBridge);
-    window.call("showMarkers");
-  }
-
-  public void deleteMarkers() {
-    window.setMember("aBridge",aBridge);
-    window.call("deleteMarkers");
-  }
 
   public void prettyMarker(double lat,double lng,String info,String markerType) {
     window.setMember("aBridge",aBridge);
     window.call("prettyMarker",lat,lng,info,markerType);
   }
 
+  //Test method
   public void testPretty() {
     prettyMarker(40.714728,-73.998672,"Test string","wifi");
   }
