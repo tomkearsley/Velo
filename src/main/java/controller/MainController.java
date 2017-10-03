@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import filehandler.Reader;
 import helper.Bridge;
 import helper.tableOnClickPopup;
@@ -9,6 +10,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,6 +19,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker.State;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -57,6 +61,10 @@ public class MainController {
   //private boolean publicPOIIsDetailed = false;
   private boolean routeIsDetailed = false;
   //private boolean stationIsDetailed = false;
+  private boolean hotspotsLoaded = false;
+  private boolean stationsLoaded = false;
+  private boolean POISLoaded = false;
+  private boolean retailersLoaded = false;
 
   private ArrayList<ImageView> buttons = new ArrayList<ImageView>();
 
@@ -99,6 +107,11 @@ public class MainController {
   private Pane userPane;
   @FXML
   private Pane fileHandlerPane;
+
+  @FXML
+  private ChoiceBox importType;
+  @FXML
+  private ChoiceBox exportType;
 
   @FXML private ImageView wifi_icon_primary;
   @FXML private ImageView retailer_icon_primary;
@@ -187,7 +200,12 @@ public class MainController {
 
   public void toggleButton2() {
     try {
-      displayHotspots();
+      if(hotspotsLoaded) {
+        showHotspots();
+      }
+      else {
+        loadHotspots();
+      }
     }
     catch (IOException e) {
       System.out.println("Error occurred while reading hotspots");
@@ -200,6 +218,17 @@ public class MainController {
   }
 
   public void toggleButton4() {
+    try {
+      if(stationsLoaded) {
+        showStations();
+      }
+      else {
+        loadStations();
+      }
+    }
+    catch (IOException e) {
+      System.out.println("Error occurred while reading stations");
+    }
     toggleButton(3);
   }
 
@@ -209,7 +238,7 @@ public class MainController {
 
   public void toggleButton6() {
     try {
-      hideMarkers();
+      hideHotspots();
     }
     catch (Exception e) {
       System.out.println("Internal error, please report to app devs");
@@ -222,6 +251,12 @@ public class MainController {
   }
 
   public void toggleButton8() {
+    try {
+      hideStations();
+    }
+    catch (Exception e) {
+      System.out.println("Internal error, please report to app devs");
+    }
     toggleButton(7);
   }
 
@@ -252,6 +287,11 @@ public class MainController {
 
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
+
+    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "UserPOI"}; //TODO add more
+    ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
+    importType.setItems(dataTypes);
+    importType.setValue("Hotspot");
 
     setImages();
 
@@ -288,34 +328,93 @@ public class MainController {
     return true;
   }
 
-  public void displayHotspots() throws IOException{
+  public void loadHotspots() throws IOException{
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
     window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0));
-    testPretty();
+    hotspotsLoaded = true;
+    //testPretty();
   }
 
-  public void hideMarkers() {
+  public void loadStations() throws IOException{
+    Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("hideMarkers");
+    window.call("loadStations",rdr.readStations("/file/stations.json"));
+    stationsLoaded = true;
   }
 
-  public void showMarkers() {
+  public void loadPOIS() throws IOException{
+    Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("showMarkers");
+    window.call("loadPOIS",rdr.readUserPOIS("/file/POIS.csv"));
+    POISLoaded = true;
   }
 
-  public void deleteMarkers() {
+  public void loadRetailers() throws IOException{
+    Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("deleteMarkers");
+    window.call("loadRetailers",rdr.readRetailers("/file/InitialRetailers.json"));
+    retailersLoaded = true;
   }
+
+  public void showHotspots() {
+    window.setMember("aBridge",aBridge);
+    window.call("showHotspots");
+  }
+
+  public void hideHotspots() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideHotspots");
+  }
+
+  public void showStations() {
+    window.setMember("aBridge",aBridge);
+    window.call("showStations");
+  }
+
+  public void hideStations() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideStations");
+  }
+
+  public void showRetailers() {
+    window.setMember("aBridge",aBridge);
+    window.call("showRetailers");
+  }
+
+  public void hideRetailers() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideRetailers");
+  }
+
+  public void showPOIS() {
+    window.setMember("aBridge",aBridge);
+    window.call("showPOIS");
+  }
+
+  public void hidePOIS() {
+    window.setMember("aBridge",aBridge);
+    window.call("hidePOIS");
+  }
+
+  //What is this method for?
+  public ArrayList<Hotspot> getHotspots() {
+    return hotspots;
+  }
+
+  public void hideAllMarkers() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideAllMarkers");
+  }
+
 
   public void prettyMarker(double lat,double lng,String info,String markerType) {
     window.setMember("aBridge",aBridge);
     window.call("prettyMarker",lat,lng,info,markerType);
   }
 
+  //Test method
   public void testPretty() {
     prettyMarker(40.714728,-73.998672,"Test string","wifi");
   }
@@ -336,6 +435,57 @@ public class MainController {
 
   public void viewFileHandler() {
     fileHandlerPane.toFront();
+  }
+
+  /**
+   * Imports additional items from a csv file to the appropriate ArrayList based on the selected datatype
+   * from the ChoiceBox
+   */
+  public void importData() { //TODO expand for rest of data types
+    Reader reader = new Reader();
+    int prevSize;
+    if (importType.getValue().equals("Hotspot")) {
+      try {
+        ArrayList<Hotspot> hotspotsToAdd = reader.readHotspots("/file/InitialHotspots.csv", 0); //TODO change to 1 after testing
+        prevSize = hotspots.size();
+        for (Hotspot hotspot : hotspotsToAdd) {
+          hotspots.add(hotspot);
+        }
+        System.out.println((hotspots.size() - prevSize) + " hotspots added.");
+        initHotspotTable();
+      } catch (IOException e) {
+        System.out.println("Error loading hotspots");
+      }
+    } else if (importType.getValue().equals("Retailer")) {
+      try {
+        ArrayList<Retailer> retailersToAdd = reader.readRetailers("/file/InitialRetailers.csv");
+        prevSize = retailers.size();
+        for (Retailer retailer : retailersToAdd) {
+          retailers.add(retailer);
+        }
+        System.out.println((retailers.size() - prevSize) + " retailers added.");
+        initRetailerTable();
+      } catch (IOException e) {
+        System.out.println("Error loading retailers");
+      }
+    } else if (importType.getValue().equals("UserPOI")) {
+      try {
+        ArrayList<UserPOI> userPOIsToAdd = reader.readUserPOIS("/file/UserPOIdata_smallsample.csv");
+        prevSize = userPOIs.size();
+        for (UserPOI userPOI: userPOIsToAdd) {
+          userPOIs.add(userPOI);
+        }
+        System.out.println((userPOIs.size() - prevSize) + " user POIs added.");
+        initUserPOITable();
+      } catch (IOException e) {
+        System.out.println("Error loading user POIs");
+      }
+    }
+
+  }
+
+  public void exportData() {
+    System.out.println("test2");
   }
 
   public void toggleDetailsHotspot() {

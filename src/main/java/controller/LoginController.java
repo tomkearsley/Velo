@@ -1,10 +1,13 @@
 package controller;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 public class LoginController {
 
@@ -15,6 +18,20 @@ public class LoginController {
   @FXML private Button logIn;
   @FXML private Hyperlink join;
 
+
+  // TODO make enter press the log in button
+//  // Methods
+//  /** Initialize the window */
+//  public void initialize() {
+//    gridPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//      @Override
+//      public void handle(KeyEvent keyEvent) {
+//        if (keyEvent.getCode() == KeyCode.ENTER)  {
+//          authenticate();
+//        }
+//      }
+//    });
+//  }
 
   /** Checks credentials against database to authenticate user */
   public void authenticate() {
@@ -33,7 +50,6 @@ public class LoginController {
     }
 
   }
-
 
   /** Tells GUIManager to launch the Join window */
   public void join() {

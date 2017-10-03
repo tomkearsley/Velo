@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
@@ -21,6 +23,18 @@ public class Login extends Application {
       Parent root = FXMLLoader.load(getClass().getResource("/gui/login.fxml"));
       primaryStage.setTitle("Vélo");
       primaryStage.setScene(new Scene(root, 500, 400));
+
+//      MenuBar menuBar = new MenuBar();
+//      final String os = System.getProperty ("os.name");
+//      if (os != null && os.startsWith ("mac"))
+//        menuBar.useSystemMenuBarProperty().set(true);
+//
+//      BorderPane borderPane = new BorderPane ();
+//      borderPane.setTop(menuBar);
+//
+//      primaryStage.setScene(new Scene(borderPane));
+
+
       primaryStage.show();
     } catch (Exception e) {
       e.printStackTrace();
