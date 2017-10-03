@@ -477,8 +477,13 @@ public class MainController {
             double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
             //TODO change this when retailers have lat/long fields
             //TODO update the marker type to not be wifi
-            prettyMarker(loc[0], loc[1], "<b>Test</b>","wifi");
-            viewMap();
+            try {
+              prettyMarker(loc[0], loc[1], "<b>Test</b>", "wifi");
+              viewMap();
+            }
+            catch(NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
           }
         }
       }
