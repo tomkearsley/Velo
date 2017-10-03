@@ -68,7 +68,7 @@ public class Reader {
         quoteReached = !quoteReached;
       }
       if (quoteReached && string.charAt(i) == ',') {
-        locs.add(new Integer(i));
+        locs.add(i);
       }
     }
     return locs;
@@ -157,7 +157,6 @@ public class Reader {
     }
     return null;
   }
-
 
   /**
    * Reads WiFi hotspots from a csv file Uses BufferedReader
