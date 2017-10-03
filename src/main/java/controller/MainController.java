@@ -1,5 +1,6 @@
 package controller;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import filehandler.Reader;
 import helper.Bridge;
 import java.io.FileNotFoundException;
@@ -8,6 +9,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -15,6 +18,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker.State;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -98,6 +102,11 @@ public class MainController {
   private Pane userPane;
   @FXML
   private Pane fileHandlerPane;
+
+  @FXML
+  private ChoiceBox importType;
+  @FXML
+  private ChoiceBox exportType;
 
   @FXML private ImageView wifi_icon_primary;
   @FXML private ImageView retailer_icon_primary;
@@ -252,6 +261,11 @@ public class MainController {
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
 
+    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "UserPOI"}; //TODO add more
+    ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
+    importType.setItems(dataTypes);
+    importType.setValue("Hotspot");
+
     setImages();
 
     mapEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
@@ -291,8 +305,12 @@ public class MainController {
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
-    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0));
+    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0)); //TODO get current hotspots instead of reading (so imported data is included)
     testPretty();
+  }
+
+  public ArrayList<Hotspot> getHotspots() {
+    return hotspots;
   }
 
   public void hideMarkers() {
@@ -335,6 +353,57 @@ public class MainController {
 
   public void viewFileHandler() {
     fileHandlerPane.toFront();
+  }
+
+  /**
+   * Imports additional items from a csv file to the appropriate ArrayList based on the selected datatype
+   * from the ChoiceBox
+   */
+  public void importData() { //TODO expand for rest of data types
+    Reader reader = new Reader();
+    int prevSize;
+    if (importType.getValue().equals("Hotspot")) {
+      try {
+        ArrayList<Hotspot> hotspotsToAdd = reader.readHotspots("/file/InitialHotspots.csv", 0); //TODO change to 1 after testing
+        prevSize = hotspots.size();
+        for (Hotspot hotspot : hotspotsToAdd) {
+          hotspots.add(hotspot);
+        }
+        System.out.println((hotspots.size() - prevSize) + " hotspots added.");
+        initHotspotTable();
+      } catch (IOException e) {
+        System.out.println("Error loading hotspots");
+      }
+    } else if (importType.getValue().equals("Retailer")) {
+      try {
+        ArrayList<Retailer> retailersToAdd = reader.readRetailers("/file/InitialRetailers.csv");
+        prevSize = retailers.size();
+        for (Retailer retailer : retailersToAdd) {
+          retailers.add(retailer);
+        }
+        System.out.println((retailers.size() - prevSize) + " retailers added.");
+        initRetailerTable();
+      } catch (IOException e) {
+        System.out.println("Error loading retailers");
+      }
+    } else if (importType.getValue().equals("UserPOI")) {
+      try {
+        ArrayList<UserPOI> userPOIsToAdd = reader.readUserPOIS("/file/UserPOIdata_smallsample.csv");
+        prevSize = userPOIs.size();
+        for (UserPOI userPOI: userPOIsToAdd) {
+          userPOIs.add(userPOI);
+        }
+        System.out.println((userPOIs.size() - prevSize) + " user POIs added.");
+        initUserPOITable();
+      } catch (IOException e) {
+        System.out.println("Error loading user POIs");
+      }
+    }
+
+  }
+
+  public void exportData() {
+    System.out.println("test2");
   }
 
   public void toggleDetailsHotspot() {
