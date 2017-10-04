@@ -3,6 +3,7 @@ package filehandler;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonParser;
 import com.google.gson.JsonObject;
+import helper.Bridge;
 import helper.tableOnClickPopup;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -98,11 +99,16 @@ public class Google {
 
   public static void main(String[] args) {
     Reader rdr = new Reader();
+    Bridge aBridge = new Bridge();
+    ArrayList<Retailer> retailerArrayList = new ArrayList<Retailer>();
     try {
-      ArrayList<Retailer> retailerArrayList = rdr.readRetailers("", false);
+      retailerArrayList = rdr.readRetailers("/file/initialRetailers.csv", false);
     }
     catch (FileNotFoundException e) {
 
+    }
+    for(int i = 0; i < retailerArrayList.size(); i++) {
+      System.out.println(Arrays.toString(aBridge.getRetailerLocation(retailerArrayList.get(i))));
     }
   }
 }

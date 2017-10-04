@@ -279,6 +279,21 @@
       });
     }
 
+    function geocodeLatLngRetailer(latlng,infowindow) {
+      geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+          if (results[0]) {
+            //alert(results[0].formatted_address);
+            infowindow.setContent(results[0].formatted_address);
+          } else {
+            alert('No results found');
+          }
+        } else {
+          alert('Geocoder failed due to: ' + status);
+        }
+      });
+    }
+
     function loadHotspots(infoArray) {
       var lat,lng,title;
       aBridge.outputValue("Displaying hotspots");
