@@ -1,10 +1,12 @@
 package controller;
 
 import filehandler.Reader;
+import filehandler.Writer;
 import helper.Bridge;
 import helper.tableOnClickPopup;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -476,18 +478,30 @@ public class MainController {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open CSV File");
     fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
+    //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
     File selectedFile = fileChooser.showOpenDialog(null);
     if (selectedFile != null) {
       importData(selectedFile.getPath());
     }
   }
 
-  public void selectExportFile() {
+  public void exportUserRoutes() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Export CSV File");
+    File saveFile = fileChooser.showSaveDialog(null);
+    if (saveFile != null) {
+      try {
+        Writer writer = new Writer();
+        if (saveFile.getPath().endsWith(".csv")) {
+          writer.writeRoutesToFile(routes, saveFile.getPath());
+        } else {
+          writer.writeRoutesToFile(routes, saveFile.getPath() + ".csv");
+        }
 
-  }
-
-  public void importData() {
-
+      } catch (IOException e) {
+        //TODO CATCH with alert
+      }
+    }
   }
 
   /**
@@ -567,10 +581,6 @@ public class MainController {
     if (alert != null) {
       alert.showAndWait();
     }
-  }
-
-  public void exportData() {
-    System.out.println("test2");
   }
 
   public void toggleDetailsHotspot() {

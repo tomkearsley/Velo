@@ -62,29 +62,6 @@
                         </HBox>
                      </items>
                   </SplitPane>
-                  <Pane fx:id="fileHandlerPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
-                     <children>
-                        <GridPane layoutX="14.0" layoutY="148.0" prefHeight="182.0" prefWidth="437.0">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#importData" text="Import" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <Button mnemonicParsing="false" onAction="#exportData" text="Export" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                              <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                              <Button mnemonicParsing="false" onAction="#selectImportFile" text="Select File" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <Button mnemonicParsing="false" onAction="#selectExportFile" text="Select File" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                           </children>
-                        </GridPane>
-                     </children>
-                  </Pane>
                   <TabPane fx:id="dataTabPane">
                      <tabs>
                         <Tab closable="false" text="Hotspots">
@@ -372,7 +349,7 @@
                                           <Button mnemonicParsing="false" onAction="#selectImportFile" prefHeight="27.0" prefWidth="117.0" text="Import" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                        </children>
                                     </GridPane>
-                                    <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="270.0" text="Export Route History" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Button mnemonicParsing="false" onAction="#exportUserRoutes" prefHeight="27.0" prefWidth="270.0" text="Export Route History" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <GridPane.margin>
                                           <Insets right="20.0" />
                                        </GridPane.margin>
