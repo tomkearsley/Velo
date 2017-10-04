@@ -431,6 +431,11 @@ public class MainController {
     window.call("prettyMarker",lat,lng,info,markerType);
   }
 
+  public void displayRoute(double startLat,double startLng,double endLat,double endLng) {
+    window.setMember("aBridge",aBridge);
+    window.call("displayRoute",startLat,startLng,endLat,endLng);
+  }
+
   //Test method
   public void testPretty() {
     prettyMarker(40.714728,-73.998672,"Test string","wifi");
