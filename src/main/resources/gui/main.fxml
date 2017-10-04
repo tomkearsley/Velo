@@ -43,7 +43,7 @@
       <children>
             <StackPane fx:id="mainStackPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <SplitPane fx:id="dataSplitPane" dividerPositions="0.9" orientation="VERTICAL" prefHeight="398.0" prefWidth="417.0" visible="false">
+                  <SplitPane fx:id="dataSplitPane" dividerPositions="0.9" orientation="VERTICAL" prefHeight="398.0" prefWidth="417.0">
                      <items>
                     <TableView id="mapBrowser" fx:id="rawDataTable">
                       <columns>
@@ -319,7 +319,7 @@
                         </Tab>
                      </tabs>
                   </TabPane>
-                  <AnchorPane fx:id="mapViewPane" visible="false">
+                  <AnchorPane fx:id="mapViewPane">
                      <children>
                         <WebView id="mapWebView" fx:id="mapWebView" layoutX="2.0" minHeight="-1.0" minWidth="-1.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                         <Button id="hideHotspotButton" fx:id="hideHotspotButton" layoutX="314.0" layoutY="559.0" mnemonicParsing="false" onAction="#hideAllMarkers" prefHeight="25.0" prefWidth="153.0" text="Hide Markers" />
