@@ -49,12 +49,12 @@ public class LoginController {
       e.printStackTrace();
     }
     // TODO else if ANALYST user, tell GUIManager
-    try {
-      System.out.println("Analyst authenticated");
-      GUIManager.getInstanceGUIManager().analystAuthenticated();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+//    try {
+//      System.out.println("Analyst authenticated");
+//      GUIManager.getInstanceGUIManager().analystAuthenticated();
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
 
   }
 
