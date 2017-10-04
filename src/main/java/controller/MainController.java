@@ -139,12 +139,12 @@ public class MainController {
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try {
-      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
+      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
       retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
       stations = rdr.readStations("/file/stations.json");
-      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv");
-      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv");
-      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations);
+      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
+      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
+      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
     } catch (FileNotFoundException e) {
       System.out.println("File not found");
       e.printStackTrace();
@@ -305,7 +305,7 @@ public class MainController {
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
 
-    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "UserPOI"}; //TODO add more
+    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "Public POI", "User POI", "Route"}; //TODO add more
     ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
     importType.setItems(dataTypes);
     importType.setValue("Hotspot");
@@ -349,7 +349,7 @@ public class MainController {
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
-    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0));
+    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", false));
     hotspotsLoaded = true;
     //testPretty();
   }
@@ -364,7 +364,7 @@ public class MainController {
   public void loadPOIS() throws IOException{
     Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("loadPOIS",rdr.readUserPOIS("/file/POIS.csv"));
+    window.call("loadPOIS",rdr.readUserPOIS("/file/POIS.csv", false));
     POISLoaded = true;
   }
 
@@ -482,7 +482,8 @@ public class MainController {
       if (importType.getValue().equals("Hotspot")) {
         try {
           ArrayList<Hotspot> hotspotsToAdd = reader
-              .readHotspots("/file/InitialHotspots.csv", 0); //TODO change to 1 after testing
+              .readHotspots(importFilePath, true); //NOTE Will not work when importing
+          // initial hotspots as external file due to index handling changes between internal & external files
           prevSize = hotspots.size();
           for (Hotspot hotspot : hotspotsToAdd) {
             hotspots.add(hotspot);
@@ -504,10 +505,23 @@ public class MainController {
         } catch (IOException e) {
           System.out.println("Error loading retailers");
         }
-      } else if (importType.getValue().equals("UserPOI")) {
+      } else if (importType.getValue().equals("Public POI")) {
+        try {
+          ArrayList<PublicPOI> publicPOIsToAdd = reader
+              .readPublicPOIS(importFilePath, true);
+          prevSize = publicPOIs.size();
+          for (PublicPOI publicPOI : publicPOIsToAdd) {
+            publicPOIs.add(publicPOI);
+          }
+          System.out.println((publicPOIs.size() - prevSize) + " public POIs added.");
+          initPublicPOITable();
+        } catch (IOException e) {
+          System.out.println("Error loading public POIs");
+        }
+      } else if (importType.getValue().equals("User POI")) {
         try {
           ArrayList<UserPOI> userPOIsToAdd = reader
-              .readUserPOIS("/file/UserPOIdata_smallsample.csv");
+              .readUserPOIS(importFilePath, true);
           prevSize = userPOIs.size();
           for (UserPOI userPOI : userPOIsToAdd) {
             userPOIs.add(userPOI);
@@ -516,6 +530,19 @@ public class MainController {
           initUserPOITable();
         } catch (IOException e) {
           System.out.println("Error loading user POIs");
+        }
+      } else if (importType.getValue().equals("Route")) {
+        try {
+          ArrayList<Route> routesToAdd = reader
+              .readRoutes(importFilePath, stations, true);
+          prevSize = routes.size();
+          for (Route route : routesToAdd) {
+            routes.add(route);
+          }
+          System.out.println((routes.size() - prevSize) + " routes added.");
+          initRouteTable();
+        } catch (IOException e) {
+          System.out.println("Error loading routes");
         }
       }
     }
