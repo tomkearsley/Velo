@@ -129,7 +129,7 @@ public class Writer {
     ArrayList<PublicPOI> publicPOIS;
 
     try {
-      retailers = testR.readRetailers("/file/InitialRetailers.csv");
+      retailers = testR.readRetailers("/file/InitialRetailers.csv", false);
       hotspots = testR.readHotspots("/file/InitialHotspots.csv", 0);
       stations = testR.readStations("/file/stations.json");
       userPOIS = testR.readUserPOIS("/file/UserPOIdata_smallsample.csv");

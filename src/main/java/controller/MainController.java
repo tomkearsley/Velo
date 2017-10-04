@@ -4,6 +4,7 @@ import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import filehandler.Reader;
 import helper.Bridge;
 import helper.tableOnClickPopup;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -32,6 +33,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Window;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -65,6 +69,8 @@ public class MainController {
   private boolean stationsLoaded = false;
   private boolean POISLoaded = false;
   private boolean retailersLoaded = false;
+  private String importFilePath = null;
+  private String exportFilePath = null;
 
   private ArrayList<ImageView> buttons = new ArrayList<ImageView>();
 
@@ -134,7 +140,7 @@ public class MainController {
     Reader rdr = new Reader();
     try {
       hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
-      retailers = rdr.readRetailers("/file/InitialRetailers.csv");
+      retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
       stations = rdr.readStations("/file/stations.json");
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv");
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv");
@@ -365,7 +371,7 @@ public class MainController {
   public void loadRetailers() throws IOException{
     Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("loadRetailers",rdr.readRetailers("/file/InitialRetailers.csv"));
+    window.call("loadRetailers",rdr.readRetailers("/file/InitialRetailers.csv", false));
     retailersLoaded = true;
   }
 
@@ -448,48 +454,64 @@ public class MainController {
     fileHandlerPane.toFront();
   }
 
+  public void selectImportFile() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open CSV File");
+    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
+    File selectedFile = fileChooser.showOpenDialog(null);
+    importFilePath = selectedFile.getPath();
+  }
+
+  public void selectExportFile() {
+
+  }
+
   /**
    * Imports additional items from a csv file to the appropriate ArrayList based on the selected datatype
    * from the ChoiceBox
    */
-  public void importData() { //TODO expand for rest of data types
+  public void importData() { //TODO expand for rest of data types, file path differences
     Reader reader = new Reader();
     int prevSize;
-    if (importType.getValue().equals("Hotspot")) {
-      try {
-        ArrayList<Hotspot> hotspotsToAdd = reader.readHotspots("/file/InitialHotspots.csv", 0); //TODO change to 1 after testing
-        prevSize = hotspots.size();
-        for (Hotspot hotspot : hotspotsToAdd) {
-          hotspots.add(hotspot);
+    if (importFilePath != null) {
+      if (importType.getValue().equals("Hotspot")) {
+        try {
+          ArrayList<Hotspot> hotspotsToAdd = reader
+              .readHotspots("/file/InitialHotspots.csv", 0); //TODO change to 1 after testing
+          prevSize = hotspots.size();
+          for (Hotspot hotspot : hotspotsToAdd) {
+            hotspots.add(hotspot);
+          }
+          System.out.println((hotspots.size() - prevSize) + " hotspots added.");
+          initHotspotTable();
+        } catch (IOException e) {
+          System.out.println("Error loading hotspots");
         }
-        System.out.println((hotspots.size() - prevSize) + " hotspots added.");
-        initHotspotTable();
-      } catch (IOException e) {
-        System.out.println("Error loading hotspots");
-      }
-    } else if (importType.getValue().equals("Retailer")) {
-      try {
-        ArrayList<Retailer> retailersToAdd = reader.readRetailers("/file/InitialRetailers.csv");
-        prevSize = retailers.size();
-        for (Retailer retailer : retailersToAdd) {
-          retailers.add(retailer);
+      } else if (importType.getValue().equals("Retailer")) {
+        try {
+          ArrayList<Retailer> retailersToAdd = reader.readRetailers(importFilePath, true);
+          prevSize = retailers.size();
+          for (Retailer retailer : retailersToAdd) {
+            retailers.add(retailer);
+          }
+          System.out.println((retailers.size() - prevSize) + " retailers added.");
+          initRetailerTable();
+        } catch (IOException e) {
+          System.out.println("Error loading retailers");
         }
-        System.out.println((retailers.size() - prevSize) + " retailers added.");
-        initRetailerTable();
-      } catch (IOException e) {
-        System.out.println("Error loading retailers");
-      }
-    } else if (importType.getValue().equals("UserPOI")) {
-      try {
-        ArrayList<UserPOI> userPOIsToAdd = reader.readUserPOIS("/file/UserPOIdata_smallsample.csv");
-        prevSize = userPOIs.size();
-        for (UserPOI userPOI: userPOIsToAdd) {
-          userPOIs.add(userPOI);
+      } else if (importType.getValue().equals("UserPOI")) {
+        try {
+          ArrayList<UserPOI> userPOIsToAdd = reader
+              .readUserPOIS("/file/UserPOIdata_smallsample.csv");
+          prevSize = userPOIs.size();
+          for (UserPOI userPOI : userPOIsToAdd) {
+            userPOIs.add(userPOI);
+          }
+          System.out.println((userPOIs.size() - prevSize) + " user POIs added.");
+          initUserPOITable();
+        } catch (IOException e) {
+          System.out.println("Error loading user POIs");
         }
-        System.out.println((userPOIs.size() - prevSize) + " user POIs added.");
-        initUserPOITable();
-      } catch (IOException e) {
-        System.out.println("Error loading user POIs");
       }
     }
 
