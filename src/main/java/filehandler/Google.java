@@ -3,6 +3,7 @@ package filehandler;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonParser;
 import com.google.gson.JsonObject;
+import helper.tableOnClickPopup;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import static helper.tableOnClickPopup.create;
 
 /**
  * The class Google defines the type to query the Google APIs
@@ -23,7 +25,7 @@ public class Google {
     return string.replaceAll(" ", "+");
   }
 
-  public static JSONObject urlToJson(String string){
+  public static JSONObject urlToJson(String string) throws NullPointerException{
     String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
     String JsonString =
         "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string)
@@ -60,7 +62,7 @@ public class Google {
     return new JSONObject(sb.toString());
   }
 
-  public static double[] jsonToLocation(JSONObject jsonObj) {
+  public static double[] jsonToLocation(JSONObject jsonObj) throws NullPointerException{
     JSONArray resultArray = jsonObj.getJSONArray("results");
     //JSONObject result1 = resultArray.getJSONObject(1);
     JSONObject addressObject = resultArray.getJSONObject(0);
@@ -79,9 +81,14 @@ public class Google {
   }
 
   public static double[] stringToLocation(String string) {
+    try {
       JSONObject jsonObj = urlToJson(string);
       return jsonToLocation(jsonObj);
-
+    }
+    catch(NullPointerException e) {
+      create("Invalid location","Could not find location",null);
+      return new double[]{0,0};
+    }
       //Double latitude =   jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("latitude");
       //Double longitude = jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("longitude");
   }
