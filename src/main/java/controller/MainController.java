@@ -195,6 +195,17 @@ public class MainController {
   }
 
   public void toggleButton1() {
+    try {
+      if(retailersLoaded) {
+        showRetailers();
+      }
+      else {
+        loadRetailers();
+      }
+    }
+    catch (IOException e) {
+
+    }
     toggleButton(0);
   }
 
@@ -354,7 +365,7 @@ public class MainController {
   public void loadRetailers() throws IOException{
     Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("loadRetailers",rdr.readRetailers("/file/InitialRetailers.json"));
+    window.call("loadRetailers",rdr.readRetailers("/file/InitialRetailers.csv"));
     retailersLoaded = true;
   }
 
