@@ -4,8 +4,8 @@
   <groupId>seng202.team9</groupId>
   <artifactId>SENG202Team9</artifactId>
   <packaging>jar</packaging>
-  <version>v1.0</version>
-  <name>SENG202Team9</name>
+  <version>v2.0</version>
+  <name>Vélo</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
