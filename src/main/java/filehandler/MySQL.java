@@ -223,6 +223,7 @@ public class MySQL {
             return LoginResult;
           } else {
             System.out.println("Password is incorrect");
+            LoginResult.add(successfulLogin);
             return LoginResult;
           }
         }
