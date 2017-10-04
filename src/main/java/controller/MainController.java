@@ -999,8 +999,7 @@ public class MainController {
           if(tableOnClickPopup.return_value) {
             try {
               //TODO use correct method for showing routes on map
-              prettyMarker(selected_item.getStartStation().getLatitude(), selected_item.getStartStation().getLongitude(), selected_item.getStartStationName(), "wifi" );
-              prettyMarker(selected_item.getStopStation().getLatitude(), selected_item.getStopStation().getLongitude(), selected_item.getStopStationName(), "wifi");
+              displayRoute(selected_item.getStartStation().getLatitude(), selected_item.getStartStation().getLongitude(), selected_item.getStopStation().getLatitude(), selected_item.getStopStation().getLongitude());
               viewMap();
             }
             catch (NullPointerException e) {
