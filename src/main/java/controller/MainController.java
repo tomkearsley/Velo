@@ -488,7 +488,9 @@ public class MainController {
   public void exportUserRoutes() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Export CSV File");
+    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV FILES", "*.csv"));
     File saveFile = fileChooser.showSaveDialog(null);
+    Alert alert = null;
     if (saveFile != null) {
       try {
         Writer writer = new Writer();
@@ -497,9 +499,12 @@ public class MainController {
         } else {
           writer.writeRoutesToFile(routes, saveFile.getPath() + ".csv");
         }
+        alert = new Alert(AlertType.NONE, "Routes successfully exported", ButtonType.OK);
 
       } catch (IOException e) {
-        //TODO CATCH with alert
+        alert = new Alert(AlertType.ERROR, "Error exporting routes", ButtonType.OK);
+      } finally {
+        alert.showAndWait();
       }
     }
   }
