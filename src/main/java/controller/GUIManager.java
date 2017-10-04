@@ -32,8 +32,8 @@ public class GUIManager extends Application {
 
     // TODO test this. Doesn't seem like it's working
     // Add macOS menu bar items
-    MenuToolkit tk = MenuToolkit.toolkit();
-    Menu defaultApplicationMenu = tk.createDefaultApplicationMenu("Vélo");
+    //MenuToolkit tk = MenuToolkit.toolkit();
+    //Menu defaultApplicationMenu = tk.createDefaultApplicationMenu("Vélo");
 
 //    MenuBar bar = new MenuBar();
 //    bar.getMenus().add(defaultApplicationMenu);
