@@ -9,6 +9,7 @@ import window.Join;
 import window.Login;
 import window.Main;
 import window.MainAnalyst;
+import window.UpdateAccount;
 
 public class GUIManager extends Application {
 
@@ -18,6 +19,7 @@ public class GUIManager extends Application {
   private Join joinWindow = new Join();
   private Main mainWindow = new Main();
   private MainAnalyst mainAnalyst = new MainAnalyst();
+  private UpdateAccount updateAccount = new UpdateAccount();
   private Stage primaryStage;
 
 
@@ -100,7 +102,17 @@ public class GUIManager extends Application {
     mainWindow.start(primaryStage);
   }
 
-  // JoinController methods
+  // AccountUpdate methods
+  /** The GUIManger method corresponding to the UpdateAccountController
+   * Lets GUIManager know a user wants to update their account
+   * @throws Exception possible start exceptions
+   */
+  public void updateAccount() throws Exception {
+
+    // Close any other window, begin Main window
+    updateAccount.start(primaryStage);
+  }
+
   /** The GUIManger method corresponding to the UpdateAccountController
    * Lets GUIManager know a user was updated successfully via updateAccount window
    * @throws Exception possible start exceptions
@@ -111,7 +123,6 @@ public class GUIManager extends Application {
     mainWindow.start(primaryStage);
   }
 
-  // JoinController methods
   /** The GUIManger method corresponding to the UpdateAccountController
    * Lets GUIManager know a user cancelled updating via updateAccount window
    * @throws Exception possible start exceptions

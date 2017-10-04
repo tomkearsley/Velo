@@ -616,6 +616,14 @@ public class MainController {
     }
     routeIsDetailed = !routeIsDetailed;
   }
+
+  /** Launches the updateAccount window
+   *  Tells the GUIManager to change to updateAccount window
+   */
+  public void updateAccount() throws Exception {
+    GUIManager.getInstanceGUIManager().updateAccount();
+  }
+
   /**
    * converts the arrayList of retailers to an observableList creates columns and sets these columns
    * and values to be displayed in rawDataTable
