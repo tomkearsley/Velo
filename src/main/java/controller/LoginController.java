@@ -4,6 +4,7 @@ import filehandler.MySQL;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -45,45 +46,54 @@ public class LoginController {
   /** Checks credentials against database to authenticate user */
   public void authenticate() {
 
-    String enteredUsername = username.getText();
-    String enteredPassword = password.getText();
-
-    // Check credentials
     userLoggingIn();
-    MySQL mysql = new MySQL();
-    ArrayList<Boolean> LoginResult = new ArrayList<Boolean>();
-    try {
-        LoginResult = mysql.login(enteredUsername, enteredPassword);
-    }
-    catch (Exception e){
-      System.out.println(e);
-    }
-    Boolean isCyclist = LoginResult.get(0);
-    Boolean sucessfulLogin = LoginResult.get(1);
 
-    // If CYCLIST authenticated, tell GUIManager
-    if (sucessfulLogin && isCyclist) {
+    Platform.runLater(()-> {
+
+      String enteredUsername = username.getText();
+      String enteredPassword = password.getText();
+
+      // Check credentials
+      MySQL mysql = new MySQL();
+      ArrayList<Boolean> LoginResult = new ArrayList<Boolean>();
       try {
+          LoginResult = mysql.login(enteredUsername, enteredPassword);
+      }
+      catch (Exception e){
+        System.out.println(e);
+      }
+      Boolean isCyclist = LoginResult.get(0);
+      Boolean sucessfulLogin = LoginResult.get(1);
+
+      // If CYCLIST authenticated, tell GUIManager
+      if (sucessfulLogin && isCyclist) {
         System.out.println("Cyclist authenticated");
         userLoggedIn(); // formats GUI
-        GUIManager.getInstanceGUIManager().cyclistAuthenticated();
-      } catch (Exception e) {
-        e.printStackTrace();
+        Platform.runLater(()-> {
+          try {
+            GUIManager.getInstanceGUIManager().cyclistAuthenticated();
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        });
+      }
+      // else if ANALYST user, tell GUIManager
+      else if (sucessfulLogin && !isCyclist) {
+          System.out.println("Analyst authenticated");
+          userLoggedIn(); // formats GUI
+        Platform.runLater(()-> {
+          try {
+            GUIManager.getInstanceGUIManager().analystAuthenticated();
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        });
+      } else {
+        // else credentials incorrect, call invalid credentials to display a error message
+        invalidCredentials();
       }
     }
-    // else if ANALYST user, tell GUIManager
-    else if (sucessfulLogin && !isCyclist) {
-      try {
-        System.out.println("Analyst authenticated");
-        userLoggedIn(); // formats GUI
-        GUIManager.getInstanceGUIManager().analystAuthenticated();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    } else {
-      // else credentials incorrect, call invalid credentials to display a error message
-      invalidCredentials();
-    }
+  );
   }
 
   /** Tells GUIManager to launch the Join window */
@@ -117,8 +127,7 @@ public class LoginController {
 
   /** Prepares the login GUI for loading next screen by disabling gui elements */
   private void userLoggedIn() {
-    System.out.println("User logged in formatting happening should");
-    progressBar.setVisible(true);
+    // progressBar.setVisible(true);
     username.setDisable(true);
     password.setDisable(true);
     logIn.setDisable(true);
@@ -130,12 +139,12 @@ public class LoginController {
 
   /** Disables the login GUI while checking credentials */
   private void userLoggingIn() {
-    progressBar.setVisible(true);
+    // progressBar.setVisible(true);
     username.setDisable(true);
     password.setDisable(true);
     logIn.setDisable(true);
     join.setDisable(true);
-    feedback.setText("Checking credentials...");
+    feedback.setText("Loading...");
     feedback.setStyle("-fx-text-fill: green");
     feedback.setVisible(true);
   }
