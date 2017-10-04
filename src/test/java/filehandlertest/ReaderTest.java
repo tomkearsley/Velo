@@ -77,7 +77,7 @@ public class ReaderTest {
    */
   @Test
   public void readRetailers() throws FileNotFoundException{
-    List<Retailer> Retailers = reader.readRetailers("/test/retailers.csv");
+    List<Retailer> Retailers = reader.readRetailers("/test/retailers.csv", false);
     Retailer r1, r2, r3;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "8-32", "Casual Eating & Takeout",
@@ -98,7 +98,7 @@ public class ReaderTest {
 
   @Test
   public void readRetailerWithEmptyEndingCells() throws FileNotFoundException{
-    List<Retailer> Retailers = reader.readRetailers("/test/retailerEmptyEnds.csv");
+    List<Retailer> Retailers = reader.readRetailers("/test/retailerEmptyEnds.csv", false);
     Retailer r1, r2;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "", "",

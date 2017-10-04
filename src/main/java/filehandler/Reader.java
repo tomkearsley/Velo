@@ -1,6 +1,8 @@
 package filehandler;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -246,10 +248,11 @@ public class Reader {
    * attributes
    *
    * @param filename the name of file to open
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
    * @return ArrayList Retailers
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Retailer> readRetailers(String filename) throws FileNotFoundException {
+  public ArrayList<Retailer> readRetailers(String filename, boolean isExternalFile) throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int titleIndex = 0;
@@ -268,8 +271,11 @@ public class Reader {
     ArrayList<Retailer> Retailers = new ArrayList<Retailer>();
 
     try {
-
-      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      if (isExternalFile) {
+        br = new BufferedReader(new FileReader(new File(filename)));
+      } else {
+        br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      }
       while ((line = br.readLine()) != null) {
         // Separate by comma
         ArrayList<Integer> locs = findQuotedCommas(line);
