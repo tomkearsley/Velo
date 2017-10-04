@@ -45,6 +45,7 @@ import model.Route;
 import model.Station;
 import model.UserPOI;
 import netscape.javascript.JSObject;
+import filehandler.MySQL;
 
 
 /**
@@ -139,6 +140,11 @@ public class MainController {
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try {
+      //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
+      //MySQL mysql = new MySQL();
+      //hotspots = mysql.getHotspots();
+
+      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
       hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
       retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
       stations = rdr.readStations("/file/stations.json");
