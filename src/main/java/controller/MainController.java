@@ -19,6 +19,9 @@ import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker.State;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -481,75 +484,76 @@ public class MainController {
   public void importData(String importFilePath) { //TODO expand for rest of data types, file path differences
     Reader reader = new Reader();
     int prevSize;
-    if (importFilePath != null) {
-      if (importType.getValue().equals("Hotspot")) {
-        try {
-          ArrayList<Hotspot> hotspotsToAdd = reader
-              .readHotspots(importFilePath, true); //NOTE Will not work when importing
-          // initial hotspots as external file due to index handling changes between internal & external files
-          prevSize = hotspots.size();
-          for (Hotspot hotspot : hotspotsToAdd) {
-            hotspots.add(hotspot);
-          }
-          System.out.println((hotspots.size() - prevSize) + " hotspots added.");
-          initHotspotTable();
-        } catch (IOException e) {
-          System.out.println("Error loading hotspots");
+    Alert alert = null;
+    if (importType.getValue().equals("Hotspot")) {
+      try {
+        ArrayList<Hotspot> hotspotsToAdd = reader
+            .readHotspots(importFilePath, true); //NOTE Will not work when importing
+        // initial hotspots as external file due to index handling changes between internal & external files
+        prevSize = hotspots.size();
+        for (Hotspot hotspot : hotspotsToAdd) {
+          hotspots.add(hotspot);
         }
-      } else if (importType.getValue().equals("Retailer")) {
-        try {
-          ArrayList<Retailer> retailersToAdd = reader.readRetailers(importFilePath, true);
-          prevSize = retailers.size();
-          for (Retailer retailer : retailersToAdd) {
-            retailers.add(retailer);
-          }
-          System.out.println((retailers.size() - prevSize) + " retailers added.");
-          initRetailerTable();
-        } catch (IOException e) {
-          System.out.println("Error loading retailers");
+        alert = new Alert(AlertType.NONE, hotspots.size() - prevSize + " Hotspots succesfully imported", ButtonType.OK);
+        initHotspotTable();
+      } catch (IOException e) {
+        System.out.println("Error loading hotspots");
+      }
+    } else if (importType.getValue().equals("Retailer")) {
+      try {
+        ArrayList<Retailer> retailersToAdd = reader.readRetailers(importFilePath, true);
+        prevSize = retailers.size();
+        for (Retailer retailer : retailersToAdd) {
+          retailers.add(retailer);
         }
-      } else if (importType.getValue().equals("Public POI")) {
-        try {
-          ArrayList<PublicPOI> publicPOIsToAdd = reader
-              .readPublicPOIS(importFilePath, true);
-          prevSize = publicPOIs.size();
-          for (PublicPOI publicPOI : publicPOIsToAdd) {
-            publicPOIs.add(publicPOI);
-          }
-          System.out.println((publicPOIs.size() - prevSize) + " public POIs added.");
-          initPublicPOITable();
-        } catch (IOException e) {
-          System.out.println("Error loading public POIs");
+        initRetailerTable();
+        alert = new Alert(AlertType.NONE, retailers.size() - prevSize + " Retailers succesfully imported", ButtonType.OK);
+      } catch (IOException e) {
+        System.out.println("Error loading retailers");
+      }
+    } else if (importType.getValue().equals("Public POI")) {
+      try {
+        ArrayList<PublicPOI> publicPOIsToAdd = reader
+            .readPublicPOIS(importFilePath, true);
+        prevSize = publicPOIs.size();
+        for (PublicPOI publicPOI : publicPOIsToAdd) {
+          publicPOIs.add(publicPOI);
         }
-      } else if (importType.getValue().equals("User POI")) {
-        try {
-          ArrayList<UserPOI> userPOIsToAdd = reader
-              .readUserPOIS(importFilePath, true);
-          prevSize = userPOIs.size();
-          for (UserPOI userPOI : userPOIsToAdd) {
-            userPOIs.add(userPOI);
-          }
-          System.out.println((userPOIs.size() - prevSize) + " user POIs added.");
-          initUserPOITable();
-        } catch (IOException e) {
-          System.out.println("Error loading user POIs");
+        alert = new Alert(AlertType.NONE, publicPOIs.size() - prevSize + " Public POIs succesfully imported", ButtonType.OK);
+        initPublicPOITable();
+      } catch (IOException e) {
+        System.out.println("Error loading public POIs");
+      }
+    } else if (importType.getValue().equals("User POI")) {
+      try {
+        ArrayList<UserPOI> userPOIsToAdd = reader
+            .readUserPOIS(importFilePath, true);
+        prevSize = userPOIs.size();
+        for (UserPOI userPOI : userPOIsToAdd) {
+          userPOIs.add(userPOI);
         }
-      } else if (importType.getValue().equals("Route")) {
-        try {
-          ArrayList<Route> routesToAdd = reader
-              .readRoutes(importFilePath, stations, true);
-          prevSize = routes.size();
-          for (Route route : routesToAdd) {
-            routes.add(route);
-          }
-          System.out.println((routes.size() - prevSize) + " routes added.");
-          initRouteTable();
-        } catch (IOException e) {
-          System.out.println("Error loading routes");
+        alert = new Alert(AlertType.NONE, userPOIs.size() - prevSize + " User POIs succesfully imported", ButtonType.OK);
+        initUserPOITable();
+      } catch (IOException e) {
+        System.out.println("Error loading user POIs");
+      }
+    } else if (importType.getValue().equals("Route")) {
+      try {
+        ArrayList<Route> routesToAdd = reader
+            .readRoutes(importFilePath, stations, true);
+        prevSize = routes.size();
+        for (Route route : routesToAdd) {
+          routes.add(route);
         }
+        alert = new Alert(AlertType.NONE, routes.size() - prevSize + " Routes succesfully imported", ButtonType.OK);
+        initRouteTable();
+      } catch (IOException e) {
+        System.out.println("Error loading routes");
       }
     }
-
+    if (alert != null) {
+      alert.showAndWait();
+    }
   }
 
   public void exportData() {

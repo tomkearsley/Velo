@@ -511,7 +511,12 @@ public class Reader {
         String[] csvRoute = line.split(",");
 
         // Set Route attributes from the buffered row
-        int duration = Integer.valueOf(csvRoute[durationIndex]);
+        int duration = 0;
+        try {
+          duration = Integer.parseInt(csvRoute[durationIndex]);
+        } catch (NumberFormatException e) {
+          //TODO ALERT WINDOWS
+        }
 
         // startStation
         int startStationID = Integer.parseInt(csvRoute[startStationIDIndex]);
