@@ -184,7 +184,7 @@ public class JoinController {
       // If user created successfully, tell GUIManager
       try {
         System.out.println("User created");
-        GUIManager.getInstanceGUIManager().userCreated();
+        GUIManager.getInstanceGUIManager().cyclistCreated();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -192,6 +192,15 @@ public class JoinController {
       Alert alert = new Alert(AlertType.WARNING, "Invalid input. Hover over the erroneous field for help.", ButtonType.OK);
       alert.showAndWait();
     }
+  }
+
+  /** Back button action
+   * Tells the GUI manager that the user wants to cancel joining
+   */
+  @FXML
+  private void userJoinCancelled() throws Exception {
+    System.out.println("User cancelled joining.");
+    GUIManager.getInstanceGUIManager().cyclistJoinCancelled();
   }
 
   /** Determines if the firstName element's input is valid

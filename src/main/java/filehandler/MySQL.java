@@ -1,5 +1,7 @@
 package filehandler;
 
+import java.time.LocalDate;
+import model.Analyst;
 import model.Retailer;
 
 import java.sql.Connection;
@@ -9,13 +11,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import model.Retailer;
+import model.Cyclist;
 
 /**
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
-
-  /**public static void main(String[] args) throws Exception {
+  /**
+  public static void main(String[] args) throws Exception {
   Reader reader = new Reader();
 
     ArrayList<Retailer> retailers = reader.readRetailers("/file/InitialRetailers.csv");
@@ -28,6 +31,7 @@ public class MySQL {
           retailers.get(i).getState(),retailers.get(i).getBlock(),
           retailers.get(i).getSecondaryDescription());
     }
+
   }**/
 
   public static void insertRetailer(String name,String address,String floor,String city,int zipCode,
@@ -96,16 +100,17 @@ public class MySQL {
   }
 
   /**
-   * Inserts users name and password into database. Currently not encrypted
-   *
-   * @param username Username for said user
-   * @param password Password for given user
+   * Takes a Cyclist object and inserts the username,password
+   * birthdate,gender weight and height into the database.
+   * @param cyclist Cyclist object given.
    */
-  public static void insertUser(String username, String password) {
+  public static void insertCyclist(Cyclist cyclist){
     try {
       Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO Users (username,password) VALUES ('" + username + "','" + password + "')");
+          "INSERT INTO Users (username,password,birthDate,gender,weight,height) VALUES "
+              + "('" + cyclist.getUsername() + "','" + cyclist.getPassword() + "',"
+              + ""+ cyclist.getDOB() + ", "+ cyclist.getGender() +", "+ cyclist.getWeight() +", "+ cyclist.getHeight() +")");
       inserted.executeUpdate();
     } catch (Exception e) {
       System.out.println(e);
@@ -113,6 +118,27 @@ public class MySQL {
       System.out.println("Insert Completed");
     }
   }
+
+  /**
+   * Takes the given username and password of a Analyst object and appends them to the
+   * database.
+   * @param analyst Analyst object.
+   */
+  public static void insertAnalyst(Analyst analyst) {
+    try {
+      Connection conn = getConnection();
+      PreparedStatement inserted = conn.prepareStatement(
+          "INSERT INTO Users (username,password) VALUES "
+              + "('" + analyst.getUsername() + "','" + analyst.getPassword() + "')");
+      inserted.executeUpdate();
+    } catch (Exception e) {
+      System.out.println(e);
+    } finally {
+      System.out.println("Insert Completed");
+    }
+  }
+
+
 
   // DATA RETRIEVAL
 

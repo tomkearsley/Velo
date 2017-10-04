@@ -2,16 +2,13 @@ package controller;
 
 import static com.sun.org.apache.xalan.internal.utils.SecuritySupport.getResourceAsStream;
 
+import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Menu;
 import javafx.stage.Stage;
 import window.Join;
 import window.Login;
 import window.Main;
-import window.Warning;
 
 public class GUIManager extends Application {
 
@@ -20,7 +17,6 @@ public class GUIManager extends Application {
   private Login loginWindow = new Login();
   private Join joinWindow = new Join();
   private Main mainWindow = new Main();
-  private Warning warningWindow = new Warning();
   private Stage primaryStage;
 
 
@@ -33,6 +29,15 @@ public class GUIManager extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     instanceGUIManager = this; // set the static object GUIManager
+
+    // TODO test this. Doesn't seem like it's working
+    // Add macOS menu bar items
+    MenuToolkit tk = MenuToolkit.toolkit();
+    Menu defaultApplicationMenu = tk.createDefaultApplicationMenu("Vélo");
+
+//    MenuBar bar = new MenuBar();
+//    bar.getMenus().add(defaultApplicationMenu);
+//    tk.setGlobalMenuBar(bar); // Use the menu bar for all stages including new ones
 
     this.primaryStage = primaryStage;
     // primaryStage.getIcons().add(new Image("velo-icon.png")); // TODO add icon to app
@@ -51,20 +56,36 @@ public class GUIManager extends Application {
    * Lets GUIManager know the user was successfully authenticated
    * @throws Exception possible start exceptions
    */
-  public void loginAuthenticated() throws Exception {
+  public void cyclistAuthenticated() throws Exception {
 
     // Close other window, begin Main window
     mainWindow.start(primaryStage);
+  }
+
+  public void analystAuthenticated() throws Exception {
+
+    // Close other window, begin mainAnalyst window
+
   }
 
   /** The GUIManager method corresponding to the LoginControler method join
    * Lets GUIManager know the user wants to sign up
    * @throws Exception possible start exceptions
    */
-  public void userJoin() throws Exception {
+  public void cyclistJoin() throws Exception {
 
     // Close other window, launch Join window
     joinWindow.start(primaryStage);
+  }
+
+  /** The GUIManager method corresponding to the LoginControler method join
+   * Lets GUIManager know the user wants to sign up
+   * @throws Exception possible start exceptions
+   */
+  public void cyclistJoinCancelled() throws Exception {
+
+    // Close Join window, launch Login window
+    loginWindow.start(primaryStage);
   }
 
   // JoinController methods
@@ -72,28 +93,10 @@ public class GUIManager extends Application {
    * Lets GUIManager know a user was created successfully via join window
    * @throws Exception possible start exceptions
    */
-  public void userCreated() throws Exception {
+  public void cyclistCreated() throws Exception {
 
     // Close any other window, begin Main window
     mainWindow.start(primaryStage);
   }
-
-  // WarningController methods
-  /** Creates the warning window with an error message
-   *
-   * @param errorMessage error message to display in the warning window
-   * @throws Exception possible Stage and Start exceptions
-   */
-  public void error(String errorMessage) throws Exception {
-
-    // Make a secondary stage (so it doesn't close the window that's already open)
-    Stage secondaryStage = new Stage();
-
-    // Create error window
-    warningWindow.start(secondaryStage);
-
-    // TODO set warning description, set visible... use the public method in WarningController?
-  }
-
 
 }
