@@ -1,5 +1,7 @@
 package controller;
 
+import filehandler.MySQL;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -11,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import sun.rmi.runtime.Log;
 
 public class LoginController {
 
@@ -44,24 +47,42 @@ public class LoginController {
     String enteredUsername = username.getText();
     String enteredPassword = password.getText();
 
-    // TODO get text, and check credentials
+    // TODO and check credentials
+
+    MySQL mysql = new MySQL();
+    ArrayList<Boolean> LoginResult = new ArrayList<Boolean>();
+    try {
+        LoginResult = mysql.login(enteredUsername, enteredPassword);
+    }
+    catch (Exception e){
+      System.out.println(e);
+    }
+
 
     // TODO If CYCLIST authenticated, tell GUIManager
-    try {
-      System.out.println("Cyclist authenticated");
-      userLoggedIn(); // formats GUI
-      GUIManager.getInstanceGUIManager().cyclistAuthenticated();
-    } catch (Exception e) {
-      e.printStackTrace();
+    Boolean isCyclist = LoginResult.get(0);
+    Boolean sucessfulLogin = LoginResult.get(1);
+
+    if (sucessfulLogin && isCyclist) {
+      try {
+        System.out.println("Cyclist authenticated");
+        userLoggedIn(); // formats GUI
+        GUIManager.getInstanceGUIManager().cyclistAuthenticated();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
-    // TODO if ANALYST user, tell GUIManager
-//    try {
-//      System.out.println("Analyst authenticated");
-//      userLoggedIn(); // formats GUI
-//      GUIManager.getInstanceGUIManager().analystAuthenticated();
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
+    // TODO else if ANALYST user, tell GUIManager
+    else if (isCyclist == false && sucessfulLogin == true) {
+      try {
+        System.out.println("Analyst authenticated");
+        userLoggedIn(); // formats GUI
+        GUIManager.getInstanceGUIManager().analystAuthenticated();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
 
     // TODO else if credentials incorrect, call invalid credentials to display a error message
     // invalidCredentials();
