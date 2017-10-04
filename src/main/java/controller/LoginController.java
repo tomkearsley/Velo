@@ -1,6 +1,7 @@
 package controller;
 
 import filehandler.MySQL;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import javafx.event.EventHandler;
@@ -28,18 +29,18 @@ public class LoginController {
 
 
   // TODO make enter press the log in button
-//  // Methods
-//  /** Initialize the window */
-//  public void initialize() {
-//    gridPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//      @Override
-//      public void handle(KeyEvent keyEvent) {
-//        if (keyEvent.getCode() == KeyCode.ENTER)  {
-//          authenticate();
-//        }
-//      }
-//    });
-//  }
+  // Methods
+  /** Initialize the window */
+  public void initialize() {
+    EventHandler<KeyEvent> listener = (keyEvent) -> {
+      if (keyEvent.getCode() == KeyCode.ENTER)  {
+        authenticate();
+      }
+    };
+    username.setOnKeyPressed(listener);
+    password.setOnKeyPressed(listener);
+    logIn.setOnKeyPressed(listener);
+  }
 
   /** Checks credentials against database to authenticate user */
   public void authenticate() {
@@ -116,6 +117,7 @@ public class LoginController {
 
   /** Prepares the login GUI for loading next screen by disabling gui elements */
   private void userLoggedIn() {
+    System.out.println("User logged in formatting happening should");
     progressBar.setVisible(true);
     username.setDisable(true);
     password.setDisable(true);
