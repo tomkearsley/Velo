@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <items>
     <AnchorPane prefHeight="598.0" prefWidth="144.0">
          <children>
@@ -62,29 +62,6 @@
                         </HBox>
                      </items>
                   </SplitPane>
-                  <Pane fx:id="fileHandlerPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;">
-                     <children>
-                        <GridPane layoutX="14.0" layoutY="148.0" prefHeight="182.0" prefWidth="437.0">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#importData" text="Import" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <Button mnemonicParsing="false" onAction="#exportData" text="Export" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                              <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                              <Button mnemonicParsing="false" onAction="#selectImportFile" text="Select File" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <Button mnemonicParsing="false" onAction="#selectExportFile" text="Select File" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                           </children>
-                        </GridPane>
-                     </children>
-                  </Pane>
                   <TabPane fx:id="dataTabPane">
                      <tabs>
                         <Tab closable="false" text="Hotspots">
@@ -298,19 +275,6 @@
                         </Tab>
                      </tabs>
                   </TabPane>
-                  <AnchorPane fx:id="mapViewPane">
-                     <children>
-                        <WebView id="mapWebView" fx:id="mapWebView" layoutX="2.0" minHeight="-1.0" minWidth="-1.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        <ImageView fx:id="retailer_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton1" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="wifi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton2" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="poi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton3" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="station_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton4" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="retailer_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton5" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="wifi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton6" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="poi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton7" pickOnBounds="true" preserveRatio="true" />
-                        <ImageView fx:id="station_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </AnchorPane>
                   <Pane fx:id="userPane" style="-fx-background-color: #FFFFFF;">
                      <children>
                         <GridPane layoutX="1.0" prefHeight="598.0" prefWidth="680.0">
@@ -385,7 +349,7 @@
                                           <Button mnemonicParsing="false" onAction="#selectImportFile" prefHeight="27.0" prefWidth="117.0" text="Import" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                        </children>
                                     </GridPane>
-                                    <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="270.0" text="Export Route History" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Button mnemonicParsing="false" onAction="#exportUserRoutes" prefHeight="27.0" prefWidth="270.0" text="Export Route History" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <GridPane.margin>
                                           <Insets right="20.0" />
                                        </GridPane.margin>
@@ -396,6 +360,22 @@
                         </GridPane>
                      </children>
                   </Pane>
+                  <AnchorPane fx:id="mapViewPane">
+                     <children>
+                        <WebView id="mapWebView" fx:id="mapWebView" layoutX="2.0" minHeight="-1.0" minWidth="-1.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ImageView fx:id="retailer_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton1" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="wifi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton2" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="poi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton3" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="station_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton4" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="retailer_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton5" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="wifi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton6" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="poi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton7" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="station_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
+                        <TextField fx:id="locationFrom" layoutX="109.0" layoutY="532.0" promptText="Start location" />
+                        <TextField fx:id="locationTo" layoutX="296.0" layoutY="532.0" promptText="End location" />
+                        <Button fx:id="displayRouteButton" layoutX="488.0" layoutY="532.0" mnemonicParsing="false" onAction="#displayRouteClick" text="Show Route" />
+                     </children>
+                  </AnchorPane>
                </children>
             </StackPane>
       </children></AnchorPane>

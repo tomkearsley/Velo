@@ -264,6 +264,12 @@
       //alert("Test");
     }
 
+    function displayRouteClick(startLocation,endLocation) {
+      var startLocationArray = aBridge.getDisplayRouteArray(startLocation);
+      var endLocationArray = aBridge.getDisplayRouteArray(endLocation);
+      displayRoute(startLocation[0],startLocationArray[1],endLocationArray[0],endLocationArray[1])
+    }
+
     function geocodeLatLng(latlng,infowindow) {
       geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {

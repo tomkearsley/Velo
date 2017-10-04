@@ -1,10 +1,12 @@
 package controller;
 
 import filehandler.Reader;
+import filehandler.Writer;
 import helper.Bridge;
 import helper.tableOnClickPopup;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -127,6 +129,9 @@ public class MainController {
   @FXML private ImageView poi_icon_secondary;
   @FXML private ImageView station_icon_primary;
   @FXML private ImageView station_icon_secondary;
+
+  @FXML private TextField locationFrom;
+  @FXML private TextField locationTo;
 
   //Other attributes
   private JSObject window;
@@ -441,6 +446,11 @@ public class MainController {
     window.call("displayRoute",startLat,startLng,endLat,endLng);
   }
 
+  public void displayRouteClick() {
+    window.setMember("aBridge",aBridge);
+    window.call("displayRouteClick",locationFrom.getText(),locationTo.getText());
+  }
+
   //Test method
   public void testPretty() {
     prettyMarker(40.714728,-73.998672,"Test string","wifi");
@@ -468,18 +478,35 @@ public class MainController {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open CSV File");
     fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
+    //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
     File selectedFile = fileChooser.showOpenDialog(null);
     if (selectedFile != null) {
       importData(selectedFile.getPath());
     }
   }
 
-  public void selectExportFile() {
+  public void exportUserRoutes() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Export CSV File");
+    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV FILES", "*.csv"));
+    File saveFile = fileChooser.showSaveDialog(null);
+    Alert alert = null;
+    if (saveFile != null) {
+      try {
+        Writer writer = new Writer();
+        if (saveFile.getPath().endsWith(".csv")) {
+          writer.writeRoutesToFile(routes, saveFile.getPath());
+        } else {
+          writer.writeRoutesToFile(routes, saveFile.getPath() + ".csv");
+        }
+        alert = new Alert(AlertType.NONE, "Routes successfully exported", ButtonType.OK);
 
-  }
-
-  public void importData() {
-
+      } catch (IOException e) {
+        alert = new Alert(AlertType.ERROR, "Error exporting routes", ButtonType.OK);
+      } finally {
+        alert.showAndWait();
+      }
+    }
   }
 
   /**
@@ -559,10 +586,6 @@ public class MainController {
     if (alert != null) {
       alert.showAndWait();
     }
-  }
-
-  public void exportData() {
-    System.out.println("test2");
   }
 
   public void toggleDetailsHotspot() {
