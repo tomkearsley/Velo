@@ -130,10 +130,10 @@ public class Writer {
 
     try {
       retailers = testR.readRetailers("/file/InitialRetailers.csv", false);
-      hotspots = testR.readHotspots("/file/InitialHotspots.csv", 0);
+      hotspots = testR.readHotspots("/file/InitialHotspots.csv", false);
       stations = testR.readStations("/file/stations.json");
-      userPOIS = testR.readUserPOIS("/file/UserPOIdata_smallsample.csv");
-      publicPOIS = testR.readPublicPOIS("/file/PublicPOIdata_smallsample.csv");
+      userPOIS = testR.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
+      publicPOIS = testR.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
 
       testW.writePOIsToFile(retailers, "src/main/java/filehandler/aRet.csv");
       testW.writePOIsToFile(hotspots, "src/main/java/filehandler/aHot.csv");

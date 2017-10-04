@@ -166,25 +166,25 @@ public class Reader {
    * TODO Needs to be tested to ensure it works.
    *
    * @param filename the name of file to open
-   * @param fileType The format of the input csv (0 - DataGov format, 1 - Exported csv Format)
+   * @param isExternalFile To determine format of file and how to read it
    * @return ArrayList Hotspots
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Hotspot> readHotspots(String filename, int fileType) throws FileNotFoundException {
+  public ArrayList<Hotspot> readHotspots(String filename, boolean isExternalFile) throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int idIndex = 0;
-    int typeIndex = fileType == 1 ? 1:3;
-    int providerIndex = fileType == 1 ? 2:4;
-    int nameIndex = fileType == 1 ? 3:5;
-    int locationAddressIndex = fileType == 1 ? 4:6;
-    int latitudeIndex = fileType == 1 ? 5:7;
-    int longitudeIndex = fileType == 1 ? 6:8;
-    int remarksIndex = fileType == 1 ? 7:12;
-    int cityIndex = fileType == 1 ? 8:13;
-    int ssidIndex = fileType == 1 ? 9:14;
-    int boroughIndex = fileType == 1 ? 10:19;
-    int postcodeIndex = fileType == 1 ? 11:22;
+    int typeIndex = isExternalFile ? 1:3;
+    int providerIndex = isExternalFile ? 2:4;
+    int nameIndex = isExternalFile ? 3:5;
+    int locationAddressIndex = isExternalFile ? 4:6;
+    int latitudeIndex = isExternalFile ? 5:7;
+    int longitudeIndex = isExternalFile ? 6:8;
+    int remarksIndex = isExternalFile ? 7:12;
+    int cityIndex = isExternalFile ? 8:13;
+    int ssidIndex = isExternalFile ? 9:14;
+    int boroughIndex = isExternalFile ? 10:19;
+    int postcodeIndex = isExternalFile ? 11:22;
 
     // Initialize scanner and Hotspots array
     BufferedReader br = null;
@@ -192,8 +192,11 @@ public class Reader {
     ArrayList<Hotspot> Hotspots = new ArrayList<Hotspot>();
 
     try {
-
-      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      if (isExternalFile) {
+        br = new BufferedReader(new FileReader(new File(filename)));
+      } else {
+        br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      }
       while ((line = br.readLine()) != null) {
 
         // Separate by comma
@@ -328,10 +331,11 @@ public class Reader {
    * extracted attributes
    *
    * @param filename the name of file to open
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
    * @return ArrayList User Points of Interest
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<UserPOI> readUserPOIS(String filename) throws FileNotFoundException {
+  public ArrayList<UserPOI> readUserPOIS(String filename, boolean isExternalFile) throws FileNotFoundException {
     int nameIndex = 0;
 
     //Google uses latitude, longitude pairings.
@@ -345,8 +349,11 @@ public class Reader {
     ArrayList<UserPOI> UserPOIs = new ArrayList<UserPOI>();
 
     try {
-
-      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      if (isExternalFile) {
+        br = new BufferedReader(new FileReader(new File(filename)));
+      } else {
+        br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      }
       while ((line = br.readLine()) != null) {
         // Separate by comma
         ArrayList<Integer> locs = findQuotedCommas(line);
@@ -388,10 +395,11 @@ public class Reader {
    * the extracted attributes
    *
    * @param filename the name of file to open
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
    * @return ArrayList Public Points of Interest
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<PublicPOI> readPublicPOIS(String filename) throws FileNotFoundException {
+  public ArrayList<PublicPOI> readPublicPOIS(String filename, boolean isExternalFile) throws FileNotFoundException {
     int nameIndex = 0;
 
     //Google uses latitude, longitude pairings.
@@ -405,8 +413,11 @@ public class Reader {
     ArrayList<PublicPOI> PublicPOIs = new ArrayList<PublicPOI>();
 
     try {
-
-      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      if (isExternalFile) {
+        br = new BufferedReader(new FileReader(new File(filename)));
+      } else {
+        br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      }
       while ((line = br.readLine()) != null) {
         // Separate by comma
         ArrayList<Integer> locs = findQuotedCommas(line);
@@ -456,10 +467,11 @@ public class Reader {
    *
    * @param filename the name of file to open
    * @param stations The stations to read the routes from
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
    * @return ArrayList Routes
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations)
+  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations, boolean isExternalFile)
       throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
@@ -490,8 +502,11 @@ public class Reader {
     ArrayList<Route> Routes = new ArrayList<Route>();
 
     try {
-
-      br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      if (isExternalFile) {
+        br = new BufferedReader(new FileReader(new File(filename)));
+      } else {
+        br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      }
       while ((line = br.readLine()) != null) {
         // Separate by comma
         String[] csvRoute = line.split(",");
