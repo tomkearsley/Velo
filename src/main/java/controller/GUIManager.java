@@ -2,13 +2,13 @@ package controller;
 
 import static com.sun.org.apache.xalan.internal.utils.SecuritySupport.getResourceAsStream;
 
-import de.codecentric.centerdevice.MenuToolkit;
 import javafx.application.Application;
 import javafx.scene.control.Menu;
 import javafx.stage.Stage;
 import window.Join;
 import window.Login;
 import window.Main;
+import window.MainAnalyst;
 
 public class GUIManager extends Application {
 
@@ -17,12 +17,12 @@ public class GUIManager extends Application {
   private Login loginWindow = new Login();
   private Join joinWindow = new Join();
   private Main mainWindow = new Main();
+  private MainAnalyst mainAnalyst = new MainAnalyst();
   private Stage primaryStage;
 
 
   // Methods
   public static void main(String[] args) {
-
     launch(args);
   }
 
@@ -65,6 +65,7 @@ public class GUIManager extends Application {
   public void analystAuthenticated() throws Exception {
 
     // Close other window, begin mainAnalyst window
+    mainAnalyst.start(primaryStage);
 
   }
 
@@ -94,6 +95,28 @@ public class GUIManager extends Application {
    * @throws Exception possible start exceptions
    */
   public void cyclistCreated() throws Exception {
+
+    // Close any other window, begin Main window
+    mainWindow.start(primaryStage);
+  }
+
+  // JoinController methods
+  /** The GUIManger method corresponding to the UpdateAccountController
+   * Lets GUIManager know a user was updated successfully via updateAccount window
+   * @throws Exception possible start exceptions
+   */
+  public void accountUpdated() throws Exception {
+
+    // Close any other window, begin Main window
+    mainWindow.start(primaryStage);
+  }
+
+  // JoinController methods
+  /** The GUIManger method corresponding to the UpdateAccountController
+   * Lets GUIManager know a user cancelled updating via updateAccount window
+   * @throws Exception possible start exceptions
+   */
+  public void accountUpdateCancelled() throws Exception {
 
     // Close any other window, begin Main window
     mainWindow.start(primaryStage);

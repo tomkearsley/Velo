@@ -272,6 +272,7 @@ public class JoinController {
   private void clearFirstNameStyle() {
     firstName.setStyle("-fx-background-color: null");
     firstName.setStyle("-fx-border-color: null");
+    System.out.println("Cleared the first name style");
   }
 
   /** Clears the CSS style for the lastName element */
