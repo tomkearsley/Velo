@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <items>
     <AnchorPane prefHeight="598.0" prefWidth="144.0">
          <children>
@@ -300,7 +300,6 @@
                   <AnchorPane fx:id="mapViewPane">
                      <children>
                         <WebView id="mapWebView" fx:id="mapWebView" layoutX="2.0" minHeight="-1.0" minWidth="-1.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        <Button id="hideHotspotButton" fx:id="hideHotspotButton" layoutX="314.0" layoutY="559.0" mnemonicParsing="false" onAction="#hideAllMarkers" prefHeight="25.0" prefWidth="153.0" text="Hide Markers" />
                         <ImageView fx:id="retailer_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton1" pickOnBounds="true" preserveRatio="true" />
                         <ImageView fx:id="wifi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton2" pickOnBounds="true" preserveRatio="true" />
                         <ImageView fx:id="poi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton3" pickOnBounds="true" preserveRatio="true" />

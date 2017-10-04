@@ -147,7 +147,7 @@
       //Create marker on click
       google.maps.event.addListener(map,'click',function(event) {
         markerNum++;
-        createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"default");
+        createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"user-poi");
       });
 
 
@@ -265,6 +265,21 @@
     }
 
     function geocodeLatLng(latlng,infowindow) {
+      geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+          if (results[0]) {
+            //alert(results[0].formatted_address);
+            infowindow.setContent(results[0].formatted_address);
+          } else {
+            alert('No results found');
+          }
+        } else {
+          alert('Geocoder failed due to: ' + status);
+        }
+      });
+    }
+
+    function geocodeLatLngRetailer(latlng,infowindow) {
       geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
           if (results[0]) {

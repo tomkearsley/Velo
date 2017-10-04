@@ -1,7 +1,5 @@
 package controller;
 
-import static com.sun.org.apache.xalan.internal.utils.SecuritySupport.getResourceAsStream;
-
 import javafx.application.Application;
 import javafx.scene.control.Menu;
 import javafx.stage.Stage;
@@ -25,6 +23,7 @@ public class GUIManager extends Application {
 
   // Methods
   public static void main(String[] args) {
+
     launch(args);
   }
 
