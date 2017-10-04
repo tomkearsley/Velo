@@ -1,9 +1,12 @@
 package controller;
 
+import java.util.concurrent.TimeUnit;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -17,6 +20,8 @@ public class LoginController {
   @FXML private TextField password;
   @FXML private Button logIn;
   @FXML private Hyperlink join;
+  @FXML private Label feedback;
+  @FXML private ProgressBar progressBar;
 
 
   // TODO make enter press the log in button
@@ -43,18 +48,23 @@ public class LoginController {
 
     // TODO If CYCLIST authenticated, tell GUIManager
     try {
-      System.out.println("User authenticated");
+      System.out.println("Cyclist authenticated");
+      userLoggedIn(); // formats GUI
       GUIManager.getInstanceGUIManager().cyclistAuthenticated();
     } catch (Exception e) {
       e.printStackTrace();
     }
-    // TODO else if ANALYST user, tell GUIManager
+    // TODO if ANALYST user, tell GUIManager
 //    try {
 //      System.out.println("Analyst authenticated");
+//      userLoggedIn(); // formats GUI
 //      GUIManager.getInstanceGUIManager().analystAuthenticated();
 //    } catch (Exception e) {
 //      e.printStackTrace();
 //    }
+
+    // TODO else if credentials incorrect, call invalid credentials to display a error message
+    // invalidCredentials();
 
   }
 
@@ -68,7 +78,30 @@ public class LoginController {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
 
+
+  /** Displays a red warning message */
+  private void invalidCredentials() {
+    feedback.setText("Incorrect username or password");
+    feedback.setVisible(true);
+  }
+
+  /** Hides the red warning label message */
+  @FXML private void hideFeedbackLabel() {
+    feedback.setVisible(false);
+  }
+
+  /** Prepares the login GUI for loading next screen by disabling gui elements */
+  private void userLoggedIn() {
+    progressBar.setVisible(true);
+    username.setDisable(true);
+    password.setDisable(true);
+    logIn.setDisable(true);
+    join.setDisable(true);
+    feedback.setText("Logged in, loading...");
+    feedback.setStyle("-fx-text-fill: green");
+    feedback.setVisible(true);
   }
 
 }

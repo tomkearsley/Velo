@@ -23,7 +23,6 @@ public class GUIManager extends Application {
 
   // Methods
   public static void main(String[] args) {
-
     launch(args);
   }
 
