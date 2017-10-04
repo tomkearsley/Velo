@@ -67,6 +67,16 @@ public class GUIManager extends Application {
     joinWindow.start(primaryStage);
   }
 
+  /** The GUIManager method corresponding to the LoginControler method join
+   * Lets GUIManager know the user wants to sign up
+   * @throws Exception possible start exceptions
+   */
+  public void userJoinCancelled() throws Exception {
+
+    // Close Join window, launch Login window
+    loginWindow.start(primaryStage);
+  }
+
   // JoinController methods
   /** The GUIManger method corresponding to the JoinController method createUser
    * Lets GUIManager know a user was created successfully via join window

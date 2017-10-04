@@ -194,6 +194,15 @@ public class JoinController {
     }
   }
 
+  /** Back button action
+   * Tells the GUI manager that the user wants to cancel joining
+   */
+  @FXML
+  private void userJoinCancelled() throws Exception {
+    System.out.println("User cancelled joining.");
+    GUIManager.getInstanceGUIManager().userJoinCancelled();
+  }
+
   /** Determines if the firstName element's input is valid
    *
    * @return true if valid; else false
