@@ -661,7 +661,7 @@ public class MainController {
             //TODO change this when retailers have lat/long fields
             //TODO update the marker type to not be wifi
             try {
-              prettyMarker(loc[0], loc[1], "<b>Test</b>", "wifi");
+              prettyMarker(loc[0], loc[1], "<b>Test</b>", "retailer");
               viewMap();
             }
             catch(NullPointerException e) {
@@ -741,7 +741,7 @@ public class MainController {
           helper.tableOnClickPopup.create("Hotspot", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getLocationAddress(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getLocationAddress(), "hotspot");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -805,7 +805,7 @@ public class MainController {
           tableOnClickPopup.create("Public POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "public-poi");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -863,7 +863,7 @@ public class MainController {
           tableOnClickPopup.create("User POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "user-poi");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -921,7 +921,7 @@ public class MainController {
           tableOnClickPopup.create("Public POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "station");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -993,6 +993,7 @@ public class MainController {
           tableOnClickPopup.create("Public POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
+              //TODO use correct method for showing routes on map
               prettyMarker(selected_item.getStartStation().getLatitude(), selected_item.getStartStation().getLongitude(), selected_item.getStartStationName(), "wifi" );
               prettyMarker(selected_item.getStopStation().getLatitude(), selected_item.getStopStation().getLongitude(), selected_item.getStopStationName(), "wifi");
               viewMap();
