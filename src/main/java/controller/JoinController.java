@@ -184,7 +184,7 @@ public class JoinController {
       // If user created successfully, tell GUIManager
       try {
         System.out.println("User created");
-        GUIManager.getInstanceGUIManager().userCreated();
+        GUIManager.getInstanceGUIManager().cyclistCreated();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -200,7 +200,7 @@ public class JoinController {
   @FXML
   private void userJoinCancelled() throws Exception {
     System.out.println("User cancelled joining.");
-    GUIManager.getInstanceGUIManager().userJoinCancelled();
+    GUIManager.getInstanceGUIManager().cyclistJoinCancelled();
   }
 
   /** Determines if the firstName element's input is valid

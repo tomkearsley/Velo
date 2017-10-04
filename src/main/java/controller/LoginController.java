@@ -41,10 +41,17 @@ public class LoginController {
 
     // TODO get text, and check credentials
 
-    // If authenticated, tell GUIManager
+    // TODO If CYCLIST authenticated, tell GUIManager
     try {
       System.out.println("User authenticated");
-      GUIManager.getInstanceGUIManager().loginAuthenticated();
+      GUIManager.getInstanceGUIManager().cyclistAuthenticated();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    // TODO else if ANALYST user, tell GUIManager
+    try {
+      System.out.println("Analyst authenticated");
+      GUIManager.getInstanceGUIManager().analystAuthenticated();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -57,7 +64,7 @@ public class LoginController {
     // If wanting to join, tell GUIManager
     try {
       System.out.println("User joining...");
-      GUIManager.getInstanceGUIManager().userJoin();
+      GUIManager.getInstanceGUIManager().cyclistJoin();
     } catch (Exception e) {
       e.printStackTrace();
     }
