@@ -128,6 +128,9 @@ public class MainController {
   @FXML private ImageView station_icon_primary;
   @FXML private ImageView station_icon_secondary;
 
+  @FXML private TextField locationFrom;
+  @FXML private TextField locationTo;
+
   //Other attributes
   private JSObject window;
   private Bridge aBridge = new Bridge();
@@ -439,6 +442,11 @@ public class MainController {
   public void displayRoute(double startLat,double startLng,double endLat,double endLng) {
     window.setMember("aBridge",aBridge);
     window.call("displayRoute",startLat,startLng,endLat,endLng);
+  }
+
+  public void displayRouteClick() {
+    window.setMember("aBridge",aBridge);
+    window.call("displayRouteClick",locationFrom.getText(),locationTo.getText());
   }
 
   //Test method

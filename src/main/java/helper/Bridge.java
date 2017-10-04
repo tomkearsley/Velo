@@ -31,4 +31,6 @@ public class Bridge {
   public double[] getRetailerLocation(Retailer retailer) { return stringToLocation(retailer.getAddress()); }
 
   public String getRetailerTitle(Retailer retailer) { return retailer.getDescription();}
+
+  public double[] getDisplayRouteArray(String location) {return stringToLocation(location);}
 }
