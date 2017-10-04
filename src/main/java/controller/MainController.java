@@ -69,8 +69,6 @@ public class MainController {
   private boolean stationsLoaded = false;
   private boolean POISLoaded = false;
   private boolean retailersLoaded = false;
-  private String importFilePath = null;
-  private String exportFilePath = null;
 
   private ArrayList<ImageView> buttons = new ArrayList<ImageView>();
 
@@ -464,10 +462,16 @@ public class MainController {
     fileChooser.setTitle("Open CSV File");
     fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
     File selectedFile = fileChooser.showOpenDialog(null);
-    importFilePath = selectedFile.getPath();
+    if (selectedFile != null) {
+      importData(selectedFile.getPath());
+    }
   }
 
   public void selectExportFile() {
+
+  }
+
+  public void importData() {
 
   }
 
@@ -475,7 +479,7 @@ public class MainController {
    * Imports additional items from a csv file to the appropriate ArrayList based on the selected datatype
    * from the ChoiceBox
    */
-  public void importData() { //TODO expand for rest of data types, file path differences
+  public void importData(String importFilePath) { //TODO expand for rest of data types, file path differences
     Reader reader = new Reader();
     int prevSize;
     if (importFilePath != null) {
