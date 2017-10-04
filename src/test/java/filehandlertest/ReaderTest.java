@@ -49,7 +49,7 @@ public class ReaderTest {
    */
   @Test
   public void readHotspots() throws FileNotFoundException {
-    ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv", 0);
+    ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv", false);
 
     Hotspot hotspot998 = new Hotspot(998, 40.745968, -73.994039,
         "179 WEST 26 STREET", "MN17", "New York", 10001,
@@ -115,7 +115,7 @@ public class ReaderTest {
   //TODO ADD JAVADOC
   @Test
   public void readUserPOIS() throws FileNotFoundException {
-    ArrayList<UserPOI> POIs = reader.readUserPOIS("/test/POIS.csv");
+    ArrayList<UserPOI> POIs = reader.readUserPOIS("/test/POIS.csv", false);
     ArrayList<UserPOI> expectedPOIs = new ArrayList<UserPOI>();
 
     UserPOI p1, p2, p3;
@@ -136,7 +136,7 @@ public class ReaderTest {
   //TODO ADD JAVADOC
   @Test
   public void readPublicPOIS() throws FileNotFoundException {
-    ArrayList<PublicPOI> POIs = reader.readPublicPOIS("/test/PublicPOIS.csv");
+    ArrayList<PublicPOI> POIs = reader.readPublicPOIS("/test/PublicPOIS.csv", false);
     ArrayList<PublicPOI> expectedPOIs = new ArrayList<PublicPOI>();
 
     PublicPOI p1, p2, p3;
@@ -177,7 +177,7 @@ public class ReaderTest {
     stations.add(startStation3);
     stations.add(stopStation3);
 
-    ArrayList<Route> routes = reader.readRoutes("/test/TestInitialRoutes.csv", stations);
+    ArrayList<Route> routes = reader.readRoutes("/test/TestInitialRoutes.csv", stations, false);
 
     // Expected routes
     Date startDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:00", "MM/dd/yyyy HH:mm");

@@ -309,6 +309,24 @@
       }
     }
 
+    function loadRetailers(infoArray) {
+      var location = [];
+      var title;
+      aBridge.outputValue("Displaying retailers");
+      for(var i = 0; i < infoArray.size(); i++) {
+        //aBridge.testValue("test");
+        aBridge.outputValue(i);
+        location = aBridge.getRetailerLocation(infoArray.get(i));
+        lat = location[0];
+        //aBridge.testValue("test1");
+        lng = location[1];
+        //aBridge.testValue("test2");
+        title = aBridge.getRetailerTitle(infoArray.get(i));
+        //aBridge.testValue("test3");
+        createMarker(lat,lng,title,"retailer");
+      }
+    }
+
     function hideAllMarkers() {
       hideMarkers(allMarkers);
     }

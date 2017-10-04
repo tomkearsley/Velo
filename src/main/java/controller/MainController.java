@@ -139,12 +139,12 @@ public class MainController {
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
     try {
-      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
+      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
       retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
       stations = rdr.readStations("/file/stations.json");
-      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv");
-      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv");
-      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations);
+      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
+      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
+      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
     } catch (FileNotFoundException e) {
       System.out.println("File not found");
       e.printStackTrace();
@@ -305,7 +305,7 @@ public class MainController {
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
 
-    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "UserPOI"}; //TODO add more
+    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "Public POI", "User POI", "Route"}; //TODO add more
     ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
     importType.setItems(dataTypes);
     importType.setValue("Hotspot");
@@ -349,7 +349,7 @@ public class MainController {
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
-    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", 0));
+    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv", false));
     hotspotsLoaded = true;
     //testPretty();
   }
@@ -364,7 +364,7 @@ public class MainController {
   public void loadPOIS() throws IOException{
     Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("loadPOIS",rdr.readUserPOIS("/file/POIS.csv"));
+    window.call("loadPOIS",rdr.readUserPOIS("/file/POIS.csv", false));
     POISLoaded = true;
   }
 
@@ -431,6 +431,11 @@ public class MainController {
     window.call("prettyMarker",lat,lng,info,markerType);
   }
 
+  public void displayRoute(double startLat,double startLng,double endLat,double endLng) {
+    window.setMember("aBridge",aBridge);
+    window.call("displayRoute",startLat,startLng,endLat,endLng);
+  }
+
   //Test method
   public void testPretty() {
     prettyMarker(40.714728,-73.998672,"Test string","wifi");
@@ -477,7 +482,8 @@ public class MainController {
       if (importType.getValue().equals("Hotspot")) {
         try {
           ArrayList<Hotspot> hotspotsToAdd = reader
-              .readHotspots("/file/InitialHotspots.csv", 0); //TODO change to 1 after testing
+              .readHotspots(importFilePath, true); //NOTE Will not work when importing
+          // initial hotspots as external file due to index handling changes between internal & external files
           prevSize = hotspots.size();
           for (Hotspot hotspot : hotspotsToAdd) {
             hotspots.add(hotspot);
@@ -499,10 +505,23 @@ public class MainController {
         } catch (IOException e) {
           System.out.println("Error loading retailers");
         }
-      } else if (importType.getValue().equals("UserPOI")) {
+      } else if (importType.getValue().equals("Public POI")) {
+        try {
+          ArrayList<PublicPOI> publicPOIsToAdd = reader
+              .readPublicPOIS(importFilePath, true);
+          prevSize = publicPOIs.size();
+          for (PublicPOI publicPOI : publicPOIsToAdd) {
+            publicPOIs.add(publicPOI);
+          }
+          System.out.println((publicPOIs.size() - prevSize) + " public POIs added.");
+          initPublicPOITable();
+        } catch (IOException e) {
+          System.out.println("Error loading public POIs");
+        }
+      } else if (importType.getValue().equals("User POI")) {
         try {
           ArrayList<UserPOI> userPOIsToAdd = reader
-              .readUserPOIS("/file/UserPOIdata_smallsample.csv");
+              .readUserPOIS(importFilePath, true);
           prevSize = userPOIs.size();
           for (UserPOI userPOI : userPOIsToAdd) {
             userPOIs.add(userPOI);
@@ -511,6 +530,19 @@ public class MainController {
           initUserPOITable();
         } catch (IOException e) {
           System.out.println("Error loading user POIs");
+        }
+      } else if (importType.getValue().equals("Route")) {
+        try {
+          ArrayList<Route> routesToAdd = reader
+              .readRoutes(importFilePath, stations, true);
+          prevSize = routes.size();
+          for (Route route : routesToAdd) {
+            routes.add(route);
+          }
+          System.out.println((routes.size() - prevSize) + " routes added.");
+          initRouteTable();
+        } catch (IOException e) {
+          System.out.println("Error loading routes");
         }
       }
     }
@@ -661,7 +693,7 @@ public class MainController {
             //TODO change this when retailers have lat/long fields
             //TODO update the marker type to not be wifi
             try {
-              prettyMarker(loc[0], loc[1], "<b>Test</b>", "wifi");
+              prettyMarker(loc[0], loc[1], "<b>Test</b>", "retailer");
               viewMap();
             }
             catch(NullPointerException e) {
@@ -741,7 +773,7 @@ public class MainController {
           helper.tableOnClickPopup.create("Hotspot", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getLocationAddress(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getLocationAddress(), "hotspot");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -805,7 +837,7 @@ public class MainController {
           tableOnClickPopup.create("Public POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "public-poi");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -863,7 +895,7 @@ public class MainController {
           tableOnClickPopup.create("User POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "user-poi");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -921,7 +953,7 @@ public class MainController {
           tableOnClickPopup.create("Public POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "wifi");
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(), selected_item.getName(), "station");
               viewMap();
             }
             catch (NullPointerException e) {
@@ -993,8 +1025,8 @@ public class MainController {
           tableOnClickPopup.create("Public POI", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
-              prettyMarker(selected_item.getStartStation().getLatitude(), selected_item.getStartStation().getLongitude(), selected_item.getStartStationName(), "wifi" );
-              prettyMarker(selected_item.getStopStation().getLatitude(), selected_item.getStopStation().getLongitude(), selected_item.getStopStationName(), "wifi");
+              //TODO use correct method for showing routes on map
+              displayRoute(selected_item.getStartStation().getLatitude(), selected_item.getStartStation().getLongitude(), selected_item.getStopStation().getLatitude(), selected_item.getStopStation().getLongitude());
               viewMap();
             }
             catch (NullPointerException e) {
