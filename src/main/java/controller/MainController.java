@@ -54,7 +54,6 @@ import filehandler.MySQL;
 public class MainController {
 
 
-
   private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
   private ArrayList<Retailer> retailers = new ArrayList<Retailer>();
   private ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
@@ -631,6 +630,13 @@ public class MainController {
    */
   public void updateAccount() throws Exception {
     GUIManager.getInstanceGUIManager().updateAccount();
+  }
+
+  /** Tells GUIManager the user wants to log out
+   *
+   */
+  public void logOut() throws  Exception {
+    GUIManager.getInstanceGUIManager().logOut();
   }
 
   /**

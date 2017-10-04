@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<SplitPane fx:id="mainSplitpane" dividerPositions="0.143" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <items>
     <AnchorPane prefHeight="598.0" prefWidth="144.0">
          <children>
@@ -31,6 +31,7 @@
                   <Button fx:id="mapViewButton" mnemonicParsing="false" onAction="#viewMap" prefWidth="91.0" text="Map" />
                   <Button fx:id="dataViewButton" mnemonicParsing="false" onAction="#viewData" prefWidth="91.0" text="Locations" />
                   <Button fx:id="userViewButton" mnemonicParsing="false" onAction="#viewUser" prefWidth="91.0" text="Account" />
+                  <Button fx:id="logOut" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="91.0" text="Log out" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

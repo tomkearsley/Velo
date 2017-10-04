@@ -53,7 +53,7 @@ public class GUIManager extends Application {
 
   //LoginController methods
   /** The GUIManager method corresponding to the LoginController method authenticate
-   * Lets GUIManager know the user was successfully authenticated
+   * Lets GUIManager know a cyclist user was successfully authenticated
    * @throws Exception possible start exceptions
    */
   public void cyclistAuthenticated() throws Exception {
@@ -62,11 +62,14 @@ public class GUIManager extends Application {
     mainWindow.start(primaryStage);
   }
 
+  /** The GUIManager method corresponding to the LoginController method authenticate
+   * Lets GUIManager know a analyst user was successfully authenticated
+   * @throws Exception possible start exceptions
+   */
   public void analystAuthenticated() throws Exception {
 
     // Close other window, begin mainAnalyst window
     mainAnalyst.start(primaryStage);
-
   }
 
   /** The GUIManager method corresponding to the LoginControler method join
@@ -129,6 +132,16 @@ public class GUIManager extends Application {
 
     // Close any other window, begin Main window
     mainWindow.start(primaryStage);
+  }
+
+  /** The GUIManager method corresponding to the LoginController method authenticate
+   * Lets GUIManager know the user was successfully authenticated
+   * @throws Exception possible start exceptions
+   */
+  public void logOut() throws Exception {
+
+    //Close any other window, begin Login window
+    loginWindow.start(primaryStage);
   }
 
 }

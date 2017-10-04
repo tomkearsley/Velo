@@ -47,8 +47,8 @@ public class LoginController {
     String enteredUsername = username.getText();
     String enteredPassword = password.getText();
 
-    // TODO and check credentials
-
+    // Check credentials
+    userLoggingIn();
     MySQL mysql = new MySQL();
     ArrayList<Boolean> LoginResult = new ArrayList<Boolean>();
     try {
@@ -57,12 +57,10 @@ public class LoginController {
     catch (Exception e){
       System.out.println(e);
     }
-
-
-    // TODO If CYCLIST authenticated, tell GUIManager
     Boolean isCyclist = LoginResult.get(0);
     Boolean sucessfulLogin = LoginResult.get(1);
 
+    // If CYCLIST authenticated, tell GUIManager
     if (sucessfulLogin && isCyclist) {
       try {
         System.out.println("Cyclist authenticated");
@@ -72,8 +70,8 @@ public class LoginController {
         e.printStackTrace();
       }
     }
-    // TODO else if ANALYST user, tell GUIManager
-    else if (isCyclist == false && sucessfulLogin == true) {
+    // else if ANALYST user, tell GUIManager
+    else if (sucessfulLogin && !isCyclist) {
       try {
         System.out.println("Analyst authenticated");
         userLoggedIn(); // formats GUI
@@ -81,12 +79,10 @@ public class LoginController {
       } catch (Exception e) {
         e.printStackTrace();
       }
+    } else {
+      // else credentials incorrect, call invalid credentials to display a error message
+      invalidCredentials();
     }
-
-
-    // TODO else if credentials incorrect, call invalid credentials to display a error message
-    // invalidCredentials();
-
   }
 
   /** Tells GUIManager to launch the Join window */
@@ -101,10 +97,15 @@ public class LoginController {
     }
   }
 
-
   /** Displays a red warning message */
   private void invalidCredentials() {
+    progressBar.setVisible(false);
+    username.setDisable(false);
+    password.setDisable(false);
+    logIn.setDisable(false);
+    join.setDisable(false);
     feedback.setText("Incorrect username or password");
+    feedback.setStyle("-fx-text-fill: red");
     feedback.setVisible(true);
   }
 
@@ -121,6 +122,18 @@ public class LoginController {
     logIn.setDisable(true);
     join.setDisable(true);
     feedback.setText("Logged in, loading...");
+    feedback.setStyle("-fx-text-fill: green");
+    feedback.setVisible(true);
+  }
+
+  /** Disables the login GUI while checking credentials */
+  private void userLoggingIn() {
+    progressBar.setVisible(true);
+    username.setDisable(true);
+    password.setDisable(true);
+    logIn.setDisable(true);
+    join.setDisable(true);
+    feedback.setText("Checking credentials...");
     feedback.setStyle("-fx-text-fill: green");
     feedback.setVisible(true);
   }
