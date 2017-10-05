@@ -52,6 +52,8 @@ public class Retailer extends POI {
     this.zipcode = zipcode;
     this.block = block;
     this.secondaryDescription = secondaryDescription;
+    this.setLatitude(latitude);
+    this.setLongitude(longitude);
   }
 
   @Override

@@ -29,7 +29,7 @@
     var infowindow;
     var geocoder;
     var currentLocation;
-    var retailerClutster;
+    var retailerCluster;
     var hotspotCluster;
     var POICluster;
     var stationCluster;
@@ -136,9 +136,9 @@
       directionsService = new google.maps.DirectionsService;
       directionsDisplay = new google.maps.DirectionsRenderer;
 
-      MarkerClusterer.prototype.remove = function () {}
+      MarkerClusterer.prototype.remove = function () {};
 
-      retailerClutster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
+      retailerCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
       POICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
       hotspotCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
       stationCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
@@ -365,16 +365,14 @@
     }
 
     function loadRetailers(infoArray) {
-      var location = [];
-      var title;
+      var lat,lng,title;
       aBridge.outputValue("Displaying retailers");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
         aBridge.outputValue(i);
-        location = aBridge.getRetailerLocation(infoArray.get(i));
-        lat = location[0];
+        lat = aBridge.getRetailerLat(infoArray.get(i));
         //aBridge.testValue("test1");
-        lng = location[1];
+        lng = aBridge.getRetailerLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getRetailerTitle(infoArray.get(i));
         //aBridge.testValue("test3");
@@ -412,12 +410,12 @@
 
     function hideRetailers() {
       hideMarkers(retailerMarkers);
-      hideCluster(retailerClutster);
+      hideCluster(retailerCluster);
     }
 
     function showRetailers() {
       showMarkers(retailerMarkers);
-      showCluster(retailerClutster);
+      showCluster(retailerCluster);
     }
 
     function hideHotspots() {

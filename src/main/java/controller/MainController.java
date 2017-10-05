@@ -260,15 +260,23 @@ public class MainController {
   }
 
   public void toggleButton5() {
+    try{
+      hideRetailers();
+    }
+    catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+    }
     toggleButton(4);
+
   }
 
   public void toggleButton6() {
     try {
       hideHotspots();
     }
-    catch (Exception e) {
-      System.out.println("Internal error, please report to app devs");
+    catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+      //System.out.println("Internal error, please report to app devs");
     }
     toggleButton(5);
   }
@@ -281,8 +289,9 @@ public class MainController {
     try {
       hideStations();
     }
-    catch (Exception e) {
-      System.out.println("Internal error, please report to app devs");
+    catch (netscape.javascript.JSException e) {
+      //null error. should be occuring
+      //System.out.println("Internal error, please report to app devs");
     }
     toggleButton(7);
   }
