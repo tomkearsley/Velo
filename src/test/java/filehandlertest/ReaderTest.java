@@ -81,13 +81,14 @@ public class ReaderTest {
     Retailer r1, r2, r3;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "8-32", "Casual Eating & Takeout",
-        "F-Coffeehouse");
+        "F-Coffeehouse",40.7375659,-74.04536639999999);
     r2 = new Retailer("New York Health & Racquet Club", "39 Whitehall Street", "",
         "New York", "NY", 10004, "8-32",
-        "Personal and Professional Services", "P-Athletic Clubs/Fitness");
+        "Personal and Professional Services", "P-Athletic Clubs/Fitness",
+        40.7029437,-74.0126761);
     r3 = new Retailer("A.J. Kelly's", "6 Stone Street", "", "New York",
         "NY", 10004, "10-32", "Full Service Dining",
-        "F-Irish Pub");
+        "F-Irish Pub",40.0514416,-95.60269609999999);
 
     List<Retailer> actualRetailers = Arrays.asList(r1, r2, r3);
     for (int i = 0; i < Retailers.size(); i++) {
@@ -97,8 +98,8 @@ public class ReaderTest {
   }
 
   @Test
-  public void readRetailerWithEmptyEndingCells() throws FileNotFoundException{
-    List<Retailer> Retailers = reader.readRetailers("/test/retailerEmptyEnds.csv", false);
+  public void readExternalRetailerWithEmptyEndingCells() throws FileNotFoundException{
+    List<Retailer> Retailers = reader.readRetailers("src/main/resources/test/retailerEmptyEnds.csv", true);
     Retailer r1, r2;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "", "",

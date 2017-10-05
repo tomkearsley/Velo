@@ -7,12 +7,17 @@ import java.util.Arrays;
  */
 public class POI implements Mappable {
 
-  String name = "";
-  String description = "";
+  private String name = "";
+  private String description = "";
+  private Double latitude;
+  private Double longitude;
 
-  public POI(String name, String description) {
+
+  public POI(String name, String description, Double latitude, Double longitude) {
     this.name = name;
     this.description = description;
+    this.latitude = latitude;
+    this.longitude = longitude;
 
   }
 
@@ -51,6 +56,14 @@ public class POI implements Mappable {
    */
   public String getDescription() {
     return this.description;
+  }
+
+  public Double getLatitude() {
+    return this.latitude;
+  }
+
+  public Double getLongitude() {
+    return this.longitude;
   }
 
   @Override

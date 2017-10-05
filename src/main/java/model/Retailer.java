@@ -32,7 +32,19 @@ public class Retailer extends POI {
 
   public Retailer(String title, String address, String floor, String city, String state, int zipcode,
       String block, String description, String secondaryDescription) {
-    super(title, description);
+    super(title, description, null, null);
+    this.address = address;
+    this.floor = floor;
+    this.city = city;
+    this.state = state;
+    this.zipcode = zipcode;
+    this.block = block;
+    this.secondaryDescription = secondaryDescription;
+  }
+
+  public Retailer(String title, String address, String floor, String city, String state, int zipcode,
+      String block, String description, String secondaryDescription, Double latitude, Double longitude) {
+    super(title, description, latitude, longitude);
     this.address = address;
     this.floor = floor;
     this.city = city;
@@ -46,7 +58,8 @@ public class Retailer extends POI {
   public String toString(){
     return "Retailer: " + getName() + " Address: " + address + ", " + floor + ", " + block
         + ", " + city + ", " + state + ", " + Integer.toString(zipcode) + " Description(s): "
-        + getDescription() + ", " + secondaryDescription;
+        + getDescription() + ", " + secondaryDescription + " Latitude: " + getLatitude() +
+        " Longitude: " + getLongitude();
   }
 //  //TODO add lat and long fields derived from street address using google api
 //  public boolean equals(Retailer r){

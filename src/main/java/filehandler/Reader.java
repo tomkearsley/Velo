@@ -266,6 +266,8 @@ public class Reader {
     int blockIndex = 6;
     int descriptionIndex = 7;
     int description2Index = 8;
+    int latitudeIndex = 9;
+    int longitudeIndex = 10;
 
     // Initialize scanner and Retailers array
     BufferedReader br = null;
@@ -302,9 +304,21 @@ public class Reader {
         String description = csvRetailer[descriptionIndex];
         String secondaryDescription = csvRetailer[description2Index];
 
-        //add newRetailer to Retailers array
-        Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description,
-            secondaryDescription));
+        Double latitude;
+        Double longitude;
+
+        if (!isExternalFile) {
+          latitude = Double.parseDouble(csvRetailer[latitudeIndex]);
+          longitude = Double.parseDouble(csvRetailer[longitudeIndex]);
+
+          //add newRetailer to Retailers array
+          Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description,
+              secondaryDescription, latitude, longitude));
+        } else {
+          //add newRetailer to Retailers array
+          Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description,
+              secondaryDescription));
+        }
 
       }
 

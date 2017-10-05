@@ -19,12 +19,6 @@ public class Station extends POI{
   /**Number of total docks*/
   private int totalDocks;
 
-  /**Station latitude*/
-  private double latitude;
-
-  /**Station longitude*/
-  private double longitude;
-
   /**Status of Station*/
   private String statusValue;
 
@@ -69,30 +63,6 @@ public class Station extends POI{
 
   public void setID(int newID) {
     ID = newID;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String newName) {
-    name = newName;
-  }
-
-  public double getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(double newLatitude) {
-    latitude = newLatitude;
-  }
-
-  public double getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(double newLongitude) {
-    longitude = newLongitude;
   }
 
   public int getAvailableDocs() {
@@ -206,21 +176,17 @@ public class Station extends POI{
   //Constructors
 
   public Station(int ID, String name, double latitude, double longitude) {
-    super(name, "");
+    super(name, "", latitude, longitude);
     this.ID = ID;
     //this.stationName = name;
-    this.latitude = latitude;
-    this.longitude = longitude;
   }
 
   public Station(int ID, String name, int availableDocks, int totalDocks, double latitude, double longitude, String statusValue, int statusKey, int availableBikes, String streetAddress1, String streetAddress2, String city,String postalCode, String location, String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
-    super(name, "");
+    super(name, "", latitude, longitude);
     this.ID = ID;
     //this.stationName = stationName;
     this.availableDocks = availableDocks;
     this.totalDocks = totalDocks;
-    this.latitude = latitude;
-    this.longitude = longitude;
     this.statusValue = statusValue;
     this.statusKey = statusKey;
     this.availableBikes = availableBikes;
@@ -237,15 +203,15 @@ public class Station extends POI{
 
   @Override
   public String toString() {
-    return "ID: " + ID + "\nstationName: " + name + "\navailableDocks: " + availableDocks + "\ntotalDocks: " + totalDocks + "\nlatitude:" +
-    latitude + "\nlongitude: " + longitude + "\nstatusValue: " + statusValue + "\nstatusKey: " + statusKey + "\navailableBikes" + availableBikes +
+    return "ID: " + ID + "\nstationName: " + getName() + "\navailableDocks: " + availableDocks + "\ntotalDocks: " + totalDocks + "\nlatitude:" +
+    getLatitude() + "\nlongitude: " + getLongitude() + "\nstatusValue: " + statusValue + "\nstatusKey: " + statusKey + "\navailableBikes" + availableBikes +
     "\nstreetAddress1" + streetAddress1 + "\nstreetAddress2" + streetAddress2 + "\ncity: " + city + "\npostalCode" + postalCode + "\nlocation: " + location +
     "\naltitude: " + altitude + "\ntestStation:" + testStation + "\nlastCommunicationTime: " + lastCommunicationTime + "\nlandMark" + landMark;
   }
 
   public String test() {
-    return ID + "," + name + "," + availableDocks + "," + totalDocks + "," +
-        latitude + "," + longitude + "," + statusValue + "," + statusKey + "," + availableBikes +
+    return ID + "," + getName() + "," + availableDocks + "," + totalDocks + "," +
+        getLatitude() + "," + getLongitude() + "," + statusValue + "," + statusKey + "," + availableBikes +
         "," + streetAddress1 + "," + streetAddress2 + "," + postalCode + "," + location +
         "," + altitude + "," + testStation + "," + lastCommunicationTime + "," + landMark;
   }
