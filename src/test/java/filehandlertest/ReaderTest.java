@@ -224,6 +224,9 @@ public class ReaderTest {
     for(int i = 0;i < compareStations.size()-1;i++) {
       //System.out.println(stations.get(i).toString());
       //System.out.println(compareStations.get(i).toString());
+      System.out.println(stations.get(i).toString());
+      System.out.println(compareStations.get(i).toString());
+
       assertTrue(stations.get(i).toString().equals(compareStations.get(i).toString()));
     }
   }
