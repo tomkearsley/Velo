@@ -455,6 +455,11 @@ public class MainController {
   public void testPretty() {
     prettyMarker(40.714728,-73.998672,"Test string","wifi");
   }
+
+  public void testCluster() {
+    window.setMember("aBridge",aBridge);
+    window.call("testCluster");
+  }
   /*
   Action handlers
    */

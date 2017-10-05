@@ -9,11 +9,7 @@
     body { height: 100%; margin: 0; padding: 0 }
     #map-canvas { height: 100% }
   </style>
-  <script type="text/javascript">
-    function test() {
-      alert("Test function");
-    }
-  </script>
+  <script type="text/javascript" src="cluster.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM&callback=initMap&libraries=places">
     </script>
   <script type="text/javascript"
@@ -33,6 +29,11 @@
     var infowindow;
     var geocoder;
     var currentLocation;
+    var retailerClutster;
+    var hotspotCluster;
+    var POICluster;
+    var stationCluster;
+
     //alert(directionsService.toString());
     function initialize() {
       var mapOptions = {
@@ -135,6 +136,11 @@
       directionsService = new google.maps.DirectionsService;
       directionsDisplay = new google.maps.DirectionsRenderer;
 
+      retailerClutster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
+      POICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
+      hotspotCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
+      stationCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
+
       infowindow = new google.maps.InfoWindow({
         content: "Loading location info..."
       });
@@ -145,13 +151,12 @@
       //createMarker(40.785091, -73.968285,'Test Marker',"default");
 
       //Create marker on click
+      /*
       google.maps.event.addListener(map,'click',function(event) {
         markerNum++;
         createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"user-poi");
       });
-
-
-
+      */
       //var bikeLayer = new google.maps.BicyclingLayer();
       //bikeLayer.setMap(map);
       //alert("Test");
@@ -166,8 +171,8 @@
       //alert("lat: " + lat + "\nlng: " + lng + "\nLocation: " + myLatLng);
       var marker = new google.maps.Marker({
         position: myLatLng,
-        map:map,
         title: title,
+        map: map,
         icon: "image/" + markerType + ".png"
       });
 
@@ -179,17 +184,22 @@
       switch(markerType) {
         case "hotspot":
           hotspotMarkers.push(marker);
+          hotspotCluster.addMarker(marker);
           break;
         case "station":
           stationMarkers.push(marker);
+          stationCluster.addMarker(marker);
           break;
         case "POI":
           POIMarkers.push(marker);
+          POICluster.addMarker(marker);
           break;
         case "retailer":
           retailerMarkers.push(marker);
+          retailerCluster.addMarker(marker);
           break;
       }
+      return marker;
     }
 
     function prettyMarker(lat,lng,info,markerType) {
@@ -245,6 +255,14 @@
       }
     }
 
+    function hideCluster(markerCluster) {
+
+    }
+
+    function showCluster(markerCluster) {
+
+    }
+
     function displayRoute(startLat,startLng,endLat,endLng) {
       //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
       var startLocation = startLat + "," + startLng;
@@ -262,6 +280,14 @@
         }
       });
       //alert("Test");
+    }
+
+    function testCluster() {
+      markerCluster.addMarker(createMarker(40.758896,-73.985130,"Test","hotspot"));
+      markerCluster.addMarker(createMarker(40.8,-73.985130,"Test","hotspot"));
+      markerCluster.addMarker(createMarker(40.9,-73.985130,"Test","hotspot"));
+      markerCluster.addMarker(createMarker(40.82,-73.985130,"Test","hotspot"));
+      markerCluster.addMarker(createMarker(40.79,-73.985130,"Test","hotspot"));
     }
 
     function displayRouteClick(startLocation,endLocation) {
