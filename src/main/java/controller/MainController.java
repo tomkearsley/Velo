@@ -479,6 +479,10 @@ public class MainController {
     fileHandlerPane.toFront();
   }
 
+
+  /**
+   * Allows the user to select a file to import data from, at which case the Import Function is called.
+   */
   public void selectImportFile() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open CSV File");
@@ -490,6 +494,10 @@ public class MainController {
     }
   }
 
+
+  /**
+   * Allows the user to export their routes to a custom csv file. Shows alert based on result
+   */
   public void exportUserRoutes() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Export CSV File");

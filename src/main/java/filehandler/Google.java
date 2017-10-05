@@ -6,11 +6,16 @@ import com.google.gson.JsonObject;
 import helper.Bridge;
 import helper.tableOnClickPopup;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import jdk.nashorn.internal.parser.JSONParser;
@@ -98,17 +103,53 @@ public class Google {
   }
 
   public static void main(String[] args) {
-    Reader rdr = new Reader();
-    Bridge aBridge = new Bridge();
-    ArrayList<Retailer> retailerArrayList = new ArrayList<Retailer>();
-    try {
-      retailerArrayList = rdr.readRetailers("/file/initialRetailers.csv", false);
-    }
-    catch (FileNotFoundException e) {
+    System.out.println(stringToLocation("1 Liberty Plaza")[0]);
+    System.out.println(stringToLocation("1 Liberty Plaza")[1]);
 
-    }
-    for(int i = 0; i < retailerArrayList.size(); i++) {
-      System.out.println(Arrays.toString(aBridge.getRetailerLocation(retailerArrayList.get(i))));
-    }
+//    Reader rdr = new Reader();
+//    Bridge aBridge = new Bridge();
+//    ArrayList<Retailer> retailerArrayList = new ArrayList<Retailer>();
+//    try {
+//      retailerArrayList = rdr.readRetailers("/file/InitialRetailers.csv", false);
+//    }
+//    catch (FileNotFoundException e) {
+//
+//    }
+//    double[] location;
+//    BufferedWriter bw;
+//    BufferedReader br;
+//    ArrayList<String> lines = new ArrayList<>();
+//    String line;
+//    try {
+//
+//      br = new BufferedReader(new FileReader(new File("src/main/resources/file/InitialRetailers.csv")));
+//      int counter = 0;
+//      while ((line = br.readLine()) != null) {
+//        lines.add(line);
+//        counter++;
+//      }
+//      bw = new BufferedWriter(
+//          new FileWriter(new File("src/main/resources/file/InitialRetailersBU.csv"), true));
+//
+//      for (int i=730; i < retailerArrayList.size(); i++) {
+//        System.out.println("A");
+//        System.out.println(i);
+//        System.out.println(retailerArrayList.get(i).getAddress());
+//        location = aBridge.getRetailerLocation(retailerArrayList.get(i));
+//
+//        bw.write(lines.get(i) + "," + location[0] + "," + location[1]);
+//        bw.newLine();
+//      }
+//      System.out.println(stringToLocation(retailerArrayList.get(730).getAddress())[0]);
+//      System.out.println(stringToLocation(retailerArrayList.get(730).getAddress())[1]);
+//    bw.close();
+//    } catch (IOException e){
+//      e.printStackTrace();
+//      System.out.println("ASDASD");
+//    }
+
+
+
+
   }
 }

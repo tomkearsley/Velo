@@ -75,7 +75,7 @@ public class Writer {
     };
   }
 
-  private void writeLinesToFIle(BufferedWriter writer, String[] attributes) throws IOException {
+  private void writeLinesToFile(BufferedWriter writer, String[] attributes) throws IOException {
     for (int i = 0; i < attributes.length; i++) {
       writer.write(attributes[i]);
       if (i < attributes.length - 1) {
@@ -99,7 +99,7 @@ public class Writer {
     for (POI poi : POIs) {
       String[] attributes = getAttributesFromPOI(poi);
 
-      writeLinesToFIle(writer, attributes);
+      writeLinesToFile(writer, attributes);
     }
 
     writer.close();
@@ -112,7 +112,7 @@ public class Writer {
     for (Route route : routes) {
       String[] attributes = getAttributesFromRoute(route);
 
-      writeLinesToFIle(writer, attributes);
+      writeLinesToFile(writer, attributes);
     }
 
     writer.close();
