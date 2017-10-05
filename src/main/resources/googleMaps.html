@@ -136,10 +136,12 @@
       directionsService = new google.maps.DirectionsService;
       directionsDisplay = new google.maps.DirectionsRenderer;
 
-      retailerClutster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
-      POICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
-      hotspotCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
-      stationCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m'});
+      MarkerClusterer.prototype.remove = function () {}
+
+      retailerClutster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
+      POICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
+      hotspotCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
+      stationCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
 
       infowindow = new google.maps.InfoWindow({
         content: "Loading location info..."
@@ -256,11 +258,17 @@
     }
 
     function hideCluster(markerCluster) {
-
+      markerCluster.set("map", null); // remove the clusterer
+      markerCluster.resetViewport();
+      markerCluster.redraw();
+      aBridge.outputValue("Hiding cluster");
     }
 
     function showCluster(markerCluster) {
-
+      markerCluster.set("map",map);
+      markerCluster.resetViewport();
+      markerCluster.redraw();
+      aBridge.outputValue("Showing cluster");
     }
 
     function displayRoute(startLat,startLng,endLat,endLng) {
@@ -384,34 +392,42 @@
 
     function hideStations() {
       hideMarkers(stationMarkers);
+      hideCluster(stationCluster);
     }
 
     function showStations() {
       showMarkers(stationMarkers);
+      showCluster(stationCluster);
     }
 
     function hidePOIS() {
       hideMarkers(POIMarkers);
+      hideCluster(POICluster);
     }
 
     function showPOIS() {
       showMarkers(POIMarkers);
+      showCluster(POICluster);
     }
 
     function hideRetailers() {
       hideMarkers(retailerMarkers);
+      hideCluster(retailerClutster);
     }
 
     function showRetailers() {
       showMarkers(retailerMarkers);
+      showCluster(retailerClutster);
     }
 
     function hideHotspots() {
       hideMarkers(hotspotMarkers);
+      hideCluster(hotspotCluster);
     }
 
     function showHotspots() {
       showMarkers(hotspotMarkers);
+      showCluster(hotspotCluster)
     }
 
     //initialize();
