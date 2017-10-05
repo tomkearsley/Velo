@@ -1094,7 +1094,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRoute.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI", "", selected_item);
+          tableOnClickPopup.create("Route", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
               //TODO use correct method for showing routes on map

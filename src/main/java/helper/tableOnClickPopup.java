@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Region;
 import model.Mappable;
 import model.POI;
 import model.Retailer;
@@ -18,6 +19,8 @@ public class tableOnClickPopup {
     alert.setTitle(title);
     alert.setHeaderText(null);
     alert.setContentText(clicked_item.toString());
+    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+    alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
 
     ButtonType showOnMapButton = new ButtonType("Show on Map");
     //other buttons go here

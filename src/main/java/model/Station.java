@@ -203,10 +203,11 @@ public class Station extends POI{
 
   @Override
   public String toString() {
-    return "ID: " + ID + "\nstationName: " + getName() + "\navailableDocks: " + availableDocks + "\ntotalDocks: " + totalDocks + "\nlatitude:" +
-    getLatitude() + "\nlongitude: " + getLongitude() + "\nstatusValue: " + statusValue + "\nstatusKey: " + statusKey + "\navailableBikes" + availableBikes +
-    "\nstreetAddress1" + streetAddress1 + "\nstreetAddress2" + streetAddress2 + "\ncity: " + city + "\npostalCode" + postalCode + "\nlocation: " + location +
-    "\naltitude: " + altitude + "\ntestStation:" + testStation + "\nlastCommunicationTime: " + lastCommunicationTime + "\nlandMark" + landMark;
+    String address = streetAddress1 + (streetAddress2 == "" ? "" : ", " + streetAddress2);
+    return "Name:\t\t" + getName() + " (" + ID + ")" + "\nStatus:\t\t" + statusValue +
+        "\nTotal docks:\t" + totalDocks
+        + "\nAvailable bikes: " + availableBikes + "\nAddress:\t\t" + address +
+        (city.equals("") ? "" : ("\nCity:\t" + city)) + "\nTest station:\t" + (testStation ? "True" : "False");
   }
 
   public String test() {
