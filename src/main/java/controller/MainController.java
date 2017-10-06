@@ -55,11 +55,18 @@ public class MainController {
   @FXML
   private TabPane mainPane;
   @FXML
-  private AnchorPane mapViewPane;
+  private Tab mapViewTab;
   @FXML
   private Tab dataViewTab;
   @FXML
-  private Tab historyViewButton;
+  private Tab historyViewTab;
+  @FXML
+  private Tab userViewTab;
+
+
+  @FXML
+  private AnchorPane mapViewPane;
+
   @FXML
   private Pane userPane;
   @FXML
@@ -203,19 +210,19 @@ public class MainController {
 
   /* Tab action handlers */
   public void viewData() {
-    dataTabPane.toFront();
+    mainPane.getSelectionModel().select(dataViewTab);
+    //dataTabPane.toFront();
   }
-
   public void viewMap() {
     // mapViewPane.();
+    mainPane.getSelectionModel().select(mapViewTab);
   }
-
   public void viewUser() {
+    mainPane.getSelectionModel().select(userViewTab);
     // userPane.toFront();
   }
-
   public void viewHistory() {
-
+    mainPane.getSelectionModel().select(historyViewTab);
   }
 
   private void loadHotspots() throws IOException {

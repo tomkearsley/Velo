@@ -21,7 +21,7 @@
 
 <TabPane fx:id="mainPane" prefHeight="577.0" prefWidth="634.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <tabs>
-    <Tab fx:id="mapViewButton" closable="false" onSelectionChanged="#viewMap" text="Map">
+    <Tab fx:id="mapViewTab" closable="false" text="Map">
          <content>
             <AnchorPane fx:id="mapViewPane">
                <children>
@@ -43,7 +43,7 @@
             </AnchorPane>
          </content>
     </Tab>
-    <Tab fx:id="dataViewTab" closable="false" onSelectionChanged="#viewData" text="Places">
+    <Tab fx:id="dataViewTab" closable="false" text="Places">
          <content>
             <GridPane>
               <columnConstraints>
@@ -256,7 +256,7 @@
             </GridPane>
          </content>
     </Tab>
-      <Tab fx:id="historyViewButton" closable="false" onSelectionChanged="#viewHistory" text="History">
+      <Tab fx:id="historyViewTab" closable="false" text="History">
          <content>
             <GridPane>
               <columnConstraints>
@@ -285,7 +285,7 @@
             </GridPane>
          </content>
       </Tab>
-      <Tab fx:id="userViewButton" closable="false" onSelectionChanged="#viewUser" text="Account">
+      <Tab fx:id="userViewTab" closable="false" text="Account">
          <content>
             <GridPane fx:id="userPane" gridLinesVisible="true" prefHeight="445.0" prefWidth="601.0">
               <columnConstraints>
