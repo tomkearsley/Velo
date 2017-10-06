@@ -67,7 +67,6 @@ public class Hotspot extends POI {
    */
   @Override
   public String toString() {
-    System.out.println(locationAddress);
     String address = locationAddress + (borough.equals("") ? "" : ", " + borough) + ", " + Integer.toString(postcode);
     return "ID:\t\t\t" + Integer.toString(id) + "\nName:\t\t" + getName() + "\nSSID:\t\t" + SSID +
         "\nProvider:\t\t" + provider + "\nRemarks:\t\t" + getDescription() + "\nAddress:\t\t" + address +
