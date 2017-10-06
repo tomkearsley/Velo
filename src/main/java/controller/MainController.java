@@ -450,14 +450,14 @@ public class MainController {
       //it is detailed, so remove columns
       dataTableHotspot.getColumns().remove(7, 11);
     } else {
-      TableColumn<Hotspot, Double> latCol = new TableColumn<Hotspot, Double>("Latitude");
-      latCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("latitude"));
-      TableColumn<Hotspot, Double> longCol = new TableColumn<Hotspot, Double>("Longitude");
-      longCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("longitude"));
-      TableColumn<Hotspot, String> postCodeCol = new TableColumn<Hotspot, String>("postcode");
-      postCodeCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("postcode"));
-      TableColumn<Hotspot, String> SSIDCol = new TableColumn<Hotspot, String>("SSID");
-      SSIDCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("SSID"));
+      TableColumn<Hotspot, Double> latCol = new TableColumn<>("Latitude");
+      latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+      TableColumn<Hotspot, Double> longCol = new TableColumn<>("Longitude");
+      longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+      TableColumn<Hotspot, String> postCodeCol = new TableColumn<>("postcode");
+      postCodeCol.setCellValueFactory(new PropertyValueFactory<>("postcode"));
+      TableColumn<Hotspot, String> SSIDCol = new TableColumn<>("SSID");
+      SSIDCol.setCellValueFactory(new PropertyValueFactory<>("SSID"));
       dataTableHotspot.getColumns().addAll(latCol, longCol, postCodeCol, SSIDCol);
     }
     hotspotIsDetailed = !hotspotIsDetailed;
@@ -470,16 +470,16 @@ public class MainController {
     if (retailerIsDetailed) {
       dataTableRetailer.getColumns().remove(3, 8);
     } else {
-      TableColumn<Retailer, String> floorCol = new TableColumn<Retailer, String>("Floor");
-      floorCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("floor"));
-      TableColumn<Retailer, String> cityCol = new TableColumn<Retailer, String>("City");
-      cityCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("city"));
-      TableColumn<Retailer, String> zipcodeCol = new TableColumn<Retailer, String>("Zipcode");
-      zipcodeCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("zipcode"));
-      TableColumn<Retailer, String> stateCol = new TableColumn<Retailer, String>("State");
-      stateCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("state"));
-      TableColumn<Retailer, String> blockCol = new TableColumn<Retailer, String>("Block");
-      blockCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("block"));
+      TableColumn<Retailer, String> floorCol = new TableColumn<>("Floor");
+      floorCol.setCellValueFactory(new PropertyValueFactory<>("floor"));
+      TableColumn<Retailer, String> cityCol = new TableColumn<>("City");
+      cityCol.setCellValueFactory(new PropertyValueFactory<>("city"));
+      TableColumn<Retailer, String> zipcodeCol = new TableColumn<>("Zipcode");
+      zipcodeCol.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
+      TableColumn<Retailer, String> stateCol = new TableColumn<>("State");
+      stateCol.setCellValueFactory(new PropertyValueFactory<>("state"));
+      TableColumn<Retailer, String> blockCol = new TableColumn<>("Block");
+      blockCol.setCellValueFactory(new PropertyValueFactory<>("block"));
       dataTableRetailer.getColumns().addAll(floorCol, cityCol, zipcodeCol, stateCol, blockCol);
     }
 
@@ -528,17 +528,17 @@ public class MainController {
     ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
     //each 2 line section creates one table heading and set of values
     //TODO lat and long from address?
-    TableColumn<Retailer, String> nameCol = new TableColumn<Retailer, String>(
+    TableColumn<Retailer, String> nameCol = new TableColumn<>(
         "Name");//title to be written above column
     nameCol.setCellValueFactory(
-        new PropertyValueFactory<Retailer, String>("name"));//looks for retailer.getName()
-    TableColumn<Retailer, String> addressCol = new TableColumn<Retailer, String>("Address");
-    addressCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("address"));
+        new PropertyValueFactory<>("name"));//looks for retailer.getName()
+    TableColumn<Retailer, String> addressCol = new TableColumn<>("Address");
+    addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
 
-    TableColumn<Retailer, String> secondaryDescCol = new TableColumn<Retailer, String>(
+    TableColumn<Retailer, String> secondaryDescCol = new TableColumn<>(
         "Secondary Description");
     secondaryDescCol
-        .setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
+        .setCellValueFactory(new PropertyValueFactory<>("secondaryDescription"));
 
     FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
     /**
@@ -576,7 +576,7 @@ public class MainController {
      * wrapping the filtered list in a sorted list allows the user to click on the title
      * of a column and sort the entries in alphanumeric order
      */
-    SortedList<Retailer> sListRetailers = new SortedList<Retailer>(fListRetailers);
+    SortedList<Retailer> sListRetailers = new SortedList<>(fListRetailers);
     sListRetailers.comparatorProperty().bind(dataTableRetailer.comparatorProperty());
 //simple: name, address, description
     //detailed: above and floor, city, zipcode, state, block
@@ -617,8 +617,8 @@ public class MainController {
   private void initHotspotTable() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
 
-    TableColumn<Hotspot, String> idCol = new TableColumn<Hotspot, String>("Name");
-    idCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("name"));
+    TableColumn<Hotspot, String> idCol = new TableColumn<>("Name");
+    idCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
     TableColumn<Hotspot, String> locAddressCol = new TableColumn<Hotspot, String>("Address");
     locAddressCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("locationAddress"));
@@ -627,17 +627,17 @@ public class MainController {
     TableColumn<Hotspot, String> cityCol = new TableColumn<Hotspot, String>("City");
     cityCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("city"));
 
-    TableColumn<Hotspot, String> typeCol = new TableColumn<Hotspot, String>("Type");
-    typeCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("type"));
+    TableColumn<Hotspot, String> typeCol = new TableColumn<>("Type");
+    typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
 
-    TableColumn<Hotspot, String> nameCol = new TableColumn<Hotspot, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("name"));
-    TableColumn<Hotspot, String> providerCol = new TableColumn<Hotspot, String>("Provider");
-    providerCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("provider"));
-    TableColumn<Hotspot, String> remarksCol = new TableColumn<Hotspot, String>("Remarks");
-    remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("description"));
+    TableColumn<Hotspot, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<Hotspot, String> providerCol = new TableColumn<>("Provider");
+    providerCol.setCellValueFactory(new PropertyValueFactory<>("provider"));
+    TableColumn<Hotspot, String> remarksCol = new TableColumn<>("Remarks");
+    remarksCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-    FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
+    FilteredList<Hotspot> fListHotspots = new FilteredList<>(oListHotspots);
     HotspotFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListHotspots.setPredicate(Hotspot -> {
         //if filter is empty, show all
@@ -657,7 +657,7 @@ public class MainController {
       });
     });
 
-    SortedList<Hotspot> sListHotspots = new SortedList<Hotspot>(fListHotspots);
+    SortedList<Hotspot> sListHotspots = new SortedList<>(fListHotspots);
     sListHotspots.comparatorProperty().bind(dataTableHotspot.comparatorProperty());
 
     //sets up simple view.
@@ -698,17 +698,17 @@ public class MainController {
 
     //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
-    TableColumn<PublicPOI, Double> latCol = new TableColumn<PublicPOI, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("latitude"));
-    TableColumn<PublicPOI, Double> longCol = new TableColumn<PublicPOI, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("longitude"));
-    TableColumn<PublicPOI, String> nameCol = new TableColumn<PublicPOI, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("name"));
-    TableColumn<PublicPOI, String> descriptionCol = new TableColumn<PublicPOI, String>(
+    TableColumn<PublicPOI, Double> latCol = new TableColumn<>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+    TableColumn<PublicPOI, Double> longCol = new TableColumn<>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+    TableColumn<PublicPOI, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<PublicPOI, String> descriptionCol = new TableColumn<>(
         "Description");
-    descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("description"));
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-    FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<PublicPOI>(oListPublicPOIs);
+    FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<>(oListPublicPOIs);
     PublicPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListPublicPOIs.setPredicate(PublicPOI -> {
         //if filter is empty, show all
@@ -726,7 +726,7 @@ public class MainController {
       });
     });
 
-    SortedList<PublicPOI> sListPublicPOIs = new SortedList<PublicPOI>(fListPublicPOIs);
+    SortedList<PublicPOI> sListPublicPOIs = new SortedList<>(fListPublicPOIs);
     sListPublicPOIs.comparatorProperty().bind(dataTablePublicPOI.comparatorProperty());
 
     dataTablePublicPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
@@ -755,21 +755,24 @@ public class MainController {
     });
   }
 
-  // TODO write JavaDoc Tyler
-  private void initUserPOITable() {
+  /**
+   * converts the arrayList of user POIs to an observable list, wraps it in filtered and sorted lists
+   * sets dataTableUserPOI to display these items as well as enabling filtering, sorting, and on-click behaviour
+   */
+  public void initUserPOITable() {
     //lat, long, name, description
     ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(userPOIs);
 
-    TableColumn<UserPOI, Double> latCol = new TableColumn<UserPOI, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("latitude"));
-    TableColumn<UserPOI, Double> longCol = new TableColumn<UserPOI, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("longitude"));
-    TableColumn<UserPOI, String> nameCol = new TableColumn<UserPOI, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("name"));
-    TableColumn<UserPOI, String> descriptionCol = new TableColumn<UserPOI, String>("Description");
-    descriptionCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("description"));
+    TableColumn<UserPOI, Double> latCol = new TableColumn<>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+    TableColumn<UserPOI, Double> longCol = new TableColumn<>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+    TableColumn<UserPOI, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<UserPOI, String> descriptionCol = new TableColumn<>("Description");
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-    FilteredList<UserPOI> fListUserPOIs = new FilteredList<UserPOI>(oListUserPOIs);
+    FilteredList<UserPOI> fListUserPOIs = new FilteredList<>(oListUserPOIs);
     UserPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListUserPOIs.setPredicate(UserPOI -> {
         //if filter is empty, show all
@@ -788,7 +791,7 @@ public class MainController {
       });
     });
 
-    SortedList<UserPOI> sListUserPOIs = new SortedList<UserPOI>(fListUserPOIs);
+    SortedList<UserPOI> sListUserPOIs = new SortedList<>(fListUserPOIs);
     sListUserPOIs.comparatorProperty().bind(dataTableUserPOI.comparatorProperty());
 
     dataTableUserPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
@@ -814,21 +817,24 @@ public class MainController {
     });
   }
 
-  // TODO write JavaDoc Tyler
-  private void initStationTable() {
+  /**
+   * converts the arrayList of Stations to an observable list, wraps it in filtered and sorted lists
+   * sets dataTableStation to display these items as well as enabling filtering, sorting, and on-click behaviour
+   */
+  public void initStationTable() {
     //latitude, longitude, name, ID
     ObservableList<Station> oListStations = FXCollections.observableArrayList(stations);
 
-    TableColumn<Station, Double> latCol = new TableColumn<Station, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<Station, Double>("latitude"));
-    TableColumn<Station, Double> longCol = new TableColumn<Station, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<Station, Double>("longitude"));
-    TableColumn<Station, String> nameCol = new TableColumn<Station, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<Station, String>("name"));
-    TableColumn<Station, Integer> idCol = new TableColumn<Station, Integer>("ID");
-    idCol.setCellValueFactory(new PropertyValueFactory<Station, Integer>("ID"));
+    TableColumn<Station, Double> latCol = new TableColumn<>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+    TableColumn<Station, Double> longCol = new TableColumn<>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+    TableColumn<Station, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<Station, Integer> idCol = new TableColumn<>("ID");
+    idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
-    FilteredList<Station> fListStations = new FilteredList<Station>(oListStations);
+    FilteredList<Station> fListStations = new FilteredList<>(oListStations);
     StationFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListStations.setPredicate(Station -> {
         //if filter is empty, show all
@@ -847,7 +853,7 @@ public class MainController {
       });
     });
 
-    SortedList<Station> sListStations = new SortedList<Station>(fListStations);
+    SortedList<Station> sListStations = new SortedList<>(fListStations);
     sListStations.comparatorProperty().bind(dataTableStation.comparatorProperty());
 
     dataTableStation.getColumns().setAll(nameCol, latCol, longCol, idCol);
@@ -873,22 +879,25 @@ public class MainController {
     });
   }
 
-  // TODO write JavaDoc Tyler
-  private void initRouteTable() {
+  /**
+   * converts the arrayList of routes to an observable list, wraps it in filtered and sorted lists
+   * sets dataTableRoute to display these items as well as enabling filtering, sorting, and on-click behaviour
+   */
+  public void initRouteTable() {
     //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
     ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
 
-    TableColumn<Route, Station> startStationCol = new TableColumn<Route, Station>("Start Station");
+    TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
     startStationCol
-        .setCellValueFactory(new PropertyValueFactory<Route, Station>("startStationName"));
-    TableColumn<Route, Station> stopStationCol = new TableColumn<Route, Station>("Stop Station");
-    stopStationCol.setCellValueFactory(new PropertyValueFactory<Route, Station>("stopStationName"));
-    TableColumn<Route, Date> startDateTimeCol = new TableColumn<Route, Date>("Start Time");
-    startDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("startDate"));
-    TableColumn<Route, Date> endDateTimeCol = new TableColumn<Route, Date>("Stop Time");
-    endDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("stopDate"));
+        .setCellValueFactory(new PropertyValueFactory<>("startStationName"));
+    TableColumn<Route, Station> stopStationCol = new TableColumn<>("Stop Station");
+    stopStationCol.setCellValueFactory(new PropertyValueFactory<>("stopStationName"));
+    TableColumn<Route, Date> startDateTimeCol = new TableColumn<>("Start Time");
+    startDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+    TableColumn<Route, Date> endDateTimeCol = new TableColumn<>("Stop Time");
+    endDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("stopDate"));
 
-    FilteredList<Route> fListRoutes = new FilteredList<Route>(oListRoutes);
+    FilteredList<Route> fListRoutes = new FilteredList<>(oListRoutes);
 
     RouteFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListRoutes.setPredicate(Route -> {
@@ -916,7 +925,7 @@ public class MainController {
       });
     });
 
-    SortedList<Route> sListRoutes = new SortedList<Route>(fListRoutes);
+    SortedList<Route> sListRoutes = new SortedList<>(fListRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
     //simple: start and end stations, start and end times
     //TODO finish simple/advanced views for routes

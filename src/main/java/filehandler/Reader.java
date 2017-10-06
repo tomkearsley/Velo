@@ -241,7 +241,6 @@ public class Reader {
         }
       }
     }
-
     return Hotspots;
   }
 
