@@ -63,10 +63,10 @@ public class LoginController {
         System.out.println(e);
       }
       Boolean isCyclist = LoginResult.get(0);
-      Boolean sucessfulLogin = LoginResult.get(1);
+      Boolean successfulLogin = LoginResult.get(1);
 
       // If CYCLIST authenticated, tell GUIManager
-      if (sucessfulLogin && isCyclist) {
+      if (successfulLogin && isCyclist) {
         System.out.println("Cyclist authenticated");
         userLoggedIn(); // formats GUI
         Platform.runLater(()-> {
@@ -78,9 +78,9 @@ public class LoginController {
         });
       }
       // else if ANALYST user, tell GUIManager
-      else if (sucessfulLogin && !isCyclist) {
-          System.out.println("Analyst authenticated");
-          userLoggedIn(); // formats GUI
+      else if (successfulLogin /*&& !isCyclist*/) {
+        System.out.println("Analyst authenticated");
+        userLoggedIn(); // formats GUI
         Platform.runLater(()-> {
           try {
             GUIManager.getInstanceGUIManager().analystAuthenticated();
