@@ -164,8 +164,8 @@ public class ReaderTest {
     ArrayList<Station> stations = new ArrayList<Station>();
 
     Station startStation1, stopStation1, startStation2, stopStation2, startStation3, stopStation3;
-    startStation1 = new Station(164,"E 47 St & 2 Ave",40.75323098,-73.97032517);
-    stopStation1 = new Station(504,"1 Ave & E 15 St",40.73221853,-73.98165557);
+    startStation1 = new Station(164, "E 47 St & 2 Ave", 40.75323098, -73.97032517);
+    stopStation1 = new Station(504, "1 Ave & E 15 St", 40.73221853, -73.98165557);
     startStation2 = new Station(531,"Forsyth St & Broome St",40.71893904,-73.99266288);
     stopStation2 = new Station(499,"Broadway & W 60 St",40.76915505,-73.98191841);
     startStation3 = new Station(345,"W 13 St & 6 Ave",40.73649403,-73.99704374);

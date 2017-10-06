@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Arrays;
-
 /**
  * The class POI defines the superclass for Points of Interest
  */
@@ -40,6 +38,7 @@ public class POI implements Mappable {
   }
 
   // GETTERS
+
   /**
    * Returns the name of POI Object
    *

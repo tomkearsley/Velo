@@ -11,15 +11,20 @@ public class Cyclist {
   private String lastName;
   private String username;
   private String password;
-  /**User gender 0 - male 1 - female 2 - not specified*/
+  /**
+   * User gender 0 - male 1 - female 2 - not specified
+   */
   private int gender;
   private double weight;
   private int height;
-  /** Contains only the date; no time*/
+  /**
+   * Contains only the date; no time
+   */
   private LocalDate birthDate;
 
   /**
    * Default Constructor for Creating a Cyclist User
+   *
    * @param username Username for Cyclist
    * @param password Password for Cyclist
    * @param birthDate Date of birth of Cyclist User. Uses java.time.LocalDate
@@ -28,7 +33,7 @@ public class Cyclist {
    * @param height Height of user in inches
    */
   public Cyclist(String firstName, String lastName, String username, String password,
-      LocalDate birthDate, int gender, double weight, int height){
+      LocalDate birthDate, int gender, double weight, int height) {
 
     this.firstName = firstName;
     this.lastName = lastName;
@@ -41,10 +46,12 @@ public class Cyclist {
 
   }
 
-  /** Print method for Cyclist
+  /**
+   * Print method for Cyclist
+   *
    * @return String
    */
-  public String toString(){
+  public String toString() {
 
     return "First name: " + firstName + ", Last name: " + lastName + ", Username: " + username +
         ", Password: " + password + ", Gender: " + gender + ", Weight: " + weight + ", Height: " +

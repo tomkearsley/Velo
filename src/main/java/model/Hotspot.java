@@ -5,40 +5,60 @@ package model;
  */
 public class Hotspot extends POI {
 
-  /**Hotspot ObjectID from csv file*/
+  /**
+   * Hotspot ObjectID from csv file
+   */
   private int id;
 
-  /** The address of the hotspot*/
+  /**
+   * The address of the hotspot
+   */
   private String locationAddress;
 
-  /**Particular region the hotspot is located i.e. Brooklyn*/
+  /**
+   * Particular region the hotspot is located i.e. Brooklyn
+   */
   private String borough;
 
-  /**City in which the hotspot is located*/
+  /**
+   * City in which the hotspot is located
+   */
   private String city;
 
-  /**Postal code*/
+  /**
+   * Postal code
+   */
   private int postcode;
 
-  /**Type of service i.e. free, limited free*/
+  /**
+   * Type of service i.e. free, limited free
+   */
   private String type;
 
-  /** WiFi hotspot name to the user i.e. "UCWireless"*/
+  /**
+   * WiFi hotspot name to the user i.e. "UCWireless"
+   */
   private String SSID;
 
-  /**ISP providing internet service to the hotspot*/
+  /**
+   * ISP providing internet service to the hotspot
+   */
   private String provider;
 
-  /** Comments on the hotspot*/
+  /**
+   * Comments on the hotspot
+   */
   private String remarks;
 
 
-  /** Full constructor
+  /**
+   * Full constructor
+   *
    * @param id ID of hotspot
    * @param latitude Latitude coordinate of hotspot
    * @param longitude Longitude coordinate of hotspot
    * @param locationAddress Address of hotspot
-   * @param borough  Borough where hotspot is located
+   * @param borough Borough where hotspot is located
    * @param city City where hotspot is located
    * @param postcode Postcode of hotspot
    * @param type Type of hotspot
@@ -46,9 +66,10 @@ public class Hotspot extends POI {
    * @param name Name of the actual physical device
    * @param provider Name of the internet-provider
    * @param remarks Remarks about the hotspot
-   * */
+   */
   public Hotspot(int id, double latitude, double longitude, String locationAddress, String borough,
-      String city, int postcode, String type, String SSID, String name, String provider, String remarks) {
+      String city, int postcode, String type, String SSID, String name, String provider,
+      String remarks) {
     super(name, remarks, latitude, longitude);
     this.id = id;
     this.locationAddress = locationAddress;
@@ -62,15 +83,20 @@ public class Hotspot extends POI {
 
   /*Hotspot methods*/
 
-  /** Print method for Hotspot
+  /**
+   * Print method for Hotspot
+   *
    * @return String
    */
   @Override
   public String toString() {
-    String address = locationAddress + (borough.equals("") ? "" : ", " + borough) + ", " + Integer.toString(postcode);
+    String address = locationAddress + (borough.equals("") ? "" : ", " + borough) + ", " + Integer
+        .toString(postcode);
     return "ID:\t\t\t" + Integer.toString(id) + "\nName:\t\t" + getName() + "\nSSID:\t\t" + SSID +
-        "\nProvider:\t\t" + provider + "\nRemarks:\t\t" + getDescription() + "\nAddress:\t\t" + address +
-        "\nCity:\t\t\t" + city + "\nCoordinates:\t" + String.format("(%.3f, %.3f)", getLatitude(), getLongitude());
+        "\nProvider:\t\t" + provider + "\nRemarks:\t\t" + getDescription() + "\nAddress:\t\t"
+        + address +
+        "\nCity:\t\t\t" + city + "\nCoordinates:\t" + String
+        .format("(%.3f, %.3f)", getLatitude(), getLongitude());
   }
 
 //  public String toString(){

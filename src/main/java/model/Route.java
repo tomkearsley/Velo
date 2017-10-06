@@ -93,7 +93,7 @@ public class Route implements Mappable {
 
   public Station getStopStation() {
     int len = mapPoints.size();
-    if (mapPoints.get(len-1) instanceof Station) {
+    if (mapPoints.get(len - 1) instanceof Station) {
       Station stop = (Station) mapPoints.get(len - 1);
       return stop;
     } else {
@@ -169,23 +169,20 @@ public class Route implements Mappable {
 
   /**
    * Adds a POI in the second index of the mapPoints ArrayList
-   * @param newPoint
    */
-  public void insertPointFirst (POI newPoint) {
+  public void insertPointFirst(POI newPoint) {
     mapPoints.add(1, newPoint);
   }
 
   /**
-   * Adds a POI in the second-last index of the mapPoints ArrayList
-   * If this is not possible, it will be inserted as the second item (same as inserPointFirst
-   * @param newPoint
+   * Adds a POI in the second-last index of the mapPoints ArrayList If this is not possible, it will
+   * be inserted as the second item (same as inserPointFirst
    */
-  public void insertPointLast (POI newPoint) {
+  public void insertPointLast(POI newPoint) {
     int len = mapPoints.size();
-    if (len-2 != 0) {
+    if (len - 2 != 0) {
       mapPoints.add(len - 1, newPoint);
-    }
-    else {
+    } else {
       mapPoints.add(1, newPoint);
     }
   }
@@ -215,8 +212,7 @@ public class Route implements Mappable {
           + "\nStart time:\t\t"
           + startDate + "\nStop time:\t\t" + stopDate + "\nRoute duration:\t" + duration
           + "\nBike ID:\t\t\t" + bikeID + "\nUser type:\t\t" + userType;
-    }
-    catch(Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
       return "borked";
     }

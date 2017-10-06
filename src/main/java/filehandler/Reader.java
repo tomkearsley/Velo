@@ -2,32 +2,20 @@ package filehandler;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import java.security.spec.ECField;
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Date;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
-import model.UserPOI;
 import model.Route;
 import model.Station;
-
-import java.util.Date;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.io.IOException;
-import java.io.FileNotFoundException;
+import model.UserPOI;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -40,6 +28,7 @@ public class Reader {
 
   /**
    * Converts from a String to a Date type
+   *
    * @param newDate inputDate
    * @param pattern Date pattern that we want to read
    * @return The Date representation of the string passed in as a parameter
@@ -169,21 +158,22 @@ public class Reader {
    * @return ArrayList Hotspots
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Hotspot> readHotspots(String filename, boolean isExternalFile) throws FileNotFoundException {
+  public ArrayList<Hotspot> readHotspots(String filename, boolean isExternalFile)
+      throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int idIndex = 0;
-    int typeIndex = isExternalFile ? 1:3;
-    int providerIndex = isExternalFile ? 2:4;
-    int nameIndex = isExternalFile ? 3:5;
-    int locationAddressIndex = isExternalFile ? 4:6;
-    int latitudeIndex = isExternalFile ? 5:7;
-    int longitudeIndex = isExternalFile ? 6:8;
-    int remarksIndex = isExternalFile ? 7:12;
-    int cityIndex = isExternalFile ? 8:13;
-    int ssidIndex = isExternalFile ? 9:14;
-    int boroughIndex = isExternalFile ? 10:19;
-    int postcodeIndex = isExternalFile ? 11:22;
+    int typeIndex = isExternalFile ? 1 : 3;
+    int providerIndex = isExternalFile ? 2 : 4;
+    int nameIndex = isExternalFile ? 3 : 5;
+    int locationAddressIndex = isExternalFile ? 4 : 6;
+    int latitudeIndex = isExternalFile ? 5 : 7;
+    int longitudeIndex = isExternalFile ? 6 : 8;
+    int remarksIndex = isExternalFile ? 7 : 12;
+    int cityIndex = isExternalFile ? 8 : 13;
+    int ssidIndex = isExternalFile ? 9 : 14;
+    int boroughIndex = isExternalFile ? 10 : 19;
+    int postcodeIndex = isExternalFile ? 11 : 22;
 
     // Initialize scanner and Hotspots array
     BufferedReader br = null;
@@ -253,7 +243,8 @@ public class Reader {
    * @return ArrayList Retailers
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Retailer> readRetailers(String filename, boolean isExternalFile) throws FileNotFoundException {
+  public ArrayList<Retailer> readRetailers(String filename, boolean isExternalFile)
+      throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
     int titleIndex = 0;
@@ -311,12 +302,14 @@ public class Reader {
           longitude = Double.parseDouble(csvRetailer[longitudeIndex]);
 
           //add newRetailer to Retailers array
-          Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description,
-              secondaryDescription, latitude, longitude));
+          Retailers
+              .add(new Retailer(title, address, floor, city, state, zipcode, block, description,
+                  secondaryDescription, latitude, longitude));
         } else {
           //add newRetailer to Retailers array
-          Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description,
-              secondaryDescription));
+          Retailers
+              .add(new Retailer(title, address, floor, city, state, zipcode, block, description,
+                  secondaryDescription));
         }
 
       }
@@ -347,7 +340,8 @@ public class Reader {
    * @return ArrayList User Points of Interest
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<UserPOI> readUserPOIS(String filename, boolean isExternalFile) throws FileNotFoundException {
+  public ArrayList<UserPOI> readUserPOIS(String filename, boolean isExternalFile)
+      throws FileNotFoundException {
     int nameIndex = 0;
 
     //Google uses latitude, longitude pairings.
@@ -411,7 +405,8 @@ public class Reader {
    * @return ArrayList Public Points of Interest
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<PublicPOI> readPublicPOIS(String filename, boolean isExternalFile) throws FileNotFoundException {
+  public ArrayList<PublicPOI> readPublicPOIS(String filename, boolean isExternalFile)
+      throws FileNotFoundException {
     int nameIndex = 0;
 
     //Google uses latitude, longitude pairings.
@@ -483,7 +478,8 @@ public class Reader {
    * @return ArrayList Routes
    * @throws FileNotFoundException if the file cannot be found
    */
-  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations, boolean isExternalFile)
+  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations,
+      boolean isExternalFile)
       throws FileNotFoundException {
 
     // Column indexes for the appropriate value per row
@@ -609,7 +605,8 @@ public class Reader {
     ArrayList<Station> returnArray = new ArrayList<Station>();
 
     try {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
+      BufferedReader reader = new BufferedReader(
+          new InputStreamReader(getClass().getResourceAsStream(filename)));
       StringBuilder sb = new StringBuilder();
       String inputLine;
 
@@ -679,7 +676,8 @@ public class Reader {
         }
         landMark = bufferObject.getString("landMark");
         bufferStation = new Station(id, stationName, availableDocks, totalDocks, latitude,
-            longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, city, postalCode,
+            longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, city,
+            postalCode,
             location, altitude, testStation, lastCommunicationTime, landMark);
 
         returnArray.add(bufferStation);

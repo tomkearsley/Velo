@@ -15,13 +15,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RouteTest {
-  Station station1;
-  Station station2;
-  Station station3;
-  PublicPOI publicPOI1;
-  UserPOI userPOI1;
-  Retailer retailer1;
-  Hotspot hotspot1;
+
+  private Station station1;
+  private Station station2;
+  private Station station3;
+  private PublicPOI publicPOI1;
+  private UserPOI userPOI1;
+  private Retailer retailer1;
+  private Hotspot hotspot1;
 
   Route two_points;
   Route three_points; //start, retailer, stop
@@ -33,28 +34,34 @@ public class RouteTest {
     test points:
      */
     //station1 uses full constructor, other two use shortened but are actual points
-    station1 = new Station(123, "First Station", 30, 31, 40, -70, "q", 2, 2, "Here", "There", "New York", "10004", "NY", "123", true, rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"), "Thing");
-    station2 = new Station(164,"E 47 St & 2 Ave",40.75323098,-73.97032517);
-    station3 = new Station(504,"1 Ave & E 15 St",40.73221853,-73.98165557);
+    station1 = new Station(123, "First Station", 30, 31, 40, -70, "q", 2, 2, "Here", "There",
+        "New York", "10004", "NY", "123", true,
+        rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"), "Thing");
+    station2 = new Station(164, "E 47 St & 2 Ave", 40.75323098, -73.97032517);
+    station3 = new Station(504, "1 Ave & E 15 St", 40.73221853, -73.98165557);
     hotspot1 = new Hotspot(998, 40.745968, -73.994039,
         "179 WEST 26 STREET", "MN17", "New York", 10001,
         "Free", "LinkNYC Free Wi-Fi", "mn-05-123662",
         "LinkNYC - Citybridge", "Tablet Internet -phone , Free 1 GB Wi-FI Service");
     retailer1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "8-32", "Casual Eating & Takeout",
-        "F-Coffeehouse",40.7375659,-74.04536639999999);
-    publicPOI1 = new PublicPOI(40.689209,-74.044457,"Statue of Liberty","Iconic National Monument opened in 1886, offering guided tours, a museum & city views.");
-    userPOI1 = new UserPOI(40.7484,-73.9857,"Empire State Building","The Empire State Building is a 102-story skyscraper");
+        "F-Coffeehouse", 40.7375659, -74.04536639999999);
+    publicPOI1 = new PublicPOI(40.689209, -74.044457, "Statue of Liberty",
+        "Iconic National Monument opened in 1886, offering guided tours, a museum & city views.");
+    userPOI1 = new UserPOI(40.7484, -73.9857, "Empire State Building",
+        "The Empire State Building is a 102-story skyscraper");
 
     /*
     test routes:
      */
     /* just contains station1 and station2 */
-    two_points = new Route(12, rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"), rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"),
+    two_points = new Route(12, rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"),
+        rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"),
         station1, station2, 23, "userType", 1999, 0);
 
     /* copy + paste of two_points but overriding the mapPoints */
-    three_points = new Route(12, rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"), rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"),
+    three_points = new Route(12, rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"),
+        rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"),
         station1, station2, 23, "userType", 1999, 0);
     ArrayList<POI> newPoints = new ArrayList<>();
     newPoints.add(station2);
@@ -77,18 +84,18 @@ public class RouteTest {
   }
 
   @Test
-  /**
+  /*
    * testing that an attribute unique to station exists
    */
   public void Start_is_Station() {
     Station start = two_points.getStartStation();
-    assertTrue(start.getAltitude() == "123");
+    assertTrue(start.getAltitude().equals("123"));
   }
 
   @Test
   public void TestInsertPointFirst() {
     two_points.insertPointFirst(retailer1);
-    ArrayList<POI> actual = new ArrayList<>();
+    ArrayList<POI> actual;
     actual = two_points.getMapPoints();
     ArrayList<POI> expected = new ArrayList<>();
     expected.add(station1);
@@ -102,6 +109,7 @@ public class RouteTest {
 
     //test that points are in correct order
   }
+
   @Test
   public void TestInsertPointLast() {
     //System.out.println("before:" + three_points.getMapPoints().toString());

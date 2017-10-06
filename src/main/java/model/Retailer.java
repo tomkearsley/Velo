@@ -1,7 +1,5 @@
 package model;
 
-import filehandler.Google;
-
 /**
  * The class Retailer defines the object type of retailer locations
  */
