@@ -30,10 +30,12 @@
                   <ImageView fx:id="wifi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton2" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="poi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton3" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="station_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton4" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="ppoi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="435.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="retailer_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton5" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="wifi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton6" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="poi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton7" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="station_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="ppoi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="435.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
                   <TextField fx:id="locationFrom" layoutX="14.0" layoutY="519.0" prefHeight="27.0" prefWidth="170.0" promptText="Start " />
                   <TextField fx:id="locationTo" layoutX="216.0" layoutY="519.0" prefHeight="27.0" prefWidth="170.0" promptText="End" />
                   <Button fx:id="displayRouteButton" layoutX="417.0" layoutY="519.0" mnemonicParsing="false" onAction="#displayRouteClick" prefHeight="27.0" prefWidth="120.0" text="Go" />

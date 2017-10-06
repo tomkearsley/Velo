@@ -26,6 +26,9 @@
     var hotspotMarkers = [];
     var POIMarkers = [];
     var stationMarkers = [];
+
+    var wayPoints = [];
+
     var infowindow;
     var geocoder;
     var currentLocation;
@@ -153,18 +156,42 @@
       //createMarker(40.785091, -73.968285,'Test Marker',"default");
 
       //Create marker on click
-      /*
+
       google.maps.event.addListener(map,'click',function(event) {
-        markerNum++;
+
+        wayPoints.push(event.latLng);
+        aBridge.outputValue(event.latLng);
         createMarker(event.latLng.lat(),event.latLng.lng(),'Marker ' + markerNum,"user-poi");
       });
-      */
+
       //var bikeLayer = new google.maps.BicyclingLayer();
       //bikeLayer.setMap(map);
       //alert("Test");
       var location1 = [40.7829,-73.9654];
       var location2 = [40.7736,-73.9566];
       //displayRoute(location1[0],location1[1],location2[0],location2[1]);
+    }
+
+    function addToWaypoints(location,stopover) {
+      wayPoints.push({
+        location: location,
+        stopover: stopover
+      });
+    }
+
+    function clearWaypoints() {
+      for(var i = 0; i < wayPoints.length; i++) {
+        wayPoints[i] = null
+      }
+      wayPoints = [];
+    }
+
+    function insertWaypoint(location,stopover,position) {
+      wayPoints.splice(position,0,{location: location,stopover: stopover});
+    }
+
+    function deleteWaypoint(position) {
+      wayPoints.splice(position,1);
     }
 
     function createMarker(lat,lng,title,markerType) {
@@ -202,6 +229,19 @@
           break;
       }
       return marker;
+    }
+
+    function locationToString(location) {
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({
+        latLng: location
+      }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            return (results[0].formatted_address);
+          }
+        }
+      });
     }
 
     function prettyMarker(lat,lng,info,markerType) {
@@ -290,6 +330,52 @@
       //alert("Test");
     }
 
+    function displayRouteString(startLocation,endLocation) {
+      directionsService.route({
+        origin: startLocation,
+        destination: endLocation,
+        travelMode: 'BICYCLING'
+      }, function(response, status) {
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+    }
+
+    function displayRouteWaypoints(startLat,startLng,endLat,endLng) {
+      var startLocation = startLat + "," + startLng;
+      var endLocation = endLat + "," + endLng;
+      directionsService.route({
+        origin: startLocation,
+        destination: endLocation,
+        waypoints: wayPoints,
+        travelMode: 'BICYCLING'
+      }, function(response, status) {
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+    }
+
+    function displayRouteWaypointsString(startLocation,endLocation) {
+      directionsService.route({
+        origin: startLocation,
+        destination: endLocation,
+        waypoints: wayPoints,
+        travelMode: 'BICYCLING'
+      }, function(response, status) {
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+    }
+
     function testCluster() {
       markerCluster.addMarker(createMarker(40.758896,-73.985130,"Test","hotspot"));
       markerCluster.addMarker(createMarker(40.8,-73.985130,"Test","hotspot"));
@@ -299,9 +385,7 @@
     }
 
     function displayRouteClick(startLocation,endLocation) {
-      var startLocationArray = aBridge.getDisplayRouteArray(startLocation);
-      var endLocationArray = aBridge.getDisplayRouteArray(endLocation);
-      displayRoute(startLocation[0],startLocationArray[1],endLocationArray[0],endLocationArray[1])
+      displayRouteWaypointsString(startLocation,endLocation);
     }
 
     function geocodeLatLng(latlng,infowindow) {
