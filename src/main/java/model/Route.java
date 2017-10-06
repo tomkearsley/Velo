@@ -2,13 +2,14 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import model.Station;
 import java.util.Date;
 
 /**
  * The class Route defines the object type for bicycle routes
  */
-public class Route implements Mappable{
+public class Route implements Mappable {
 
 
   /**
@@ -27,14 +28,9 @@ public class Route implements Mappable{
   private Date stopDate;
 
   /**
-   * Start station
+   * ArrayList of POIs first and last should be stations
    */
-  private Station startStation;
-
-  /**
-   * Stop station
-   */
-  private Station stopStation;
+  private ArrayList<POI> mapPoints = new ArrayList<>(2);
 
   /**
    * Bike ID
@@ -83,19 +79,31 @@ public class Route implements Mappable{
   }
 
   public Station getStartStation() {
-    return startStation;
+    if (mapPoints.get(0) instanceof Station) {
+      Station start = (Station) mapPoints.get(0);
+      return start;
+    } else {
+      return null;
+    }
   }
 
   public void setStartStation(Station newStartStation) {
-    startStation = newStartStation;
+    mapPoints.set(0, newStartStation);
   }
 
   public Station getStopStation() {
-    return stopStation;
+    int len = mapPoints.size();
+    if (mapPoints.get(-1) instanceof Station) {
+      Station stop = (Station) mapPoints.get(len - 1);
+      return stop;
+    } else {
+      return null;
+    }
   }
 
   public void setStopStation(Station newStopStation) {
-    stopStation = newStopStation;
+    int len = mapPoints.size();
+    mapPoints.set(len - 1, newStopStation);
   }
 
   public int getBikeID() {
@@ -132,11 +140,54 @@ public class Route implements Mappable{
 
   //Extra getters for tableview usability
   public String getStartStationName() {
-    return startStation.getName();
+    if (mapPoints.get(0) instanceof Station) {
+      Station start = (Station) mapPoints.get(0);
+      return start.getName();
+    } else {
+      return null;
+    }
   }
 
   public String getStopStationName() {
-    return stopStation.getName();
+    int len = mapPoints.size();
+    if (mapPoints.get(len - 1) instanceof Station) {
+      Station stop = (Station) mapPoints.get(len - 1);
+      return stop.getName();
+    } else {
+      return null;
+    }
+  }
+  //additional arrayList method should the be needed
+
+  public ArrayList<POI> getMapPoints() {
+    return mapPoints;
+  }
+
+  public void setMapPoints(ArrayList<POI> mapPoints) {
+    this.mapPoints = mapPoints;
+  }
+
+  /**
+   * Adds a POI in the second index of the mapPoints ArrayList
+   * @param newPoint
+   */
+  public void insertPointFirst (POI newPoint) {
+    mapPoints.add(1, newPoint);
+  }
+
+  /**
+   * Adds a POI in the second-last index of the mapPoints ArrayList
+   * If this is not possible, it will be inserted as the second item (same as inserPointFirst
+   * @param newPoint
+   */
+  public void insertPointLast (POI newPoint) {
+    int len = mapPoints.size();
+    if (len-2 != 0) {
+      mapPoints.add(len - 2, newPoint);
+    }
+    else {
+      mapPoints.add(1, newPoint);
+    }
   }
 
   public Route(int duration, Date startDate, Date stopDate, Station startStation,
@@ -145,8 +196,8 @@ public class Route implements Mappable{
     this.duration = duration;
     this.startDate = startDate;
     this.stopDate = stopDate;
-    this.startStation = startStation;
-    this.stopStation = stopStation;
+    this.mapPoints.add(startStation);
+    this.mapPoints.add(stopStation);
     this.bikeID = bikeID;
     this.userType = userType;
     this.birthYear = birthYear;
@@ -154,9 +205,16 @@ public class Route implements Mappable{
   }
 
   public String toString() {
-    return "Route duration: " + duration + " startDateTime: " + startDate + " stopDateTime: " +
-        stopDate + " startStation: " + startStation + " stopStation: " + stopStation + " bikeID: " +
-        bikeID + " userType: " + userType + " birthYear: " + birthYear + " gender: " + gender;
+    try {
+      int len = mapPoints.size();
+      return "Route duration: " + duration + " startDateTime: " + startDate + " stopDateTime: " +
+          stopDate + " startStation: " + mapPoints.get(0) + " stopStation: " + mapPoints
+          .get(len - 1)
+          + " bikeID: " +
+          bikeID + " userType: " + userType + " birthYear: " + birthYear + " gender: " + gender;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      return "Borked";
+    }
   }
 
   @Override
