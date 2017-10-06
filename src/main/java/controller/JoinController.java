@@ -85,7 +85,7 @@ public class JoinController {
     String newUsername = "";
     String newPassword = "";
     LocalDate newBirthDate = LocalDate.now();
-    int newGenderInt = -1;
+    int newGenderInt = 0;
     double newWeight = -1.0;
     int newHeight = -1;
 
