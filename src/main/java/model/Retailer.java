@@ -52,15 +52,25 @@ public class Retailer extends POI {
     this.zipcode = zipcode;
     this.block = block;
     this.secondaryDescription = secondaryDescription;
+    this.setLatitude(latitude);
+    this.setLongitude(longitude);
   }
 
   @Override
   public String toString(){
-    return "Retailer: " + getName() + " Address: " + address + ", " + floor + ", " + block
-        + ", " + city + ", " + state + ", " + Integer.toString(zipcode) + " Description(s): "
-        + getDescription() + ", " + secondaryDescription + " Latitude: " + getLatitude() +
-        " Longitude: " + getLongitude();
+    String coords = getLatitude() == null ? "Not stored" : String.format("(%.3f, %.3f)", getLatitude(), getLongitude());
+    String address = getAddress() + (floor.equals("") ? "" : (", " + floor)) +  (block.equals("") ? "" : ", " + block)
+        + ", " + Integer.toString(zipcode);
+    return "Name:\t\t" + getName() + "\nAddress:\t\t" + address + "\nCity:\t\t\t" + city + "\nState:\t\t" + state +
+        "\nDescription:\t" + getDescription() + ", " + secondaryDescription + "\nCoordinates:\t" + coords;
   }
+
+//  @Override
+//  public String toString() {
+//    return "\nName: " + getName() + "\nDescription: " + getDescription() + "\nCoordinates: ("
+//        + getLatitude() + "," + getLongitude() + ")";
+//  }
+
 //  //TODO add lat and long fields derived from street address using google api
 //  public boolean equals(Retailer r){
 //    return this.toString().equals(r.toString());

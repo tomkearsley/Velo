@@ -10,7 +10,6 @@ import java.lang.Exception;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import model.Retailer;
 import model.Cyclist;
 import model.Hotspot;
 import sun.rmi.runtime.Log;
@@ -20,35 +19,36 @@ import sun.rmi.runtime.Log;
  */
 public class MySQL {
 
-
+  /**
   public static void main(String[] args) throws Exception {
-    /**
-    Reader reader = new Reader();
 
-    ArrayList<Retailer> retailers = reader.readRetailers("/file/InitialRetailers.csv");
+    Reader rdr = new Reader();
+    Connection conn = getConnection();
+    ArrayList <Retailer> retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
     int size = retailers.size();
+    for (int i = 11; i<size; i++) {
+      insertRetailer(conn,retailers.get(i));
+    }
 
-    for (int i = 0; i < 10; i++) {
-      //System.out.println(retailers.get(i).getFloor());
-      insertRetailer(retailers.get(i).getName(),retailers.get(i).getAddress(),
-          retailers.get(i).getFloor(),retailers.get(i).getCity(),retailers.get(i).getZipcode(),
-          retailers.get(i).getState(),retailers.get(i).getBlock(),
-          retailers.get(i).getSecondaryDescription());
-    }**/
+  } **/
 
-    ArrayList<Hotspot> hotspot = getHotspots();
-    System.out.println(hotspot);
-
-
-  }
-
-  public static void insertRetailer(String name,String address,String floor,String city,int zipCode,
-  String state,String block,String secondaryDescription)  throws Exception{
+  public static void insertRetailer(Connection conn,Retailer retailer)  throws Exception{
     try {
-      Connection conn = getConnection();
-      PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO Retailers (name,address,floor,city,zipCode,state,block,secondaryDescription) "
-              + "VALUES ('" + name + "','" + address + "','" + floor + "','" + city + "', " + zipCode + ",'"+ state + "', '" + block + "','" + secondaryDescription + "')");
+      PreparedStatement inserted = conn.prepareStatement("INSERT INTO Retailers (name,address,"
+          + "longitude,latitude,floor,city,zipCode,state,block,secondaryDescription) VALUES (?,?,?,?,?,?,?"
+          + ",?,?,?)");
+      inserted.setString(1,retailer.getName());
+      inserted.setString(2,retailer.getAddress());
+      inserted.setDouble(3,retailer.getLongitude());
+      inserted.setDouble(4,retailer.getLatitude());
+      inserted.setString(5,retailer.getFloor());
+      inserted.setString(6,retailer.getCity());
+      inserted.setInt(7,retailer.getZipcode());
+      inserted.setString(8,retailer.getState());
+      inserted.setString(9,retailer.getBlock());
+      inserted.setString(10,retailer.getSecondaryDescription());
+
+
       inserted.executeUpdate(); //UPDATE = SEND QUERY = Retrieve
     } catch (Exception e) {
       System.out.println(e);
@@ -86,18 +86,27 @@ public class MySQL {
 
   }
 
-
-  public static void insertHotspot(Hotspot hotspot) {
+  /**
+   * Inserts a hotspot into the database.
+   * @param conn Connection to server. Reduces Insert time by initialising one connection.
+   * @param hotspot Given Hotspot object
+   */
+  public static void insertHotspot(Connection conn,Hotspot hotspot) {
     try {
-      Connection conn = getConnection();
-      PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO Hotspots (longitude,latitude,LocationAddress,city,postcode,type,"
-              + "SSID,borough,remarks,provider,name) VALUES (" + hotspot.getLongitude() + ","
-              + hotspot.getLatitude() + ",'"+ hotspot.getLocationAddress() +"',"
-              + "'"+ hotspot.getCity() +"', "+ hotspot.getPostcode() +", '"+ hotspot.getType() +"',"
-              + "'"+ hotspot.getSSID() +"','"+ hotspot.getBorough() +"','"+ hotspot.getRemarks() +"',"
-              + "'"+ hotspot.getProvider() +"','"+ hotspot.getName() +"')");
-      inserted.executeUpdate();
+      PreparedStatement insert = conn.prepareStatement("INSERT INTO Hotspots (longitude,latitude,LocationAddress,city,postcode,type,"
+              + "SSID,borough,remarks,provider,name) VALUES(?,?,?,?,?,?,?,?,?,?,?)");
+      insert.setDouble(1,hotspot.getLongitude());
+      insert.setDouble(2,hotspot.getLatitude());
+      insert.setString(3,hotspot.getLocationAddress());
+      insert.setString(4,hotspot.getCity());
+      insert.setInt(5,hotspot.getPostcode());
+      insert.setString(6,hotspot.getType());
+      insert.setString(7,hotspot.getSSID());
+      insert.setString(8,hotspot.getBorough());
+      insert.setString(9,hotspot.getRemarks());
+      insert.setString(10,hotspot.getProvider());
+      insert.setString(11,hotspot.getName());
+      insert.executeUpdate();
     } catch (Exception e) {
       System.out.println(e);
     } finally {
@@ -184,14 +193,53 @@ public class MySQL {
   }
 
 
+  public static ArrayList<Retailer> getRetailers() throws Exception {
+    try {
+      Connection conn = getConnection();
+      PreparedStatement statement = conn.prepareStatement("SELECT name,address,longitude,latitude,"
+          + "floor,city,zipCode,state,block,secondaryDescription FROM Retailers");
+
+      ResultSet result = statement.executeQuery();
+
+      ArrayList<Retailer> retailers = new ArrayList<Retailer>();
+      while (result.next()) {
+
+        String name = result.getString("name");
+        String address = result.getString("address");
+        Double longitude = result.getDouble("longitude");
+        Double latitude = result.getDouble("latitude");
+        String floor = result.getString("floor");
+        String city = result.getString("city");
+        Integer zipCode = result.getInt("zipCode");
+        String state = result.getString("state");
+        String block = result.getString("block");
+        String secondaryDescription = result.getString("secondaryDescription");
+        Retailer retailer = new Retailer(name,address,floor,city,state,zipCode,
+        block,secondaryDescription,"",longitude,latitude);
+        retailers.add(retailer);
+
+
+      }
+      return retailers;
+
+
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    System.out.println("Record was not found.");
+    return null;
+  }
+
+
   /**
    * Used within the login screen returns true if login is successful otherwise false. Additionally
    * tells if username exists
    *
-   * @param username Users entered username
+       * @param username Users entered username
    * @param password Users entered password
-   * @throws Exception In case connection falses due to unknown reasons
-   * @return Boolean true if password and username is correct. Otherwise returns false
+   * @return Boolean Array List with two booleans, 1. If the User is a Cyclist 2. If the login was
+   * sucessful
+   * @throws Exception
    */
   public static ArrayList<Boolean> login(String username, String password) throws Exception {
     Connection conn = getConnection();

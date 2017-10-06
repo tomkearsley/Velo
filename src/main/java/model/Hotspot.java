@@ -26,11 +26,6 @@ public class Hotspot extends POI {
   /** WiFi hotspot name to the user i.e. "UCWireless"*/
   private String SSID;
 
-  /** Name of hotspot
-   * Different than the user-facing SSID!
-   */
-  private String name;
-
   /**ISP providing internet service to the hotspot*/
   private String provider;
 
@@ -70,14 +65,23 @@ public class Hotspot extends POI {
   /** Print method for Hotspot
    * @return String
    */
-  public String toString(){
-
-    return "ID: " + Integer.toString(id) + ", Latitude: " + getLatitude() +
-        ", Longitude: " + getLongitude() + ", Address: " + locationAddress +
-        ", Borough: " + borough + ", City: " + city + ", Postcode: " + Integer.toString(postcode) +
-        ", Type: " + type + ", SSID: " + SSID + ", Name: " + name + ", Provider: " + provider +
-        ", Remarks: " + remarks;
+  @Override
+  public String toString() {
+    System.out.println(locationAddress);
+    String address = locationAddress + (borough.equals("") ? "" : ", " + borough) + ", " + Integer.toString(postcode);
+    return "ID:\t\t\t" + Integer.toString(id) + "\nName:\t\t" + getName() + "\nSSID:\t\t" + SSID +
+        "\nProvider:\t\t" + provider + "\nRemarks:\t\t" + getDescription() + "\nAddress:\t\t" + address +
+        "\nCity:\t\t\t" + city + "\nCoordinates:\t" + String.format("(%.3f, %.3f)", getLatitude(), getLongitude());
   }
+
+//  public String toString(){
+//
+//    return "ID: " + Integer.toString(id) + ", Latitude: " + getLatitude() +
+//        ", Longitude: " + getLongitude() + ", Address: " + locationAddress +
+//        ", Borough: " + borough + ", City: " + city + ", Postcode: " + Integer.toString(postcode) +
+//        ", Type: " + type + ", SSID: " + SSID + ", Name: " + name + ", Provider: " + provider +
+//        ", Remarks: " + remarks;
+//  }
 
 //  /** Used for the assert functions in JUnit testing
 //   *

@@ -1,19 +1,17 @@
 package controller;
 
+import filehandler.MySQL;
 import filehandler.Reader;
 import filehandler.Writer;
 import helper.Bridge;
 import helper.tableOnClickPopup;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -39,7 +37,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Window;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -47,7 +44,6 @@ import model.Route;
 import model.Station;
 import model.UserPOI;
 import netscape.javascript.JSObject;
-import filehandler.MySQL;
 
 
 /**
@@ -56,12 +52,12 @@ import filehandler.MySQL;
 public class MainController {
 
 
-  private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
-  private ArrayList<Retailer> retailers = new ArrayList<Retailer>();
-  private ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
-  private ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
-  private ArrayList<Route> routes = new ArrayList<Route>();
-  private ArrayList<Station> stations = new ArrayList<Station>();
+  private ArrayList<Hotspot> hotspots = new ArrayList<>();
+  private ArrayList<Retailer> retailers = new ArrayList<>();
+  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
+  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
+  private ArrayList<Route> routes = new ArrayList<>();
+  private ArrayList<Station> stations = new ArrayList<>();
   //local variables for toggling detailed view in table view
   private boolean hotspotIsDetailed = false;
   private boolean retailerIsDetailed = false;
@@ -74,7 +70,7 @@ public class MainController {
   private boolean POISLoaded = false;
   private boolean retailersLoaded = false;
 
-  private ArrayList<ImageView> buttons = new ArrayList<ImageView>();
+  private ArrayList<ImageView> buttons = new ArrayList<>();
 
   //Data tables
   @FXML
@@ -118,8 +114,6 @@ public class MainController {
 
   @FXML
   private ChoiceBox importType;
-  @FXML
-  private ChoiceBox exportType;
 
   @FXML private ImageView wifi_icon_primary;
   @FXML private ImageView retailer_icon_primary;
@@ -141,21 +135,19 @@ public class MainController {
    * populates arrayLists used for temporary local storage
    * @return true if populating was successful, otherwise false
    */
-  public boolean populateArrayLists() {
+  private boolean populateArrayLists() {
     Reader rdr = new Reader();
+    MySQL mysql = new MySQL();
     try {
-      //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
-      //MySQL mysql = new MySQL();
-      //hotspots = mysql.getHotspots();
+      hotspots = mysql.getHotspots();
 
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
-      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
       retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
       stations = rdr.readStations("/file/stations.json");
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
       routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
-    } catch (FileNotFoundException e) {
+    } catch (Exception e) {
       System.out.println("File not found");
       e.printStackTrace();
       return false;
@@ -163,7 +155,7 @@ public class MainController {
     return true;
   }
 
-  public void setImages() throws URISyntaxException{
+  private void setImages() throws URISyntaxException{
     wifi_icon_primary.setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
     retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
     poi_icon_primary.setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
@@ -197,7 +189,7 @@ public class MainController {
     station_icon_secondary.setVisible(false);
   }
 
-  public void toggleButton(int buttonNo) {
+  private void toggleButton(int buttonNo) {
     System.out.println("Toggling button" + (buttonNo + 1));
     buttons.get(buttonNo).setVisible(false);
     int halfButtonSize = buttons.size()/2;
@@ -220,7 +212,8 @@ public class MainController {
       }
     }
     catch (IOException e) {
-
+      //TODO do something here??
+      System.out.println();
     }
     toggleButton(0);
   }
@@ -260,15 +253,23 @@ public class MainController {
   }
 
   public void toggleButton5() {
+    try{
+      hideRetailers();
+    }
+    catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+    }
     toggleButton(4);
+
   }
 
   public void toggleButton6() {
     try {
       hideHotspots();
     }
-    catch (Exception e) {
-      System.out.println("Internal error, please report to app devs");
+    catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+      //System.out.println("Internal error, please report to app devs");
     }
     toggleButton(5);
   }
@@ -281,8 +282,9 @@ public class MainController {
     try {
       hideStations();
     }
-    catch (Exception e) {
-      System.out.println("Internal error, please report to app devs");
+    catch (netscape.javascript.JSException e) {
+      //null error. should be occuring
+      //System.out.println("Internal error, please report to app devs");
     }
     toggleButton(7);
   }
@@ -292,11 +294,12 @@ public class MainController {
    * populateArrayLists() TODO adapt to using database primarily with csv as fallback
    */
   public void initialize() throws URISyntaxException{
-    boolean arraylists_populated = populateArrayLists();
-
-    if (!arraylists_populated) {
-      //TODO bring up warning window when that is implemented
-    }
+    //boolean arraylists_populated = populateArrayLists();
+    //
+    //if (!arraylists_populated) {
+    //
+    //TODO bring up warning window when that is implemented
+    //}
 
     //create tables
     initRetailerTable();
@@ -305,7 +308,7 @@ public class MainController {
     initUserPOITable();
     initStationTable();
     initRouteTable();
-    //Ostrich - Is this meant to be me? - Imas
+    //Ostrich - Is this meant to be me? - Imas No :^)
 
 
 
@@ -342,8 +345,8 @@ public class MainController {
   /**
    * helper function for filter boxes. If the input string s is an integer,
    * returns true. Otherwise, false
-   * @param s
-   * @return
+   * @param s The input string
+   * @return  Whether the input string is an integer
    */
   private boolean isInteger(String s) {
     try {
@@ -355,7 +358,7 @@ public class MainController {
     return true;
   }
 
-  public void loadHotspots() throws IOException{
+  private void loadHotspots() throws IOException{
     Reader rdr = new Reader();
     //Run both lines of code
     window.setMember("aBridge",aBridge);
@@ -364,7 +367,7 @@ public class MainController {
     //testPretty();
   }
 
-  public void loadStations() throws IOException{
+  private void loadStations() throws IOException{
     Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
     window.call("loadStations",rdr.readStations("/file/stations.json"));
@@ -378,39 +381,39 @@ public class MainController {
     POISLoaded = true;
   }
 
-  public void loadRetailers() throws IOException{
+  private void loadRetailers() throws IOException{
     Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
     window.call("loadRetailers",rdr.readRetailers("/file/InitialRetailers.csv", false));
     retailersLoaded = true;
   }
 
-  public void showHotspots() {
+  private void showHotspots() {
     window.setMember("aBridge",aBridge);
     window.call("showHotspots");
   }
 
-  public void hideHotspots() {
+  private void hideHotspots() {
     window.setMember("aBridge",aBridge);
     window.call("hideHotspots");
   }
 
-  public void showStations() {
+  private void showStations() {
     window.setMember("aBridge",aBridge);
     window.call("showStations");
   }
 
-  public void hideStations() {
+  private void hideStations() {
     window.setMember("aBridge",aBridge);
     window.call("hideStations");
   }
 
-  public void showRetailers() {
+  private void showRetailers() {
     window.setMember("aBridge",aBridge);
     window.call("showRetailers");
   }
 
-  public void hideRetailers() {
+  private void hideRetailers() {
     window.setMember("aBridge",aBridge);
     window.call("hideRetailers");
   }
@@ -436,12 +439,12 @@ public class MainController {
   }
 
 
-  public void prettyMarker(double lat,double lng,String info,String markerType) {
+  private void prettyMarker(double lat,double lng,String info,String markerType) {
     window.setMember("aBridge",aBridge);
     window.call("prettyMarker",lat,lng,info,markerType);
   }
 
-  public void displayRoute(double startLat,double startLng,double endLat,double endLng) {
+  private void displayRoute(double startLat,double startLng,double endLat,double endLng) {
     window.setMember("aBridge",aBridge);
     window.call("displayRoute",startLat,startLng,endLat,endLng);
   }
@@ -516,9 +519,10 @@ public class MainController {
 
       } catch (IOException e) {
         alert = new Alert(AlertType.ERROR, "Error exporting routes", ButtonType.OK);
-      } finally {
-        alert.showAndWait();
       }
+    }
+    if (alert != null) {
+      alert.showAndWait();
     }
   }
 
@@ -526,7 +530,7 @@ public class MainController {
    * Imports additional items from a csv file to the appropriate ArrayList based on the selected datatype
    * from the ChoiceBox
    */
-  public void importData(String importFilePath) { //TODO expand for rest of data types, file path differences
+  private void importData(String importFilePath) { //TODO expand for rest of data types, file path differences
     Reader reader = new Reader();
     int prevSize;
     Alert alert = null;
@@ -536,9 +540,7 @@ public class MainController {
             .readHotspots(importFilePath, true); //NOTE Will not work when importing
         // initial hotspots as external file due to index handling changes between internal & external files
         prevSize = hotspots.size();
-        for (Hotspot hotspot : hotspotsToAdd) {
-          hotspots.add(hotspot);
-        }
+        hotspots.addAll(hotspotsToAdd);
         alert = new Alert(AlertType.NONE, hotspots.size() - prevSize + " Hotspots succesfully imported", ButtonType.OK);
         initHotspotTable();
       } catch (IOException e) {
@@ -548,9 +550,7 @@ public class MainController {
       try {
         ArrayList<Retailer> retailersToAdd = reader.readRetailers(importFilePath, true);
         prevSize = retailers.size();
-        for (Retailer retailer : retailersToAdd) {
-          retailers.add(retailer);
-        }
+        retailers.addAll(retailersToAdd);
         initRetailerTable();
         alert = new Alert(AlertType.NONE, retailers.size() - prevSize + " Retailers succesfully imported", ButtonType.OK);
       } catch (IOException e) {
@@ -561,9 +561,7 @@ public class MainController {
         ArrayList<PublicPOI> publicPOIsToAdd = reader
             .readPublicPOIS(importFilePath, true);
         prevSize = publicPOIs.size();
-        for (PublicPOI publicPOI : publicPOIsToAdd) {
-          publicPOIs.add(publicPOI);
-        }
+        publicPOIs.addAll(publicPOIsToAdd);
         alert = new Alert(AlertType.NONE, publicPOIs.size() - prevSize + " Public POIs succesfully imported", ButtonType.OK);
         initPublicPOITable();
       } catch (IOException e) {
@@ -574,9 +572,7 @@ public class MainController {
         ArrayList<UserPOI> userPOIsToAdd = reader
             .readUserPOIS(importFilePath, true);
         prevSize = userPOIs.size();
-        for (UserPOI userPOI : userPOIsToAdd) {
-          userPOIs.add(userPOI);
-        }
+        userPOIs.addAll(userPOIsToAdd);
         alert = new Alert(AlertType.NONE, userPOIs.size() - prevSize + " User POIs succesfully imported", ButtonType.OK);
         initUserPOITable();
       } catch (IOException e) {
@@ -587,9 +583,7 @@ public class MainController {
         ArrayList<Route> routesToAdd = reader
             .readRoutes(importFilePath, stations, true);
         prevSize = routes.size();
-        for (Route route : routesToAdd) {
-          routes.add(route);
-        }
+        routes.addAll(routesToAdd);
         alert = new Alert(AlertType.NONE, routes.size() - prevSize + " Routes succesfully imported", ButtonType.OK);
         initRouteTable();
       } catch (IOException e) {
@@ -679,7 +673,7 @@ public class MainController {
    * converts the arrayList of retailers to an observableList creates columns and sets these columns
    * and values to be displayed in rawDataTable
    */
-  public void initRetailerTable() {
+  private void initRetailerTable() {
     //converting the arraylist to an observable list
     ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
     //each 2 line section creates one table heading and set of values
@@ -698,7 +692,7 @@ public class MainController {
 
 
     FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
-    /**
+    /*
      * Filtering:
      * if this returns true, the object is shown. If the filter field is empty,
      * or the attributes below match, then the object is shown
@@ -711,9 +705,7 @@ public class MainController {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /**
-         * Add more Retailer.get__'s below to include more things in the search
-         */
+        //Add more Retailer.get__'s below to include more things in the search
         if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName()
             .toLowerCase().contains(lowerCaseFilter)) {
           return true;
@@ -728,7 +720,7 @@ public class MainController {
         return false;
       });
     });
-    /**
+    /*
      * Sorting:
      * wrapping the filtered list in a sorted list allows the user to click on the title
      * of a column and sort the entries in alphanumeric order
@@ -742,9 +734,7 @@ public class MainController {
         .setAll(nameCol, addressCol, secondaryDescCol);
     dataTableRetailer.setItems(sListRetailers);
 
-    /**
-     * on click behaviour
-     */
+    // On click behaviour
     dataTableRetailer.setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
@@ -772,7 +762,7 @@ public class MainController {
    * converts the arrayList of hotspots to an ObservableList and creates TableColumns sets these as
    * viewable in rawDataTable
    */
-  public void initHotspotTable() {
+  private void initHotspotTable() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
 
     TableColumn<Hotspot, String> idCol = new TableColumn<Hotspot, String>("Name");
@@ -807,12 +797,9 @@ public class MainController {
         String lowerCaseFilter = newValue.toLowerCase();
         // Add more Hotspot.get__'s below to include more things in the search
 
-        if (Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter) || Hotspot.getType()
+        return (Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter) || Hotspot.getType()
             .toLowerCase().contains(lowerCaseFilter)|| Hotspot.getProvider()
-            .toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
+            .toLowerCase().contains(lowerCaseFilter));
       });
     });
 
@@ -825,7 +812,7 @@ public class MainController {
 
     dataTableHotspot.setItems(sListHotspots);
 
-    /**
+    /*
      * on click behaviour
      */
     dataTableHotspot.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -851,7 +838,7 @@ public class MainController {
    * converts the arrayList of retailers to an observable list, wraps it in filtered and sorted lists
    * sets dataTablePublicPOI to display these items as well as enabling filtering, sorting, and on-click behaviour
    */
-  public void initPublicPOITable() {
+  private void initPublicPOITable() {
 
     //lat, long, name, description
     ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
@@ -1085,7 +1072,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRoute.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI", "", selected_item);
+          tableOnClickPopup.create("Route", "", selected_item);
           if(tableOnClickPopup.return_value) {
             try {
               //TODO use correct method for showing routes on map

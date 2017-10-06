@@ -28,7 +28,9 @@ public class Bridge {
 
   public Double getStationLng(Station station) { return station.getLongitude(); }
 
-  public double[] getRetailerLocation(Retailer retailer) { return stringToLocation(retailer.getAddress()); }
+  public Double getRetailerLat(Retailer retailer) {return retailer.getLatitude();}
+
+  public Double getRetailerLng (Retailer retailer) {return retailer.getLongitude();}
 
   public String getRetailerTitle(Retailer retailer) { return retailer.getDescription();}
 

@@ -66,9 +66,18 @@ public class POI implements Mappable {
     return this.longitude;
   }
 
+  public void setLatitude(Double latitude) {
+    this.latitude = latitude;
+  }
+
+  public void setLongitude(Double longitude) {
+    this.longitude = longitude;
+  }
+
   @Override
-  public String toString() {;
-    return "Name: " + name + "\nDescription: " + description;
+  public String toString() {
+    return "Name:\t\t" + name + "\nDescription:\t" + description + "\nCoordinates:\t" +
+        String.format("(%.3f, %.3f)", getLatitude(), getLongitude());
   }
 
   @Override

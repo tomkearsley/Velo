@@ -204,17 +204,13 @@ public class Route implements Mappable {
     this.gender = gender;
   }
 
+  @Override
   public String toString() {
-    try {
-      int len = mapPoints.size();
-      return "Route duration: " + duration + " startDateTime: " + startDate + " stopDateTime: " +
-          stopDate + " startStation: " + mapPoints.get(0) + " stopStation: " + mapPoints
-          .get(len - 1)
-          + " bikeID: " +
-          bikeID + " userType: " + userType + " birthYear: " + birthYear + " gender: " + gender;
-    } catch (ArrayIndexOutOfBoundsException e) {
-      return "Borked";
-    }
+    int len = mapPoints.size();
+    return "Start station:\t\t" + getStartStation().getName() + " (" + getStartStation().getID() + ")" +
+        "\nStop station:\t\t" + getStopStation().getName() + " (" + getStopStation().getID() + ")" + "\nStart time:\t\t"
+        + startDate + "\nStop time:\t\t" + stopDate + "\nRoute duration:\t" + duration
+        + "\nBike ID:\t\t\t" + bikeID + "\nUser type:\t\t" + userType;
   }
 
   @Override
