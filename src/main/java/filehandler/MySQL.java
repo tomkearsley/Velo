@@ -1,5 +1,7 @@
 package filehandler;
 
+import helper.PasswordHashing;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import model.Analyst;
 import model.Retailer;
@@ -12,25 +14,18 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import model.Cyclist;
 import model.Hotspot;
-import sun.rmi.runtime.Log;
 
 /**
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
 
-  /**
   public static void main(String[] args) throws Exception {
+  Cyclist c = new Cyclist("John","Mayer","cyclist","password1",
+      LocalDate.now(),1,80,72);
+  insertCyclist(c);
 
-    Reader rdr = new Reader();
-    Connection conn = getConnection();
-    ArrayList <Retailer> retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
-    int size = retailers.size();
-    for (int i = 11; i<size; i++) {
-      insertRetailer(conn,retailers.get(i));
-    }
-
-  } **/
+  }
 
   public static void insertRetailer(Connection conn,Retailer retailer)  throws Exception{
     try {
@@ -127,7 +122,8 @@ public class MySQL {
               + "('" + cyclist.getUsername() + "','" + cyclist.getPassword() + "',"
               + ""+ cyclist.getDOB() + ", "+ cyclist.getGender() +", "+ cyclist.getWeight() +", "+ cyclist.getHeight() +")");
       inserted.executeUpdate();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       System.out.println(e);
     } finally {
       System.out.println("Insert Completed");
@@ -156,6 +152,7 @@ public class MySQL {
 
 
   // DATA RETRIEVAL
+
 
   /**
    * Retrieves the longitude and latitude of a specific Public POI Location

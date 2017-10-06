@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -180,8 +181,13 @@ public class JoinController {
           newBirthDate, newGenderInt, newWeight, newHeight
       );
       System.out.println(newCyclist);
-
       // If user created successfully, tell GUIManager
+      MySQL query = new MySQL();
+      try {
+        query.insertCyclist(newCyclist);
+      } catch (Exception usernameTaken) {
+        System.out.println("Failed. Username Taken.");
+      }
       try {
         System.out.println("User created");
         GUIManager.getInstanceGUIManager().cyclistCreated();
