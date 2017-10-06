@@ -1,20 +1,16 @@
 package controller;
 
-import filehandler.MySQL;
 import filehandler.Reader;
 import filehandler.Writer;
 import helper.Bridge;
 import helper.tableOnClickPopup;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -24,7 +20,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tab;
@@ -42,7 +37,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Window;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -50,7 +44,6 @@ import model.Route;
 import model.Station;
 import model.UserPOI;
 import netscape.javascript.JSObject;
-import filehandler.MySQL;
 
 
 /**
@@ -59,13 +52,20 @@ import filehandler.MySQL;
 public class MainController {
 
   /* Main tabs */
-  @FXML private TabPane mainPane;
-  @FXML private AnchorPane mapViewPane;
-  @FXML private Tab dataViewTab;
-  @FXML private Tab historyViewButton;
-  @FXML private Pane userPane;
-  @FXML private TabPane dataTabPane;
-  @FXML private WebView mapWebView;
+  @FXML
+  private TabPane mainPane;
+  @FXML
+  private AnchorPane mapViewPane;
+  @FXML
+  private Tab dataViewTab;
+  @FXML
+  private Tab historyViewButton;
+  @FXML
+  private Pane userPane;
+  @FXML
+  private TabPane dataTabPane;
+  @FXML
+  private WebView mapWebView;
 
   // ArrayLists of all data types
   private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
@@ -86,38 +86,62 @@ public class MainController {
   //private boolean stationIsDetailed = false;
 
   //Data tables
-  @FXML private TableView<Hotspot> dataTableHotspot;
-  @FXML private TableView<Retailer> dataTableRetailer;
-  @FXML private TableView<PublicPOI> dataTablePublicPOI;
-  @FXML private TableView<UserPOI> dataTableUserPOI;
-  @FXML private TableView<Station> dataTableStation;
-  @FXML private TableView<Route> dataTableRoute;
+  @FXML
+  private TableView<Hotspot> dataTableHotspot;
+  @FXML
+  private TableView<Retailer> dataTableRetailer;
+  @FXML
+  private TableView<PublicPOI> dataTablePublicPOI;
+  @FXML
+  private TableView<UserPOI> dataTableUserPOI;
+  @FXML
+  private TableView<Station> dataTableStation;
+  @FXML
+  private TableView<Route> dataTableRoute;
 
   // Table filter fields. one for each table view
-  @FXML private TextField HotspotFilterField;
-  @FXML private TextField RetailerFilterField;
-  @FXML private TextField PublicPOIFilterField;
-  @FXML private TextField UserPOIFilterField;
-  @FXML private TextField StationFilterField;
-  @FXML private TextField RouteFilterField;
+  @FXML
+  private TextField HotspotFilterField;
+  @FXML
+  private TextField RetailerFilterField;
+  @FXML
+  private TextField PublicPOIFilterField;
+  @FXML
+  private TextField UserPOIFilterField;
+  @FXML
+  private TextField StationFilterField;
+  @FXML
+  private TextField RouteFilterField;
 
 
   /* Map tab attributes */
   private JSObject window;
   private Bridge aBridge = new Bridge();
-  @FXML private ImageView wifi_icon_primary;
-  @FXML private ImageView retailer_icon_primary;
-  @FXML private ImageView poi_icon_primary;
-  @FXML private ImageView wifi_icon_secondary;
-  @FXML private ImageView retailer_icon_secondary;
-  @FXML private ImageView poi_icon_secondary;
-  @FXML private ImageView station_icon_primary;
-  @FXML private ImageView station_icon_secondary;
-  @FXML private ImageView ppoi_icon_primary;
-  @FXML private ImageView ppoi_icon_secondary;
+  @FXML
+  private ImageView wifi_icon_primary;
+  @FXML
+  private ImageView retailer_icon_primary;
+  @FXML
+  private ImageView poi_icon_primary;
+  @FXML
+  private ImageView wifi_icon_secondary;
+  @FXML
+  private ImageView retailer_icon_secondary;
+  @FXML
+  private ImageView poi_icon_secondary;
+  @FXML
+  private ImageView station_icon_primary;
+  @FXML
+  private ImageView station_icon_secondary;
+  @FXML
+  private ImageView ppoi_icon_primary;
+  @FXML
+  private ImageView ppoi_icon_secondary;
 
-  @FXML private TextField locationFrom;
-  @FXML private TextField locationTo;
+  @FXML
+  private TextField locationFrom;
+  @FXML
+  private TextField locationTo;
   private boolean hotspotsLoaded = false;
   private boolean stationsLoaded = false;
   private boolean POISLoaded = false;
@@ -131,10 +155,9 @@ public class MainController {
   /* METHODS */
 
   /**
-   * Initializes the window
-   * Populates the model structure with data from .csv files
-   * Sets GUI element features (i.e. images for the tabs)
-   * populateArrayLists() TODO adapt to using database primarily with csv as fallback
+   * Initializes the window Populates the model structure with data from .csv files Sets GUI element
+   * features (i.e. images for the tabs) populateArrayLists() TODO adapt to using database primarily
+   * with csv as fallback
    */
   public void initialize() throws URISyntaxException {
 
@@ -152,7 +175,8 @@ public class MainController {
     URL url = getClass().getResource("/googleMaps.html");
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
-    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "Public POI", "User POI", "Route"};
+    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "Public POI", "User POI",
+        "Route"};
     ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
     importType.setItems(dataTypes);
     importType.setValue("Hotspot");
@@ -224,10 +248,10 @@ public class MainController {
     retailersLoaded = true;
   }
 
-  public void loadPPOIS() throws IOException{
+  public void loadPPOIS() throws IOException {
     Reader rdr = new Reader();
-    window.setMember("aBridge",aBridge);
-    window.call("loadPPOIS",rdr.readPublicPOIS("/file/PPOIS.csv",false));
+    window.setMember("aBridge", aBridge);
+    window.call("loadPPOIS", rdr.readPublicPOIS("/file/PPOIS.csv", false));
   }
 
   /**
@@ -257,18 +281,28 @@ public class MainController {
     return true;
   }
 
-  private void setImages() throws URISyntaxException{
-    wifi_icon_primary.setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
-    retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
-    poi_icon_primary.setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
-    station_icon_primary.setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
-    ppoi_icon_primary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
+  private void setImages() throws URISyntaxException {
+    wifi_icon_primary
+        .setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
+    retailer_icon_primary
+        .setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
+    poi_icon_primary
+        .setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
+    station_icon_primary
+        .setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
+    ppoi_icon_primary
+        .setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
 
-    wifi_icon_secondary.setImage(new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
-    retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
-    poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
-    station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
-    ppoi_icon_secondary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
+    wifi_icon_secondary.setImage(
+        new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
+    retailer_icon_secondary.setImage(
+        new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
+    poi_icon_secondary.setImage(
+        new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
+    station_icon_secondary.setImage(
+        new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
+    ppoi_icon_secondary
+        .setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
 
     buttons.add(retailer_icon_primary);
     buttons.add(wifi_icon_primary);
@@ -428,17 +462,17 @@ public class MainController {
   } // TODO implement Imas
 
   public void showPPOIS() {
-    window.setMember("aBridge",aBridge);
+    window.setMember("aBridge", aBridge);
     window.call("showPPOIS");
   }
 
   public void hidePPOIS() {
-    window.setMember("aBridge",aBridge);
+    window.setMember("aBridge", aBridge);
     window.call("hidePPOIS");
   }
 
   public void hideAllMarkers() {
-    window.setMember("aBridge",aBridge);
+    window.setMember("aBridge", aBridge);
     window.call("hideAllMarkers");
   }
 
@@ -460,7 +494,11 @@ public class MainController {
 
 
   /* DATA TAB METHODS */
-  // TODO write JavaDoc Tyler
+
+  /**
+   * Method to create and remove columns containing additional details within the Hotspot table Uses
+   * a global boolean hotspotIsDetailed to determine state
+   */
   public void toggleDetailsHotspot() {
     //simple view: id, locAddress, borough, city, type, provider, remarks
     //advanced view: include above and lat, long, postcode, SSID
@@ -481,10 +519,12 @@ public class MainController {
     hotspotIsDetailed = !hotspotIsDetailed;
   }
 
-  // TODO write JavaDoc Tyler
+
+  /**
+   * Method to create and remove columns containing additional details within the Retailer table
+   * Uses a global boolean retailerIsDetailed to determine state
+   */
   public void toggleDetailsRetailer() {
-    //simple:
-    //detailed:
     if (retailerIsDetailed) {
       dataTableRetailer.getColumns().remove(3, 8);
     } else {
@@ -504,7 +544,10 @@ public class MainController {
     retailerIsDetailed = !retailerIsDetailed;
   }
 
-  // TODO write JavaDoc Tyler
+  /**
+   * Method to create and remove columns containing additional details within the Route table Uses a
+   * global boolean routeIsDetailed to determine state
+   */
   public void toggleDetailsRoute() {
     if (routeIsDetailed) {
       dataTableRoute.getColumns().remove(4, 8);
@@ -538,8 +581,8 @@ public class MainController {
   }
 
   /**
-   * converts the arrayList of retailers to an observableList creates columns and sets these columns
-   * and values to be displayed in rawDataTable
+   * takes the arrayList retailers, creates table columns and sets these columns along with details
+   * from retailers to be shown in the table. also enables filtering and sorting
    */
   private void initRetailerTable() {
     //converting the arraylist to an observable list
@@ -559,7 +602,7 @@ public class MainController {
         .setCellValueFactory(new PropertyValueFactory<>("secondaryDescription"));
 
     FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
-    /**
+    /*
      * Filtering:
      * if this returns true, the object is shown. If the filter field is empty,
      * or the attributes below match, then the object is shown
@@ -572,7 +615,7 @@ public class MainController {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /**
+        /*
          * Add more Retailer.get__'s below to include more things in the search
          */
         if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName()
@@ -589,7 +632,7 @@ public class MainController {
         return false;
       });
     });
-    /**
+    /*
      * Sorting:
      * wrapping the filtered list in a sorted list allows the user to click on the title
      * of a column and sort the entries in alphanumeric order
@@ -603,7 +646,7 @@ public class MainController {
         .setAll(nameCol, addressCol, secondaryDescCol);
     dataTableRetailer.setItems(sListRetailers);
 
-    /**
+    /*
      * on click behaviour
      */
     dataTableRetailer.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -615,7 +658,6 @@ public class MainController {
           if (tableOnClickPopup.return_value) {
             double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
             //TODO change this when retailers have lat/long fields
-            //TODO update the marker type to not be wifi
             try {
               prettyMarker(loc[0], loc[1], "<b>Test</b>", "retailer");
               viewMap();
@@ -629,8 +671,8 @@ public class MainController {
   }
 
   /**
-   * converts the arrayList of hotspots to an ObservableList and creates TableColumns sets these as
-   * viewable in rawDataTable
+   * takes the arrayList hotspots, creates table columns and sets these columns along with details
+   * from hotspots to be shown in the table. also enables filtering and sorting
    */
   private void initHotspotTable() {
     ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
@@ -684,7 +726,7 @@ public class MainController {
 
     dataTableHotspot.setItems(sListHotspots);
 
-    /**
+    /*
      * on click behaviour
      */
     dataTableHotspot.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -708,9 +750,8 @@ public class MainController {
   }
 
   /**
-   * converts the arrayList of retailers to an observable list, wraps it in filtered and sorted
-   * lists sets dataTablePublicPOI to display these items as well as enabling filtering, sorting,
-   * and on-click behaviour
+   * takes the arrayList publicPOIs, creates table columns and sets these columns along with details
+   * from publicPOIs to be shown in the table. also enables filtering and sorting
    */
   private void initPublicPOITable() {
 
@@ -750,7 +791,7 @@ public class MainController {
     dataTablePublicPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
     dataTablePublicPOI.setItems(sListPublicPOIs);
 
-    /**
+    /*
      * on click behaviour
      */
     dataTablePublicPOI.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -774,8 +815,8 @@ public class MainController {
   }
 
   /**
-   * converts the arrayList of user POIs to an observable list, wraps it in filtered and sorted lists
-   * sets dataTableUserPOI to display these items as well as enabling filtering, sorting, and on-click behaviour
+   * takes the arrayList userPOIs, creates table columns and sets these columns along with details
+   * from userPOIs to be shown in the table. also enables filtering and sorting
    */
   public void initUserPOITable() {
     //lat, long, name, description
@@ -799,7 +840,7 @@ public class MainController {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /**
+        /*
          * Add more UserPOI.get__'s below to include more things in the search
          */
         if (UserPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
@@ -815,6 +856,9 @@ public class MainController {
     dataTableUserPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
     dataTableUserPOI.setItems(sListUserPOIs);
 
+    /*
+     * on-click behaviour
+     */
     dataTableUserPOI.setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
@@ -836,8 +880,8 @@ public class MainController {
   }
 
   /**
-   * converts the arrayList of Stations to an observable list, wraps it in filtered and sorted lists
-   * sets dataTableStation to display these items as well as enabling filtering, sorting, and on-click behaviour
+   * takes the arrayList stations, creates table columns and sets these columns along with details
+   * from stations to be shown in the table. also enables filtering and sorting
    */
   public void initStationTable() {
     //latitude, longitude, name, ID
@@ -861,7 +905,7 @@ public class MainController {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /**
+        /*
          * Add more Station.get__'s below to include more things in the search
          */
         if (Station.getName().toLowerCase().contains(lowerCaseFilter)) {
@@ -877,6 +921,9 @@ public class MainController {
     dataTableStation.getColumns().setAll(nameCol, latCol, longCol, idCol);
     dataTableStation.setItems(sListStations);
 
+    /*
+     * on-click behaviour
+     */
     dataTableStation.setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
@@ -898,8 +945,8 @@ public class MainController {
   }
 
   /**
-   * converts the arrayList of routes to an observable list, wraps it in filtered and sorted lists
-   * sets dataTableRoute to display these items as well as enabling filtering, sorting, and on-click behaviour
+   * takes the arrayList routes, creates table columns and sets these columns along with details
+   * from routes to be shown in the table. also enables filtering and sorting
    */
   public void initRouteTable() {
     //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
@@ -925,7 +972,7 @@ public class MainController {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /**
+        /*
          * Add more Route.get__'s below to include more things in the search
          */
         if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
@@ -946,7 +993,6 @@ public class MainController {
     SortedList<Route> sListRoutes = new SortedList<>(fListRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
     //simple: start and end stations, start and end times
-    //TODO finish simple/advanced views for routes
     //TODO calculate duration of a trip and put it in a column..?
     //sets up simple view
     dataTableRoute.getColumns()
@@ -961,7 +1007,7 @@ public class MainController {
           tableOnClickPopup.create("Public POI", "", selected_item);
           if (tableOnClickPopup.return_value) {
             try {
-              //TODO use correct method for showing routes on map
+
               displayRoute(selected_item.getStartStation().getLatitude(),
                   selected_item.getStartStation().getLongitude(),
                   selected_item.getStopStation().getLatitude(),
@@ -989,7 +1035,8 @@ public class MainController {
   /**
    * Tells GUIManager the user wants to log out
    */
-  @FXML void logOut() throws Exception {
+  @FXML
+  void logOut() throws Exception {
     GUIManager.getInstanceGUIManager().logOut();
   }
 
