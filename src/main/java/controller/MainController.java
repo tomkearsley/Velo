@@ -143,19 +143,17 @@ public class MainController {
    */
   public boolean populateArrayLists() {
     Reader rdr = new Reader();
+    MySQL mysql = new MySQL();
     try {
-      //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
-      //MySQL mysql = new MySQL();
-      //hotspots = mysql.getHotspots();
+      hotspots = mysql.getHotspots();
 
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
-      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
       retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
       stations = rdr.readStations("/file/stations.json");
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
       routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
-    } catch (FileNotFoundException e) {
+    } catch (Exception e) {
       System.out.println("File not found");
       e.printStackTrace();
       return false;
