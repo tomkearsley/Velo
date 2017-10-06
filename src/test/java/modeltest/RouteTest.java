@@ -44,5 +44,9 @@ public class RouteTest {
     assertTrue(start.getAltitude() == "123");
   }
 
+  @Test
+  public void StringVer() {
+    System.out.println(two_points.toString());
+  }
   //TODO add tests for the two insert method
 }

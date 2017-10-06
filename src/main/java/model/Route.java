@@ -30,7 +30,7 @@ public class Route implements Mappable {
   /**
    * ArrayList of POIs first and last should be stations
    */
-  private ArrayList<POI> mapPoints = new ArrayList<>(2);
+  private ArrayList<POI> mapPoints;
 
   /**
    * Bike ID
@@ -93,7 +93,7 @@ public class Route implements Mappable {
 
   public Station getStopStation() {
     int len = mapPoints.size();
-    if (mapPoints.get(-1) instanceof Station) {
+    if (mapPoints.get(len-1) instanceof Station) {
       Station stop = (Station) mapPoints.get(len - 1);
       return stop;
     } else {
@@ -196,6 +196,7 @@ public class Route implements Mappable {
     this.duration = duration;
     this.startDate = startDate;
     this.stopDate = stopDate;
+    this.mapPoints = new ArrayList<>(2);
     this.mapPoints.add(startStation);
     this.mapPoints.add(stopStation);
     this.bikeID = bikeID;
@@ -206,11 +207,19 @@ public class Route implements Mappable {
 
   @Override
   public String toString() {
-    int len = mapPoints.size();
-    return "Start station:\t\t" + getStartStation().getName() + " (" + getStartStation().getID() + ")" +
-        "\nStop station:\t\t" + getStopStation().getName() + " (" + getStopStation().getID() + ")" + "\nStart time:\t\t"
-        + startDate + "\nStop time:\t\t" + stopDate + "\nRoute duration:\t" + duration
-        + "\nBike ID:\t\t\t" + bikeID + "\nUser type:\t\t" + userType;
+    try {
+      int len = mapPoints.size();
+      return "Start station:\t\t" + getStartStation().getName() + " (" + getStartStation().getID()
+          + ")" +
+          "\nStop station:\t\t" + getStopStation().getName() + " (" + getStopStation().getID() + ")"
+          + "\nStart time:\t\t"
+          + startDate + "\nStop time:\t\t" + stopDate + "\nRoute duration:\t" + duration
+          + "\nBike ID:\t\t\t" + bikeID + "\nUser type:\t\t" + userType;
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+      return "borked";
+    }
   }
 
   @Override
