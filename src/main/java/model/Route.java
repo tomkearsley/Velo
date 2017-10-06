@@ -153,10 +153,12 @@ public class Route implements Mappable{
     this.gender = gender;
   }
 
+  @Override
   public String toString() {
-    return "Route duration: " + duration + " startDateTime: " + startDate + " stopDateTime: " +
-        stopDate + " startStation: " + startStation + " stopStation: " + stopStation + " bikeID: " +
-        bikeID + " userType: " + userType + " birthYear: " + birthYear + " gender: " + gender;
+    return "Start station:\t\t" + startStation.getName() + " (" + startStation.getID() + ")" +
+        "\nStop station:\t\t" + stopStation.getName() + " (" + stopStation.getID() + ")" + "\nStart time:\t\t"
+        + startDate + "\nStop time:\t\t" + stopDate + "\nRoute duration:\t" + duration
+        + "\nBike ID:\t\t\t" + bikeID + "\nUser type:\t\t" + userType;
   }
 
   @Override
