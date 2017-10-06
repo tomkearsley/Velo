@@ -294,7 +294,7 @@ public class MainController {
    * populateArrayLists() TODO adapt to using database primarily with csv as fallback
    */
   public void initialize() throws URISyntaxException{
-    //boolean arraylists_populated = populateArrayLists();
+    boolean arraylists_populated = populateArrayLists();
     //
     //if (!arraylists_populated) {
     //
