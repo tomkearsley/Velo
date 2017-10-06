@@ -183,7 +183,7 @@ public class Route implements Mappable {
   public void insertPointLast (POI newPoint) {
     int len = mapPoints.size();
     if (len-2 != 0) {
-      mapPoints.add(len - 2, newPoint);
+      mapPoints.add(len - 1, newPoint);
     }
     else {
       mapPoints.add(1, newPoint);
