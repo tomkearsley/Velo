@@ -254,7 +254,6 @@ public class MySQL {
         if (result.getString("username").equals(username)) {
           usernameExists = true;
           if(result.getInt("userType") == 0){
-            System.out.println("going here");
             isCyclist = true;
             LoginResult.add(isCyclist);
           }//CYCLIST

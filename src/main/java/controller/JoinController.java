@@ -270,7 +270,7 @@ public class JoinController {
    * @return true if valid; else false
    */
   private boolean isValidPassword() {
-    return password.getLength() > 80;
+    return password.getLength() < 80;
   }
 
   /** Clears the CSS style for the firstName element */
@@ -278,7 +278,6 @@ public class JoinController {
   private void clearFirstNameStyle() {
     firstName.setStyle("-fx-background-color: null");
     firstName.setStyle("-fx-border-color: null");
-    System.out.println("Cleared the first name style");
   }
 
   /** Clears the CSS style for the lastName element */
