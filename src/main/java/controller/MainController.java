@@ -1,5 +1,6 @@
 package controller;
 
+import filehandler.MySQL;
 import filehandler.Reader;
 import filehandler.Writer;
 import helper.Bridge;
@@ -112,6 +113,9 @@ public class MainController {
   @FXML private ImageView poi_icon_secondary;
   @FXML private ImageView station_icon_primary;
   @FXML private ImageView station_icon_secondary;
+  @FXML private ImageView ppoi_icon_primary;
+  @FXML private ImageView ppoi_icon_secondary;
+
   @FXML private TextField locationFrom;
   @FXML private TextField locationTo;
   private boolean hotspotsLoaded = false;
@@ -220,6 +224,12 @@ public class MainController {
     retailersLoaded = true;
   }
 
+  public void loadPPOIS() throws IOException{
+    Reader rdr = new Reader();
+    window.setMember("aBridge",aBridge);
+    window.call("loadPPOIS",rdr.readPublicPOIS("/file/PPOIS.csv",false));
+  }
+
   /**
    * populates arrayLists used for temporary local storage
    *
@@ -247,26 +257,18 @@ public class MainController {
     return true;
   }
 
+  private void setImages() throws URISyntaxException{
+    wifi_icon_primary.setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
+    retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
+    poi_icon_primary.setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
+    station_icon_primary.setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
+    ppoi_icon_primary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
 
-  /* MAP METHODS */
-  private void setImages() throws URISyntaxException {
-    wifi_icon_primary
-        .setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
-    retailer_icon_primary
-        .setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
-    poi_icon_primary
-        .setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
-    station_icon_primary
-        .setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
-
-    wifi_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
-    retailer_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
-    poi_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
-    station_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
+    wifi_icon_secondary.setImage(new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
+    retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
+    poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
+    station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
+    ppoi_icon_secondary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
 
     buttons.add(retailer_icon_primary);
     buttons.add(wifi_icon_primary);
@@ -424,6 +426,22 @@ public class MainController {
     window.setMember("aBridge", aBridge);
     window.call("hidePOIS");
   } // TODO implement Imas
+
+  public void showPPOIS() {
+    window.setMember("aBridge",aBridge);
+    window.call("showPPOIS");
+  }
+
+  public void hidePPOIS() {
+    window.setMember("aBridge",aBridge);
+    window.call("hidePPOIS");
+  }
+
+  public void hideAllMarkers() {
+    window.setMember("aBridge",aBridge);
+    window.call("hideAllMarkers");
+  }
+
 
   private void prettyMarker(double lat, double lng, String info, String markerType) {
     window.setMember("aBridge", aBridge);
