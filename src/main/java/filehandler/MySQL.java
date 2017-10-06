@@ -10,7 +10,6 @@ import java.lang.Exception;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import model.Retailer;
 import model.Cyclist;
 import model.Hotspot;
 import sun.rmi.runtime.Log;
@@ -184,6 +183,44 @@ public class MySQL {
 
       }
       return hotspots;
+
+
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    System.out.println("Record was not found.");
+    return null;
+  }
+
+
+  public static ArrayList<Retailer> getRetailers() throws Exception {
+    try {
+      Connection conn = getConnection();
+      PreparedStatement statement = conn.prepareStatement("SELECT name,address,longitude,latitude,"
+          + "floor,city,zipCode,state,block,secondaryDescription FROM Retailers");
+
+      ResultSet result = statement.executeQuery();
+
+      ArrayList<Retailer> retailers = new ArrayList<Retailer>();
+      while (result.next()) {
+
+        String name = result.getString("name");
+        String address = result.getString("address");
+        Double longitude = result.getDouble("longitude");
+        Double latitude = result.getDouble("latitude");
+        String floor = result.getString("floor");
+        String city = result.getString("city");
+        Integer zipCode = result.getInt("zipCode");
+        String state = result.getString("state");
+        String block = result.getString("block");
+        String secondaryDescription = result.getString("secondaryDescription");
+        Retailer retailer = new Retailer(name,address,floor,city,state,zipCode,
+        block,secondaryDescription,"",longitude,latitude);
+        retailers.add(retailer);
+
+
+      }
+      return retailers;
 
 
     } catch (Exception e) {
