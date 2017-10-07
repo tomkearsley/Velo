@@ -1,9 +1,6 @@
 package model;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import model.Station;
 import java.util.Date;
 
 /**
@@ -163,8 +160,18 @@ public class Route implements Mappable {
     return mapPoints;
   }
 
+  /**
+   * sets the mapPoints arrayList of POIs to be the arrayList given ArrayList must be at least two
+   * points long and the first and last points must be of type Station
+   */
   public void setMapPoints(ArrayList<POI> mapPoints) {
-    this.mapPoints = mapPoints;
+    int len = mapPoints.size();
+    if (len >= 2 && mapPoints.get(0) instanceof Station && mapPoints
+        .get(len - 1) instanceof Station) {
+      this.mapPoints = mapPoints;
+    } else {
+      System.out.println("First and last points must be stations");
+    }
   }
 
   /**
