@@ -690,7 +690,7 @@ public class MainController {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Retailer selected_item = dataTableRetailer.getSelectionModel().getSelectedItem();
           helper.tableOnClickPopup.create("Retailer", selected_item);
-          if (tableOnClickPopup.return_value) {
+          if (tableOnClickPopup.return_value == 1) {
             double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
             //TODO change this when retailers have lat/long fields
             try {
@@ -770,7 +770,7 @@ public class MainController {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Hotspot selected_item = dataTableHotspot.getSelectionModel().getSelectedItem();
           helper.tableOnClickPopup.create("Hotspot",  selected_item);
-          if (tableOnClickPopup.return_value) {
+          if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
                   selected_item.getLocationAddress(), "hotspot");
@@ -835,7 +835,7 @@ public class MainController {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           PublicPOI selected_item = dataTablePublicPOI.getSelectionModel().getSelectedItem();
           tableOnClickPopup.create("Public POI",  selected_item);
-          if (tableOnClickPopup.return_value) {
+          if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
                   selected_item.getName(), "public-poi");
@@ -900,7 +900,7 @@ public class MainController {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           UserPOI selected_item = dataTableUserPOI.getSelectionModel().getSelectedItem();
           tableOnClickPopup.create("User POI",  selected_item);
-          if (tableOnClickPopup.return_value) {
+          if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
                   selected_item.getName(), "user-poi");
@@ -965,7 +965,7 @@ public class MainController {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Station selected_item = dataTableStation.getSelectionModel().getSelectedItem();
           tableOnClickPopup.create("Public POI",  selected_item);
-          if (tableOnClickPopup.return_value) {
+          if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
                   selected_item.getName(), "station");
@@ -1041,8 +1041,8 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRoute.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI",  selected_item);
-          if (tableOnClickPopup.return_value) {
+          tableOnClickPopup.create("Route",  selected_item);
+          if (tableOnClickPopup.return_value == 1) {
             try {
 
               displayRoute(selected_item.getStartStation().getLatitude(),
@@ -1053,6 +1053,9 @@ public class MainController {
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");
             }
+          } else if (tableOnClickPopup.return_value == 2) {
+            userRouteHistory.add(selected_item);
+            System.out.println(userRouteHistory.get(userRouteHistory.size()-1).toString());
           }
         }
       }
@@ -1122,7 +1125,7 @@ public class MainController {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRouteHistory.getSelectionModel().getSelectedItem();
           tableOnClickPopup.create("Personal Route",  selected_item);
-          if (tableOnClickPopup.return_value) {
+          if (tableOnClickPopup.return_value == 1) {
             try {
 
               displayRoute(selected_item.getStartStation().getLatitude(),
