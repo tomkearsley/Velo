@@ -19,23 +19,23 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<TabPane fx:id="mainPane" prefHeight="577.0" prefWidth="634.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<TabPane fx:id="mainPane" prefHeight="577.0" prefWidth="634.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <tabs>
     <Tab fx:id="mapViewTab" closable="false" text="Map">
          <content>
             <AnchorPane fx:id="mapViewPane">
                <children>
                   <WebView id="mapWebView" fx:id="mapWebView" layoutX="2.0" minHeight="-1.0" minWidth="-1.0" prefWidth="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <ImageView fx:id="retailer_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton1" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="wifi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton2" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="poi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton3" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="station_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton4" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="ppoi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="435.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="retailer_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleButton5" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="wifi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleButton6" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="poi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#toggleButton7" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="station_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="ppoi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="435.0" onMouseClicked="#toggleButton8" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="retailer_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleRetailersOn" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="hotspot_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleHotspotsOn" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="poi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#togglePOISOn" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="station_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleStationsOn" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="ppoi_icon_primary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="435.0" onMouseClicked="#togglePPOISOn" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="retailer_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="35.0" onMouseClicked="#toggleRetailersOff" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="hotspot_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="135.0" onMouseClicked="#toggleHotspotsOff" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="poi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="235.0" onMouseClicked="#togglePOISOff" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="station_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="335.0" onMouseClicked="#toggleStationsOff" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="ppoi_icon_secondary" fitHeight="50.0" fitWidth="50.0" layoutX="25.0" layoutY="435.0" onMouseClicked="#togglePPOISOff" pickOnBounds="true" preserveRatio="true" />
                   <TextField fx:id="locationFrom" layoutX="14.0" layoutY="519.0" prefHeight="27.0" prefWidth="170.0" promptText="Start " />
                   <TextField fx:id="locationTo" layoutX="216.0" layoutY="519.0" prefHeight="27.0" prefWidth="170.0" promptText="End" />
                   <Button fx:id="displayRouteButton" layoutX="417.0" layoutY="519.0" mnemonicParsing="false" onAction="#displayRouteClick" prefHeight="27.0" prefWidth="120.0" text="Go" />

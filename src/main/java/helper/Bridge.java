@@ -3,6 +3,7 @@ package helper;
 import static filehandler.Google.stringToLocation;
 
 import model.Hotspot;
+import model.POI;
 import model.Retailer;
 import model.Station;
 
@@ -14,25 +15,15 @@ public class Bridge {
     return hotspot.getRemarks();
   }
 
-  public Double getHotspotLat(Hotspot hotspot) {
-    return hotspot.getLatitude();
-  }
-
-  public Double getHotspotLng(Hotspot hotspot) {
-    return hotspot.getLongitude();
-  }
-
   public String getStationTitle(Station station) { return station.getName(); }
 
-  public Double getStationLat(Station station) { return station.getLatitude(); }
-
-  public Double getStationLng(Station station) { return station.getLongitude(); }
-
-  public Double getRetailerLat(Retailer retailer) {return retailer.getLatitude();}
-
-  public Double getRetailerLng (Retailer retailer) {return retailer.getLongitude();}
-
   public String getRetailerTitle(Retailer retailer) { return retailer.getDescription();}
+
+  public Double getLat(POI poi) { return poi.getLatitude();}
+
+  public Double getLng(POI poi) {return poi.getLongitude();}
+
+  public String getTitle(POI poi) {return poi.getDescription();}
 
   public double[] getDisplayRouteArray(String location) {return stringToLocation(location);}
 

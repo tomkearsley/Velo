@@ -93,66 +93,44 @@ public class MainController {
   //private boolean stationIsDetailed = false;
 
   //Data tables
-  @FXML
-  private TableView<Hotspot> dataTableHotspot;
-  @FXML
-  private TableView<Retailer> dataTableRetailer;
-  @FXML
-  private TableView<PublicPOI> dataTablePublicPOI;
-  @FXML
-  private TableView<UserPOI> dataTableUserPOI;
-  @FXML
-  private TableView<Station> dataTableStation;
-  @FXML
-  private TableView<Route> dataTableRoute;
+  @FXML private TableView<Hotspot> dataTableHotspot;
+  @FXML private TableView<Retailer> dataTableRetailer;
+  @FXML private TableView<PublicPOI> dataTablePublicPOI;
+  @FXML private TableView<UserPOI> dataTableUserPOI;
+  @FXML private TableView<Station> dataTableStation;
+  @FXML private TableView<Route> dataTableRoute;
 
   // Table filter fields. one for each table view
-  @FXML
-  private TextField HotspotFilterField;
-  @FXML
-  private TextField RetailerFilterField;
-  @FXML
-  private TextField PublicPOIFilterField;
-  @FXML
-  private TextField UserPOIFilterField;
-  @FXML
-  private TextField StationFilterField;
-  @FXML
-  private TextField RouteFilterField;
+  @FXML private TextField HotspotFilterField;
+  @FXML private TextField RetailerFilterField;
+  @FXML private TextField PublicPOIFilterField;
+  @FXML private TextField UserPOIFilterField;
+  @FXML private TextField StationFilterField;
+  @FXML private TextField RouteFilterField;
 
 
   /* Map tab attributes */
   private JSObject window;
   private Bridge aBridge = new Bridge();
-  @FXML
-  private ImageView wifi_icon_primary;
-  @FXML
-  private ImageView retailer_icon_primary;
-  @FXML
-  private ImageView poi_icon_primary;
-  @FXML
-  private ImageView wifi_icon_secondary;
-  @FXML
-  private ImageView retailer_icon_secondary;
-  @FXML
-  private ImageView poi_icon_secondary;
-  @FXML
-  private ImageView station_icon_primary;
-  @FXML
-  private ImageView station_icon_secondary;
-  @FXML
-  private ImageView ppoi_icon_primary;
-  @FXML
-  private ImageView ppoi_icon_secondary;
+  @FXML private ImageView hotspot_icon_primary;
+  @FXML private ImageView retailer_icon_primary;
+  @FXML private ImageView poi_icon_primary;
+  @FXML private ImageView hotspot_icon_secondary;
+  @FXML private ImageView retailer_icon_secondary;
+  @FXML private ImageView poi_icon_secondary;
+  @FXML private ImageView station_icon_primary;
+  @FXML private ImageView station_icon_secondary;
+  @FXML private ImageView ppoi_icon_primary;
+  @FXML private ImageView ppoi_icon_secondary;
 
-  @FXML
-  private TextField locationFrom;
-  @FXML
-  private TextField locationTo;
+  @FXML private TextField locationFrom;
+  @FXML private TextField locationTo;
+
   private boolean hotspotsLoaded = false;
   private boolean stationsLoaded = false;
   private boolean POISLoaded = false;
   private boolean retailersLoaded = false;
+  private boolean PPOISLoaded = false;
 
   /* Account tab attributes */
   @FXML
@@ -213,16 +191,26 @@ public class MainController {
     mainPane.getSelectionModel().select(dataViewTab);
     //dataTabPane.toFront();
   }
+
   public void viewMap() {
     // mapViewPane.();
     mainPane.getSelectionModel().select(mapViewTab);
   }
+
   public void viewUser() {
     mainPane.getSelectionModel().select(userViewTab);
     // userPane.toFront();
   }
+
   public void viewHistory() {
     mainPane.getSelectionModel().select(historyViewTab);
+  }
+
+  private void loadRetailers() throws IOException {
+    Reader rdr = new Reader();
+    window.setMember("aBridge", aBridge);
+    window.call("loadRetailers", rdr.readRetailers("/file/InitialRetailers.csv", false));
+    retailersLoaded = true;
   }
 
   private void loadHotspots() throws IOException {
@@ -244,21 +232,14 @@ public class MainController {
   public void loadPOIS() throws IOException {
     Reader rdr = new Reader();
     window.setMember("aBridge", aBridge);
-    window.call("loadPOIS", rdr.readUserPOIS("/file/POIS.csv", false));
+    window.call("loadPOIS", rdr.readUserPOIS("/test/POIS.csv", false));
     POISLoaded = true;
   } // TODO implement Imas
 
-  private void loadRetailers() throws IOException {
+  public void loadPPOIS() throws IOException{
     Reader rdr = new Reader();
-    window.setMember("aBridge", aBridge);
-    window.call("loadRetailers", rdr.readRetailers("/file/InitialRetailers.csv", false));
-    retailersLoaded = true;
-  }
-
-  public void loadPPOIS() throws IOException {
-    Reader rdr = new Reader();
-    window.setMember("aBridge", aBridge);
-    window.call("loadPPOIS", rdr.readPublicPOIS("/file/PPOIS.csv", false));
+    window.setMember("aBridge",aBridge);
+    window.call("loadPPOIS",rdr.readPublicPOIS("/test/PublicPOIS.csv",false));
   }
 
   /**
@@ -288,38 +269,30 @@ public class MainController {
     return true;
   }
 
-  private void setImages() throws URISyntaxException {
-    wifi_icon_primary
-        .setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
-    retailer_icon_primary
-        .setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
-    poi_icon_primary
-        .setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
-    station_icon_primary
-        .setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
-    ppoi_icon_primary
-        .setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
+  private void setImages() throws URISyntaxException{
+    hotspot_icon_primary.setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
+    retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
+    poi_icon_primary.setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
+    station_icon_primary.setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
+    ppoi_icon_primary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
 
-    wifi_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
-    retailer_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
-    poi_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
-    station_icon_secondary.setImage(
-        new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
-    ppoi_icon_secondary
-        .setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
+    hotspot_icon_secondary.setImage(new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
+    retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
+    poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
+    station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
+    ppoi_icon_secondary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
 
     buttons.add(retailer_icon_primary);
-    buttons.add(wifi_icon_primary);
+    buttons.add(hotspot_icon_primary);
     buttons.add(poi_icon_primary);
     buttons.add(station_icon_primary);
+    buttons.add(ppoi_icon_primary);
 
     buttons.add(retailer_icon_secondary);
-    buttons.add(wifi_icon_secondary);
+    buttons.add(hotspot_icon_secondary);
     buttons.add(poi_icon_secondary);
     buttons.add(station_icon_secondary);
+    buttons.add(ppoi_icon_secondary);
 
     /*
     wifi_icon_primary.setVisible(false);
@@ -328,10 +301,11 @@ public class MainController {
     station_icon_primary.setVisible(false);
     */
 
-    wifi_icon_secondary.setVisible(false);
+    hotspot_icon_secondary.setVisible(false);
     retailer_icon_secondary.setVisible(false);
     poi_icon_secondary.setVisible(false);
     station_icon_secondary.setVisible(false);
+    ppoi_icon_secondary.setVisible(false);
   }
 
   private void toggleButton(int buttonNo) {
@@ -346,7 +320,7 @@ public class MainController {
     }
   } // TODO IMAS RENAME AND JAVADOC
 
-  public void toggleButton1() {
+  public void toggleRetailersOn() {
     try {
       if (retailersLoaded) {
         showRetailers();
@@ -360,7 +334,7 @@ public class MainController {
     toggleButton(0);
   } // TODO IMAS RENAME AND JAVADOC
 
-  public void toggleButton2() {
+  public void toggleHotspotsOn() {
     try {
       if (hotspotsLoaded) {
         showHotspots();
@@ -374,11 +348,21 @@ public class MainController {
     toggleButton(1);
   } // TODO IMAS RENAME AND JAVADOC
 
-  public void toggleButton3() {
+  public void togglePOISOn() {
+    try {
+      if (POISLoaded) {
+        showPOIS();
+      } else {
+        loadPOIS();
+      }
+    } catch (IOException e) {
+      System.out.println("Error occurred while reading POIs");
+      System.out.println(e);
+    }
     toggleButton(2);
   } // TODO IMAS RENAME AND JAVADOC
 
-  public void toggleButton4() {
+  public void toggleStationsOn() {
     try {
       if (stationsLoaded) {
         showStations();
@@ -392,41 +376,69 @@ public class MainController {
     toggleButton(3);
   } // TODO IMAS RENAME AND JAVADOC
 
-  public void toggleButton5() {
+  public void togglePPOISOn() {
+    try {
+      if (PPOISLoaded) {
+        showPPOIS();
+      } else {
+        loadPPOIS();
+      }
+    } catch(IOException e) {
+      System.out.println(e);
+    }
+    toggleButton(4);
+  }
+
+  public void toggleRetailersOff() {
     try {
       hideRetailers();
     } catch (netscape.javascript.JSException e) {
       //null reference error. Should occur
       System.out.println(e);
     }
-    toggleButton(4);
+    toggleButton(5);
 
   } // TODO IMAS RENAME AND JAVADOC
 
-  public void toggleButton6() {
+  public void toggleHotspotsOff() {
     try {
       hideHotspots();
     } catch (netscape.javascript.JSException e) {
       //null reference error. Should occur
       //System.out.println("Internal error, please report to app devs");
     }
-    toggleButton(5);
-  } // TODO IMAS RENAME AND JAVADOC
-
-  public void toggleButton7() {
     toggleButton(6);
   } // TODO IMAS RENAME AND JAVADOC
 
-  public void toggleButton8() {
+  public void togglePOISOff() {
+    try {
+      hidePOIS();
+    } catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+    }
+    toggleButton(7);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  public void toggleStationsOff() {
     try {
       hideStations();
     } catch (netscape.javascript.JSException e) {
       //null error. should be occuring
       //System.out.println("Internal error, please report to app devs");
-      System.out.println(e);
+      //System.out.println(e);
     }
-    toggleButton(7);
+    toggleButton(8);
   } // TODO IMAS RENAME AND JAVADOC
+
+  public void togglePPOISOff() {
+    try {
+      hidePPOIS();
+    } catch(netscape.javascript.JSException e) {
+      //null error. should be occuring
+      //System.out.println(e);
+    }
+    toggleButton(9);
+  }
 
   private void showHotspots() {
     window.setMember("aBridge", aBridge);
@@ -478,11 +490,12 @@ public class MainController {
     window.call("hidePPOIS");
   }
 
+  /*
   public void hideAllMarkers() {
     window.setMember("aBridge", aBridge);
     window.call("hideAllMarkers");
   }
-
+*/
 
   private void prettyMarker(double lat, double lng, String info, String markerType) {
     window.setMember("aBridge", aBridge);

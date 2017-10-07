@@ -26,6 +26,7 @@
     var hotspotMarkers = [];
     var POIMarkers = [];
     var stationMarkers = [];
+    var PPOIMarkers = [];
 
     var wayPoints = [];
 
@@ -36,6 +37,7 @@
     var hotspotCluster;
     var POICluster;
     var stationCluster;
+    var PPOICluster;
 
     //alert(directionsService.toString());
     function initialize() {
@@ -145,6 +147,7 @@
       POICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
       hotspotCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
       stationCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
+      PPOICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
 
       infowindow = new google.maps.InfoWindow({
         content: "Loading location info..."
@@ -219,13 +222,17 @@
           stationMarkers.push(marker);
           stationCluster.addMarker(marker);
           break;
-        case "POI":
+        case "poi":
           POIMarkers.push(marker);
           POICluster.addMarker(marker);
           break;
         case "retailer":
           retailerMarkers.push(marker);
           retailerCluster.addMarker(marker);
+          break;
+        case "ppoi":
+          PPOIMarkers.push(marker);
+          PPOICluster.addMarker(marker);
           break;
       }
       return marker;
@@ -274,11 +281,14 @@
         case "station":
           stationMarkers.push(marker);
           break;
-        case "POI":
+        case "poi":
           POIMarkers.push(marker);
           break;
         case "retailer":
           retailerMarkers.push(marker);
+          break;
+        case "ppoi":
+          PPOIMarkers.push(marker);
           break;
       }
     }
@@ -418,18 +428,48 @@
       });
     }
 
+    function loadRetailers(infoArray) {
+      var lat,lng,title;
+      aBridge.outputValue("Displaying retailers");
+      for(var i = 0; i < infoArray.size(); i++) {
+        //aBridge.testValue("test");
+        lat = aBridge.getLat(infoArray.get(i));
+        //aBridge.testValue("test1");
+        lng = aBridge.getLng(infoArray.get(i));
+        //aBridge.testValue("test2");
+        title = aBridge.getRetailerTitle(infoArray.get(i));
+        //aBridge.testValue("test3");
+        createMarker(lat,lng,title,"retailer");
+      }
+    }
+
     function loadHotspots(infoArray) {
       var lat,lng,title;
       aBridge.outputValue("Displaying hotspots");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
-        lat = aBridge.getHotspotLat(infoArray.get(i));
+        lat = aBridge.getLat(infoArray.get(i));
         //aBridge.testValue("test1");
-        lng = aBridge.getHotspotLng(infoArray.get(i));
+        lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getHotspotTitle(infoArray.get(i));
         //aBridge.testValue("test3");
         createMarker(lat,lng,title,"hotspot");
+      }
+    }
+
+    function loadPOIS(infoArray) {
+      var lat,lng,title;
+      aBridge.outputValue("Displaying POIS");
+      for(var i = 0;i < infoArray.size(); i++) {
+        //aBridge.testValue("test");
+        lat = aBridge.getLat(infoArray.get(i));
+        //aBridge.testValue("test1");
+        lng = aBridge.getLng(infoArray.get(i));
+        //aBridge.testValue("test2");
+        title = aBridge.getTitle(infoArray.get(i));
+        //aBridge.testValue("test3");
+        createMarker(lat,lng,title,"poi");
       }
     }
 
@@ -438,9 +478,9 @@
       aBridge.outputValue("Displaying stations");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
-        lat = aBridge.getStationLat(infoArray.get(i));
+        lat = aBridge.getLat(infoArray.get(i));
         //aBridge.testValue("test1");
-        lng = aBridge.getStationLng(infoArray.get(i));
+        lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getStationTitle(infoArray.get(i));
         //aBridge.testValue("test3");
@@ -448,18 +488,18 @@
       }
     }
 
-    function loadRetailers(infoArray) {
+    function loadPPOIS(infoArray) {
       var lat,lng,title;
-      aBridge.outputValue("Displaying retailers");
+      aBridge.outputValue("Displaying public POIS");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
-        lat = aBridge.getRetailerLat(infoArray.get(i));
+        lat = aBridge.getLat(infoArray.get(i));
         //aBridge.testValue("test1");
-        lng = aBridge.getRetailerLng(infoArray.get(i));
+        lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
-        title = aBridge.getRetailerTitle(infoArray.get(i));
+        title = aBridge.getTitle(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"retailer");
+        createMarker(lat,lng,title,"ppoi");
       }
     }
 
@@ -469,26 +509,6 @@
 
     function showAllMarkers() {
       showMarkers(allMarkers);
-    }
-
-    function hideStations() {
-      hideMarkers(stationMarkers);
-      hideCluster(stationCluster);
-    }
-
-    function showStations() {
-      showMarkers(stationMarkers);
-      showCluster(stationCluster);
-    }
-
-    function hidePOIS() {
-      hideMarkers(POIMarkers);
-      hideCluster(POICluster);
-    }
-
-    function showPOIS() {
-      showMarkers(POIMarkers);
-      showCluster(POICluster);
     }
 
     function hideRetailers() {
@@ -510,6 +530,37 @@
       showMarkers(hotspotMarkers);
       showCluster(hotspotCluster)
     }
+
+    function hidePOIS() {
+      hideMarkers(POIMarkers);
+      hideCluster(POICluster);
+    }
+
+    function showPOIS() {
+      showMarkers(POIMarkers);
+      showCluster(POICluster)
+    }
+
+    function hideStations() {
+      hideMarkers(stationMarkers);
+      hideCluster(stationCluster);
+    }
+
+    function showStations() {
+      showMarkers(stationMarkers);
+      showCluster(stationCluster);
+    }
+
+    function hidePPOIS() {
+      hideMarkers(PPOIMarkers);
+      hideCluster(PPOICluster);
+    }
+
+    function showPPOIS() {
+      showMarkers(PPOIMarkers);
+      showCluster(PPOICluster);
+    }
+
 
     //initialize();
     google.maps.event.addDomListener(window, 'load', initialize);
