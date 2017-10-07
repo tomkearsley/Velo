@@ -661,7 +661,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Retailer selected_item = dataTableRetailer.getSelectionModel().getSelectedItem();
-          helper.tableOnClickPopup.create("Retailer", "", selected_item);
+          helper.tableOnClickPopup.create("Retailer", selected_item);
           if (tableOnClickPopup.return_value) {
             double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
             //TODO change this when retailers have lat/long fields
@@ -741,7 +741,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Hotspot selected_item = dataTableHotspot.getSelectionModel().getSelectedItem();
-          helper.tableOnClickPopup.create("Hotspot", "", selected_item);
+          helper.tableOnClickPopup.create("Hotspot",  selected_item);
           if (tableOnClickPopup.return_value) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -806,7 +806,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           PublicPOI selected_item = dataTablePublicPOI.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI", "", selected_item);
+          tableOnClickPopup.create("Public POI",  selected_item);
           if (tableOnClickPopup.return_value) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -871,7 +871,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           UserPOI selected_item = dataTableUserPOI.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("User POI", "", selected_item);
+          tableOnClickPopup.create("User POI",  selected_item);
           if (tableOnClickPopup.return_value) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -936,7 +936,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Station selected_item = dataTableStation.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI", "", selected_item);
+          tableOnClickPopup.create("Public POI",  selected_item);
           if (tableOnClickPopup.return_value) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -1011,7 +1011,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRoute.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI", "", selected_item);
+          tableOnClickPopup.create("Public POI",  selected_item);
           if (tableOnClickPopup.return_value) {
             try {
 

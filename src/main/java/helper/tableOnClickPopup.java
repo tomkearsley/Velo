@@ -7,14 +7,13 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Region;
 import model.Mappable;
-import model.POI;
-import model.Retailer;
 
 public class tableOnClickPopup {
+
   public static boolean return_value = false;
-  public static void create(String title, String message, Mappable clicked_item) {
+
+  public static void create(String title, Mappable clicked_item) {
     return_value = false;
-    //TODO may have to overload to change Mappable to POI and Route
     Alert alert = new Alert(AlertType.INFORMATION);
     alert.setTitle(title);
     alert.setHeaderText(null);
@@ -29,17 +28,29 @@ public class tableOnClickPopup {
     alert.getButtonTypes().setAll(showOnMapButton, closeButton);
 
     Optional<ButtonType> result = alert.showAndWait();
-    if(result.get() == showOnMapButton) {
-      //TODO add functionality here
-      System.out.println("you clicked Show on Map!");
+    if (result.get() == showOnMapButton) {
+      //System.out.println("you clicked Show on Map!");
       return_value = true;
-    }
-    else {
+    } else {
 
       return_value = false;
     }
-    //change return type to Mappable, return the point or null if none is selected
-    //in controller, if not null --> show on map
   }
+  public static void create(String title, String message) {
+    return_value = false;
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+    alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+    ButtonType closeButton = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
 
+    alert.getButtonTypes().setAll(closeButton);
+
+    alert.showAndWait();
+
+    return_value = false;
+
+  }
 }

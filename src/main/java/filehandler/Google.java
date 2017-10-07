@@ -95,7 +95,7 @@ public class Google {
       return jsonToLocation(jsonObj);
     }
     catch(NullPointerException e) {
-      create("Invalid location","Could not find location",null);
+      create("Invalid location","Could not find location");
       return new double[]{0,0};
     }
       //Double latitude =   jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("latitude");
