@@ -2,6 +2,7 @@ package filehandlertest;
 
 //TODO Replace assertTrue (blah.equals(blah2)) with assertEquals (overriding issue)
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,10 +46,11 @@ public class ReaderTest {
 
   /**
    * Test the Reader to ensure it extracts Hotspot csv data correctly
-   * @throws FileNotFoundException In case the file can' be found
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
   @Test
-  public void readHotspots() throws FileNotFoundException {
+  public void readHotspots() throws IOException, ArrayIndexOutOfBoundsException {
     ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv", false);
 
     Hotspot hotspot998 = new Hotspot(998, 40.745968, -73.994039,
@@ -73,10 +75,11 @@ public class ReaderTest {
   /**
    * Tests the Reader to verify that it collects the right Retailer information from a csv
    * and does not miss any entries
-   * @throws FileNotFoundException Throws exception if file is not found
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
   @Test
-  public void readRetailers() throws FileNotFoundException{
+  public void readRetailers() throws IOException, ArrayIndexOutOfBoundsException{
     List<Retailer> Retailers = reader.readRetailers("/test/retailers.csv", false);
     Retailer r1, r2, r3;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
@@ -98,7 +101,7 @@ public class ReaderTest {
   }
 
   @Test
-  public void readExternalRetailerWithEmptyEndingCells() throws FileNotFoundException{
+  public void readExternalRetailerWithEmptyEndingCells() throws IOException, ArrayIndexOutOfBoundsException{
     List<Retailer> Retailers = reader.readRetailers("src/main/resources/test/retailerEmptyEnds.csv", true);
     Retailer r1, r2;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
@@ -115,7 +118,7 @@ public class ReaderTest {
 
   //TODO ADD JAVADOC
   @Test
-  public void readUserPOIS() throws FileNotFoundException {
+  public void readUserPOIS() throws IOException, ArrayIndexOutOfBoundsException {
     ArrayList<UserPOI> POIs = reader.readUserPOIS("/test/POIS.csv", false);
     ArrayList<UserPOI> expectedPOIs = new ArrayList<UserPOI>();
 
@@ -136,7 +139,7 @@ public class ReaderTest {
 
   //TODO ADD JAVADOC
   @Test
-  public void readPublicPOIS() throws FileNotFoundException {
+  public void readPublicPOIS() throws IOException, ArrayIndexOutOfBoundsException {
     ArrayList<PublicPOI> POIs = reader.readPublicPOIS("/test/PublicPOIS.csv", false);
     ArrayList<PublicPOI> expectedPOIs = new ArrayList<PublicPOI>();
 
@@ -157,10 +160,11 @@ public class ReaderTest {
 
   /**
    * Test the Reader to ensure it extracts Route csv data correctly
-   * @throws FileNotFoundException Throws exception if file can't be found
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
   @Test
-  public void readRoutes() throws FileNotFoundException {
+  public void readRoutes() throws IOException, ArrayIndexOutOfBoundsException {
     ArrayList<Station> stations = new ArrayList<Station>();
 
     Station startStation1, stopStation1, startStation2, stopStation2, startStation3, stopStation3;
@@ -204,7 +208,7 @@ public class ReaderTest {
   }
 
   @Test
-  public void readStations() throws FileNotFoundException, ParseException{
+  public void readStations() throws IOException, ArrayIndexOutOfBoundsException, ParseException{
     ArrayList<Station> stations = reader.readStations("/file/stations.json");
 
     ArrayList<Station> compareStations = new ArrayList<Station>();
@@ -222,11 +226,6 @@ public class ReaderTest {
     compareStations.add(station3);
 
     for(int i = 0;i < compareStations.size()-1;i++) {
-      //System.out.println(stations.get(i).toString());
-      //System.out.println(compareStations.get(i).toString());
-      System.out.println(stations.get(i).toString());
-      System.out.println(compareStations.get(i).toString());
-
       assertTrue(stations.get(i).toString().equals(compareStations.get(i).toString()));
     }
   }

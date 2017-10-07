@@ -258,6 +258,7 @@ public class MainController {
    */
   private boolean populateArrayLists() {
     Reader rdr = new Reader();
+    Alert alert = null;
     try {
       //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
       //MySQL mysql = new MySQL();
@@ -271,10 +272,14 @@ public class MainController {
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
       routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
       //TODO populate userRouteHistory
-    } catch (FileNotFoundException e) {
-      System.out.println("File not found");
-      e.printStackTrace();
-      return false;
+    } catch (IOException e) {
+      alert = new Alert(AlertType.ERROR, "There was an error loading an inital data file", ButtonType.OK);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      alert = new Alert(AlertType.ERROR, "There was an error with the format of an initial data file",
+          ButtonType.OK);
+    }
+    if (alert != null) {
+      alert.showAndWait();
     }
     return true;
   }
@@ -1214,7 +1219,7 @@ public class MainController {
         alert = new Alert(AlertType.NONE,
             hotspots.size() - prevSize + " Hotspots succesfully imported", ButtonType.OK);
         initHotspotTable();
-      } catch (IOException e) {
+      } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading hotspots");
       }
     } else if (importType.getValue().equals("Retailer")) {
@@ -1227,7 +1232,7 @@ public class MainController {
         initRetailerTable();
         alert = new Alert(AlertType.NONE,
             retailers.size() - prevSize + " Retailers succesfully imported", ButtonType.OK);
-      } catch (IOException e) {
+      } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading retailers");
       }
     } else if (importType.getValue().equals("Public POI")) {
@@ -1241,7 +1246,7 @@ public class MainController {
         alert = new Alert(AlertType.NONE,
             publicPOIs.size() - prevSize + " Public POIs succesfully imported", ButtonType.OK);
         initPublicPOITable();
-      } catch (IOException e) {
+      } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading public POIs");
       }
     } else if (importType.getValue().equals("User POI")) {
@@ -1255,7 +1260,7 @@ public class MainController {
         alert = new Alert(AlertType.NONE,
             userPOIs.size() - prevSize + " User POIs succesfully imported", ButtonType.OK);
         initUserPOITable();
-      } catch (IOException e) {
+      } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading user POIs");
       }
     } else if (importType.getValue().equals("Route")) {
@@ -1269,7 +1274,7 @@ public class MainController {
         alert = new Alert(AlertType.NONE, routes.size() - prevSize + " Routes succesfully imported",
             ButtonType.OK);
         initRouteTable();
-      } catch (IOException e) {
+      } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading routes");
       }
     }
