@@ -143,11 +143,11 @@
 
       MarkerClusterer.prototype.remove = function () {};
 
-      retailerCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
-      POICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
-      hotspotCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
-      stationCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
-      PPOICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/m',ignoreHidden: true});
+      retailerCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/r',ignoreHidden: true});
+      POICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/p',ignoreHidden: true});
+      hotspotCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/h',ignoreHidden: true});
+      stationCluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/s',ignoreHidden: true});
+      PPOICluster = new MarkerClusterer(map,allMarkers,{imagePath: 'image/pp',ignoreHidden: true});
 
       infowindow = new google.maps.InfoWindow({
         content: "Loading location info..."
