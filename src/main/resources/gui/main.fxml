@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<TabPane fx:id="mainPane" prefHeight="577.0" prefWidth="634.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<TabPane fx:id="mainPane" prefHeight="577.0" prefWidth="634.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <tabs>
     <Tab fx:id="mapViewTab" closable="false" text="Map">
          <content>
@@ -267,7 +267,7 @@
                 <RowConstraints maxHeight="498.0" minHeight="10.0" prefHeight="498.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TableView fx:id="routeHistory" prefHeight="498.0" prefWidth="371.0" GridPane.rowIndex="1">
+                  <TableView fx:id="dataTableRouteHistory" prefHeight="498.0" prefWidth="371.0" GridPane.rowIndex="1">
                     <columns>
                       <TableColumn prefWidth="113.0" text="Start Time" />
                       <TableColumn prefWidth="100.0" text="Start Station" />

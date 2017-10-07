@@ -74,14 +74,19 @@ public class MainController {
   @FXML
   private WebView mapWebView;
 
+
   // ArrayLists of all data types
-  private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
-  private ArrayList<Retailer> retailers = new ArrayList<Retailer>();
-  private ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
-  private ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
-  private ArrayList<Route> routes = new ArrayList<Route>();
-  private ArrayList<Station> stations = new ArrayList<Station>();
-  private ArrayList<ImageView> buttons = new ArrayList<ImageView>(); // TODO specify what this is
+  private ArrayList<Hotspot> hotspots = new ArrayList<>();
+  private ArrayList<Retailer> retailers = new ArrayList<>();
+  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
+  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
+  private ArrayList<Route> routes = new ArrayList<>();
+  private ArrayList<Station> stations = new ArrayList<>();
+
+  private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
+  private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
+  // and are to be added to history //TODO implement saving of this arrayList to database
+  private ArrayList<ImageView> buttons = new ArrayList<>(); // TODO specify what this is
 
   /* Data tab attributes */
   // Toggling detailed view in table view
@@ -99,6 +104,8 @@ public class MainController {
   @FXML private TableView<UserPOI> dataTableUserPOI;
   @FXML private TableView<Station> dataTableStation;
   @FXML private TableView<Route> dataTableRoute;
+
+  @FXML private TableView<Route> dataTableRouteHistory;
 
   // Table filter fields. one for each table view
   @FXML private TextField HotspotFilterField;
@@ -184,6 +191,7 @@ public class MainController {
     initUserPOITable();
     initStationTable();
     initRouteTable();
+    initUserRouteTable();
   }
 
   /* Tab action handlers */
@@ -262,6 +270,7 @@ public class MainController {
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
       routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
+      //TODO populate userRouteHistory
     } catch (FileNotFoundException e) {
       System.out.println("File not found");
       e.printStackTrace();
@@ -571,7 +580,7 @@ public class MainController {
    */
   public void toggleDetailsRoute() {
     if (routeIsDetailed) {
-      dataTableRoute.getColumns().remove(4, 8);
+      dataTableRoute.getColumns().remove(5, 9);
     } else {
       TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
       bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
@@ -982,6 +991,8 @@ public class MainController {
     startDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
     TableColumn<Route, Date> endDateTimeCol = new TableColumn<>("Stop Time");
     endDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("stopDate"));
+    TableColumn<Route, Integer> durationCol = new TableColumn<>("Duration");
+    durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
     FilteredList<Route> fListRoutes = new FilteredList<>(oListRoutes);
 
@@ -1017,7 +1028,7 @@ public class MainController {
     //TODO calculate duration of a trip and put it in a column..?
     //sets up simple view
     dataTableRoute.getColumns()
-        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol);
+        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
     dataTableRoute.setItems(sListRoutes);
 
     dataTableRoute.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -1043,6 +1054,85 @@ public class MainController {
     });
   }
 
+  /**
+   * Initialiser for the route history table in the user tab
+   */
+  public void initUserRouteTable() {
+    //TODO do we want this table to be filterable?
+    ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(userRouteHistory);
+
+    TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
+    startStationCol
+        .setCellValueFactory(new PropertyValueFactory<>("startStationName"));
+    TableColumn<Route, Station> stopStationCol = new TableColumn<>("Stop Station");
+    stopStationCol.setCellValueFactory(new PropertyValueFactory<>("stopStationName"));
+    TableColumn<Route, Date> startDateTimeCol = new TableColumn<>("Start Time");
+    startDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+    TableColumn<Route, Date> endDateTimeCol = new TableColumn<>("Stop Time");
+    endDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("stopDate"));
+    TableColumn<Route, Integer> durationCol = new TableColumn<>("Duration");
+    durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+
+    FilteredList<Route> fListUserRoutes = new FilteredList<>(oListUserRoutes);
+    /*
+        FILTERNAMEGOESHERE.textProperty().addListener((observable, oldValue, newValue) -> {
+      fListUserRoutes.setPredicate(Route -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
+          return true;
+        }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+
+          //Add more Route.get__'s below to include more things in the search
+
+    if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
+        Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+      return true;
+    }
+    //filtering by gender of rider or bike ID. needs to be an exact match before anything is shown
+    if (isInteger(lowerCaseFilter)) {
+      Integer input = Integer.parseInt(lowerCaseFilter);
+      if (Route.getBikeID() == input || Route.getGender() == input) {
+        return true;
+      }
+    }
+    return false;
+  });
+});
+*/
+
+    SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
+    sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
+    //simple: start and end stations, start and end times
+    //TODO calculate duration of a trip and put it in a column..?
+    //sets up simple view
+    dataTableRouteHistory.getColumns()
+        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
+    dataTableRouteHistory.setItems(sListRoutes);
+
+    dataTableRouteHistory.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Route selected_item = dataTableRouteHistory.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("Personal Route",  selected_item);
+          if (tableOnClickPopup.return_value) {
+            try {
+
+              displayRoute(selected_item.getStartStation().getLatitude(),
+                  selected_item.getStartStation().getLongitude(),
+                  selected_item.getStopStation().getLatitude(),
+                  selected_item.getStopStation().getLongitude());
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
+  }
 
   /* ACCOUNT TAB METHODS */
 
