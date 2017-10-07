@@ -240,6 +240,7 @@ public class MainController {
     Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
     window.call("loadPPOIS",rdr.readPublicPOIS("/test/PublicPOIS.csv",false));
+    PPOISLoaded = true;
   }
 
   /**
@@ -280,7 +281,7 @@ public class MainController {
     retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
     poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
     station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
-    ppoi_icon_secondary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
+    ppoi_icon_secondary.setImage(new Image(getClass().getResource("/image/ppoi-pressed-icon.png").toURI().toString()));
 
     buttons.add(retailer_icon_primary);
     buttons.add(hotspot_icon_primary);
