@@ -65,6 +65,12 @@ public class MainController {
 
 
   // ArrayLists of all data types
+  private ArrayList<Hotspot> hotspots = new ArrayList<>();
+  private ArrayList<Retailer> retailers = new ArrayList<>();
+  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
+  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
+  private ArrayList<Route> routes = new ArrayList<>();
+  private ArrayList<Station> stations = new ArrayList<>();
 
 //  private ArrayList<Hotspot> hotspots = new ArrayList<>();
 //  private ArrayList<Retailer> retailers = new ArrayList<>();
@@ -86,6 +92,7 @@ public class MainController {
   //private boolean userPOIIsDetailed = false;
   //private boolean publicPOIIsDetailed = false;
   private boolean routeIsDetailed = false;
+  private boolean routeHistoryIsDetailed = false;
   //private boolean stationIsDetailed = false;
 
   //Data tables
@@ -105,6 +112,8 @@ public class MainController {
   @FXML private TextField UserPOIFilterField;
   @FXML private TextField StationFilterField;
   @FXML private TextField RouteFilterField;
+
+  @FXML private TextField routeHistoryFilterField;
 
 
   /* Map tab attributes */
@@ -591,6 +600,19 @@ public class MainController {
     routeIsDetailed = !routeIsDetailed;
   }
 
+  public void toggleDetailsRouteHistory() {
+    if (routeHistoryIsDetailed) {
+      dataTableRouteHistory.getColumns().remove(5, 7);
+    } else {
+      TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
+      bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
+      TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
+      userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
+
+      dataTableRouteHistory.getColumns().addAll(bikeIDCol, userTypeCol);
+    }
+    routeHistoryIsDetailed = !routeHistoryIsDetailed;
+  }
   /**
    * Determines if string is an integer
    *
@@ -1046,6 +1068,8 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
+            //TODO make this not throw Null pointers
+            //selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
             initUserRouteTable();
           }
@@ -1074,8 +1098,8 @@ public class MainController {
     durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
     FilteredList<Route> fListUserRoutes = new FilteredList<>(oListUserRoutes);
-    /*
-        FILTERNAMEGOESHERE.textProperty().addListener((observable, oldValue, newValue) -> {
+
+        routeHistoryFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListUserRoutes.setPredicate(Route -> {
         //if filter is empty, show all
         if (newValue == null || newValue.isEmpty()) {
@@ -1100,7 +1124,7 @@ public class MainController {
     return false;
   });
 });
-*/
+
 
     SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
@@ -1129,6 +1153,8 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
+            //TODO make this not throw null pointers
+            //selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().removeUserRouteHistory(selected_item);
             initUserRouteTable();
           }
