@@ -18,11 +18,11 @@ import helper.PasswordStorage;
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
-
+  /**
   public static void main(String[] args) throws Exception {
     Cyclist c = getCyclist("cyclist");
     System.out.println(c);
-  }
+  }**/
 
   // TODO @Tom add JavaDoc
   public static void insertRetailer(Connection conn,Retailer retailer)  throws Exception{
