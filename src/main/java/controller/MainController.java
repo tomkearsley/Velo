@@ -1124,7 +1124,7 @@ public class MainController {
     return false;
   });
 });
-*/
+
 
     SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
