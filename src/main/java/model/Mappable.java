@@ -11,6 +11,8 @@ public interface Mappable {
   double longitude = 0;
   String info = "";
   ImageIcon Logo = new ImageIcon();
+
+  String toHTML();
   /*
   double[] getLocation();
   void setLocation(double focusLocation[]);

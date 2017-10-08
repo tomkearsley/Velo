@@ -287,4 +287,9 @@ public class Route implements Mappable {
   public boolean equals(Object route) {
     return this.toString().equals(route.toString());
   }
+
+  @Override
+  public String toHTML() {
+    return null;
+  }
 }
