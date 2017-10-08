@@ -5,7 +5,6 @@ import filehandler.Writer;
 import helper.Bridge;
 import helper.tableOnClickPopup;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -52,27 +51,16 @@ import netscape.javascript.JSObject;
 public class MainController {
 
   /* Main tabs */
-  @FXML
-  private TabPane mainPane;
-  @FXML
-  private Tab mapViewTab;
-  @FXML
-  private Tab dataViewTab;
-  @FXML
-  private Tab historyViewTab;
-  @FXML
-  private Tab userViewTab;
+  @FXML private TabPane mainPane;
+  @FXML private Tab mapViewTab;
+  @FXML private Tab dataViewTab;
+  @FXML private Tab historyViewTab;
+  @FXML private Tab userViewTab;
 
-
-  @FXML
-  private AnchorPane mapViewPane;
-
-  @FXML
-  private Pane userPane;
-  @FXML
-  private TabPane dataTabPane;
-  @FXML
-  private WebView mapWebView;
+  @FXML private AnchorPane mapViewPane;
+  @FXML private Pane userPane;
+  @FXML private TabPane dataTabPane;
+  @FXML private WebView mapWebView;
 
 
   // ArrayLists of all data types
@@ -86,7 +74,7 @@ public class MainController {
   private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
   private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
   // and are to be added to history //TODO implement saving of this arrayList to database
-  private ArrayList<ImageView> buttons = new ArrayList<>(); // TODO specify what this is
+  private ArrayList<ImageView> buttons = new ArrayList<>();
 
   /* Data tab attributes */
   // Toggling detailed view in table view
@@ -140,8 +128,7 @@ public class MainController {
   private boolean PPOISLoaded = false;
 
   /* Account tab attributes */
-  @FXML
-  private ChoiceBox importType; // ChoiceBox for the Account import button
+  @FXML private ChoiceBox importType; // ChoiceBox for the Account import button
 
 
   /* METHODS */
@@ -155,13 +142,16 @@ public class MainController {
 
     boolean ArrayListsIsPopulated = populateArrayLists();
     if (!ArrayListsIsPopulated) {
-      //TODO bring up warning window when that is implemented
       Alert loadingError = new Alert(AlertType.ERROR, "Couldn't load initial data", ButtonType.OK);
       loadingError.showAndWait();
     }
 
     // TABS INITIALIZATION / SET IMAGES
     // TODO set tabs to images from resources/images
+//    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap.png")));
+//    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace.png")));
+//    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory.png")));
+//    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount.png")));
 
     // MAPS TAB INITIALIZATION
     URL url = getClass().getResource("/googleMaps.html");

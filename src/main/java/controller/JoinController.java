@@ -1,33 +1,23 @@
 package controller;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import model.Cyclist;
 import filehandler.MySQL;
 
 public class JoinController {
 
   // Window attributes
-  @FXML private GridPane gridPane;
   @FXML private TextField firstName;
   @FXML private TextField lastName;
   @FXML private ToggleGroup gender;
@@ -96,7 +86,6 @@ public class JoinController {
     } else {
       validData = false;
       firstName.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
-      // TODO set border red
     }
 
     // Test last name
@@ -105,7 +94,6 @@ public class JoinController {
     } else {
       validData = false;
       lastName.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
-      // TODO set border red
     }
 
     // Test radio button
@@ -173,19 +161,19 @@ public class JoinController {
 
     if (validData) {
 
-      // TODO test if username available via MySQL
-      // TODO insertCyclist to database (exception username already exists)
       // Everything's good, insert cyclist to database
       Cyclist newCyclist = new Cyclist(
           newFirstName, newLastName, newUsername, newPassword,
           newBirthDate, newGenderInt, newWeight, newHeight
       );
-      System.out.println(newCyclist);
       // If user created successfully, tell GUIManager
       MySQL query = new MySQL();
       try {
         query.insertCyclist(newCyclist);
+
       } catch (Exception usernameTaken) {
+        Alert usernameTakenAlert = new Alert(AlertType.NONE, "Username already taken.", ButtonType.OK);
+        usernameTakenAlert.showAndWait();
         System.out.println("Failed. Username Taken.");
       }
       try {
