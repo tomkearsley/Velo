@@ -44,6 +44,8 @@ public class UpdateAccountController {
       username.setTooltip(new Tooltip("Username has already been set"));
       password.setTooltip(new Tooltip("80 character limit"));
 
+      // TODO set username textfield to the username username.setText();
+
       //TODO make enter press the update button
 //    gridPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
 //      @Override
