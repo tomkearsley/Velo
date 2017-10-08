@@ -60,6 +60,13 @@ public class Writer {
       String[] pAttributes = {pblc.getName(), String.valueOf(pblc.getLatitude()),
           String.valueOf(pblc.getLongitude()), pblc.getDescription()};
       return getAttributeFormat(pAttributes);
+    } else if (poi instanceof Station) {
+      Station stn = (Station) poi;
+      String[] sAttributes = {String.valueOf(stn.getID()), stn.getName(), String.valueOf(stn.getAvailableDocs()),
+          String.valueOf(stn.getTotalDocks()), String.valueOf(stn.getLatitude()), String.valueOf(stn.getLongitude()),
+        stn.getStatusValue(), String.valueOf(stn.getAvailableBikes()), stn.getStreetAddress1(),
+        stn.getCity(), stn.getPostalCode(), String.valueOf(stn.isTestStation())};
+      return getAttributeFormat(sAttributes);
     }
     return null;
   }
@@ -77,7 +84,9 @@ public class Writer {
 
   private void writeLinesToFile(BufferedWriter writer, String[] attributes) throws IOException {
     for (int i = 0; i < attributes.length; i++) {
-      writer.write(attributes[i]);
+      if (attributes[i] != null) {
+        writer.write(attributes[i]);
+      }
       if (i < attributes.length - 1) {
         writer.write(',');
       } else {
@@ -92,16 +101,15 @@ public class Writer {
    * @param filename  The file to write to
    * @throws IOException  If there is an error opening the file
    */
-  private void writePOIsToFile (List<? extends POI> POIs, String filename) throws IOException {
+  public void writePOIsToFile (List<? extends POI> POIs, String filename) throws IOException {
     FileWriter outFile = new FileWriter(filename, true);
     BufferedWriter writer = new BufferedWriter(outFile);
 
     for (POI poi : POIs) {
       String[] attributes = getAttributesFromPOI(poi);
-
       writeLinesToFile(writer, attributes);
-    }
 
+    }
     writer.close();
   }
 
