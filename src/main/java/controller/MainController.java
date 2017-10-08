@@ -30,6 +30,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -157,8 +159,16 @@ public class MainController {
       loadingError.showAndWait();
     }
 
+    EventHandler<KeyEvent> mapCalculateListener = (keyEvent) -> {
+      if (keyEvent.getCode() == KeyCode.ENTER)  {
+        displayRouteClick();
+      }
+    };
+    locationFrom.setOnKeyPressed(mapCalculateListener);
+    locationTo.setOnKeyPressed(mapCalculateListener);
+
     // TABS INITIALIZATION / SET IMAGES
-    // TODO set tabs to images from resources/images
+    // TODO set tabs to images from resources/images @Andrew
 //    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap.png")));
 //    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace.png")));
 //    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory.png")));
@@ -1163,6 +1173,13 @@ public class MainController {
     });
   }
 
+  /**
+   * Launches the UserPOIForm window by telling GUIManager to launch that window
+   */
+  @FXML private void addUserPOI() throws Exception {
+    GUIManager.getInstanceGUIManager().addPlace();
+  }
+
   /* ACCOUNT TAB METHODS */
 
   /**
@@ -1175,8 +1192,7 @@ public class MainController {
   /**
    * Tells GUIManager the user wants to log out
    */
-  @FXML
-  void logOut() throws Exception {
+  @FXML void logOut() throws Exception {
     GUIManager.getInstanceGUIManager().logOut();
   }
 

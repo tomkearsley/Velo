@@ -25,6 +25,7 @@ import window.Login;
 import window.Main;
 import window.MainAnalyst;
 import window.UpdateAccount;
+import window.UserPOIForm;
 
 public class GUIManager extends Application {
 
@@ -38,6 +39,7 @@ public class GUIManager extends Application {
   private Main mainWindow = new Main();
   private MainAnalyst mainAnalyst = new MainAnalyst();
   private UpdateAccount updateAccount = new UpdateAccount();
+  private UserPOIForm userPOIFormWindow = new UserPOIForm();
   private Stage primaryStage;
 
   private ArrayList<Hotspot> hotspots = new ArrayList<>();
@@ -203,6 +205,26 @@ public class GUIManager extends Application {
   void accountUpdateCancelled() throws Exception {
 
     // Close any other window, begin Main window
+    mainWindow.start(primaryStage);
+  }
+
+  /** The GUIManger method corresponding to the UserPOIFormController method AddPlace
+   * Lets GUIManager know a user wants to add a place via UserPOIForm window
+   * @throws Exception possible start exceptions
+   */
+  void addPlace() throws Exception {
+
+    // Close any other window, begin UserPOIForm
+    userPOIFormWindow.start(primaryStage);
+  }
+
+  /** The GUIManger method corresponding to the UserPOIFormController method cancelAddPlace
+   * Lets GUIManager know a user cancelled adding a place via UserPOIForm window
+   * @throws Exception possible start exceptions
+   */
+  void cancelAddPlace() throws Exception {
+
+    // Close any other window, being Main window
     mainWindow.start(primaryStage);
   }
 
