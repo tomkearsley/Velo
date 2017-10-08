@@ -3,6 +3,7 @@ package helper;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Region;
@@ -26,10 +27,13 @@ public class tableOnClickPopup {
     //other buttons go here
     ButtonType closeButton = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
 
-    ButtonType addRouteButton = new ButtonType("Add to history");;
+    ButtonType addRouteButton = new ButtonType("Add to history");
+    ButtonType removeRouteButton = new ButtonType("Remove from history");
 
     if (isRouteTableItem) {
       alert.getButtonTypes().setAll(addRouteButton, showOnMapButton, closeButton);
+    } else if (clicked_item instanceof Route) {
+      alert.getButtonTypes().setAll(removeRouteButton, showOnMapButton, closeButton);
     } else {
       alert.getButtonTypes().setAll(showOnMapButton, closeButton);
     }
@@ -39,11 +43,12 @@ public class tableOnClickPopup {
     if (result.get() == showOnMapButton) {
       //System.out.println("you clicked Show on Map!");
       return_value = 1;
-    } else if (result.get() == addRouteButton) {
+    } else if ((result.get() == addRouteButton) || (result.get() == removeRouteButton)) {
       return_value = 2;
     } else {
       return_value = 0;
     }
+
   }
   public static void create(String title, String message) {
     return_value = 0;

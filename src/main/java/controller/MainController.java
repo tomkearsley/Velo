@@ -1135,6 +1135,9 @@ public class MainController {
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");
             }
+          } else if (tableOnClickPopup.return_value == 2) {
+            userRouteHistory.remove(selected_item);
+            initUserRouteTable();
           }
         }
       }
