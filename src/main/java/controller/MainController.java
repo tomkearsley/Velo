@@ -136,8 +136,7 @@ public class MainController {
 
   /**
    * Initializes the window Populates the model structure with data from .csv files Sets GUI element
-   * features (i.e. images for the tabs) populateArrayLists() TODO adapt to using database primarily
-   * with csv as fallback
+   * features (i.e. images for the tabs) populateArrayLists()
    */
   public void initialize() throws URISyntaxException {
 
@@ -158,8 +157,7 @@ public class MainController {
     URL url = getClass().getResource("/googleMaps.html");
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
-    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "Public POI", "User POI",
-        "Route"};
+    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "Public POI", "User POI", "Route"};
     ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
     importType.setItems(dataTypes);
     importType.setValue("Hotspot");

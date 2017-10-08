@@ -11,10 +11,7 @@ public class Cyclist {
   private String lastName;
   private String username;
   private String password;
-  /**
-   * User gender 0 - male 1 - female 2 - not specified
-   */
-  private int gender;
+  private int gender; /* User gender 0 - male 1 - female 2 - not specified */
   private double weight;
   private int height;
   /**

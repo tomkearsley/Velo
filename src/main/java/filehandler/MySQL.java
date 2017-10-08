@@ -25,6 +25,7 @@ public class MySQL {
 
   }**/
 
+  // TODO @Tom add JavaDoc
   public static void insertRetailer(Connection conn,Retailer retailer)  throws Exception{
     try {
       PreparedStatement inserted = conn.prepareStatement("INSERT INTO Retailers (name,address,"
@@ -133,7 +134,7 @@ public class MySQL {
     catch (Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Insert Completed");
+      System.out.println("Inserted cyclist to MySQL");
     }
   }
 
@@ -155,7 +156,7 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Insert Completed");
+      System.out.println("Inserted analyst to MySQL");
     }
   }
 

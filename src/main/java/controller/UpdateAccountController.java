@@ -78,7 +78,7 @@ public class UpdateAccountController {
       String newUsername = "";
       String newPassword = "";
       LocalDate newBirthDate = LocalDate.now();
-      int newGenderInt = -1;
+      int newGenderInt = 0;
       double newWeight = -1.0;
       int newHeight = -1;
 
@@ -184,8 +184,7 @@ public class UpdateAccountController {
     /** Back button action
      * Tells the GUI manager that the user wants to cancel joining
      */
-    @FXML
-    private void accountUpdateCancelled() throws Exception {
+    @FXML private void accountUpdateCancelled() throws Exception {
       System.out.println("User cancelled joining.");
       GUIManager.getInstanceGUIManager().accountUpdateCancelled();
     }
@@ -255,58 +254,50 @@ public class UpdateAccountController {
     }
 
     /** Clears the CSS style for the firstName element */
-    @FXML
-    private void clearFirstNameStyle() {
+    @FXML private void clearFirstNameStyle() {
       firstName.setStyle("-fx-background-color: null");
       firstName.setStyle("-fx-border-color: null");
       System.out.println("Cleared the first name style");
     }
 
     /** Clears the CSS style for the lastName element */
-    @FXML
-    private void clearLastNameStyle() {
+    @FXML private void clearLastNameStyle() {
       lastName.setStyle("-fx-background-color: null");
       lastName.setStyle("-fx-border-color: null");
     }
 
     /** Clears the CSS style for the birthDate element */
-    @FXML
-    private void clearBirthDateStyle() {
+    @FXML private void clearBirthDateStyle() {
       birthDate.setStyle("-fx-background-color: null");
       birthDate.setStyle("-fx-border-color: null");
     }
 
     /** Clears the CSS style for the heightFeet element */
-    @FXML
-    private void clearHeightFeetStyle() {
+    @FXML private void clearHeightFeetStyle() {
       heightFeet.setStyle("-fx-background-color: null");
       heightFeet.setStyle("-fx-border-color: null");
     }
 
     /** Clears the CSS style for the heightInches element */
-    @FXML
-    private void clearHeightInchesStyle() {
+    @FXML private void clearHeightInchesStyle() {
       heightInches.setStyle("-fx-background-color: null");
       heightInches.setStyle("-fx-border-color: null");
     }
 
     /** Clears the CSS style for the weight element */
-    @FXML
-    private void clearWeightStyle() {
+    @FXML private void clearWeightStyle() {
       weight.setStyle("-fx-background-color: null");
       weight.setStyle("-fx-border-color: null");
     }
 
     /** Clears the CSS style for the username element */
-    @FXML
-    private void clearUsernameStyle() {
+    @FXML private void clearUsernameStyle() {
       username.setStyle("-fx-background-color: null");
       username.setStyle("-fx-border-color: null");
     }
 
     /** Clears the CSS style for the password element */
-    @FXML
-    private void clearPasswordStyle() {
+    @FXML private void clearPasswordStyle() {
       password.setStyle("-fx-background-color: null");
       password.setStyle("-fx-border-color: null");
     }

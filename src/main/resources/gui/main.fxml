@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<TabPane fx:id="mainPane" prefHeight="577.0" prefWidth="634.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+<TabPane fx:id="mainPane" prefHeight="577.0" prefWidth="710.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" tabMinHeight="96.0" tabMinWidth="96.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
   <tabs>
     <Tab fx:id="mapViewTab" closable="false" text="Map">
          <content>

@@ -177,6 +177,7 @@ public class JoinController {
       }
       try {
         System.out.println("User created");
+        GUIManager.getInstanceGUIManager().setCyclistAccount(newCyclist);
         GUIManager.getInstanceGUIManager().cyclistCreated();
       } catch (Exception e) {
         e.printStackTrace();

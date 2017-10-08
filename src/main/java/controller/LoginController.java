@@ -1,9 +1,7 @@
 package controller;
 
 import filehandler.MySQL;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,15 +10,12 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import sun.rmi.runtime.Log;
 
 public class LoginController {
 
   // FXML Attributes
-  @FXML private ImageView icon;
   @FXML private TextField username;
   @FXML private TextField password;
   @FXML private Button logIn;
@@ -29,7 +24,6 @@ public class LoginController {
   @FXML private ProgressBar progressBar;
 
 
-  // TODO make enter press the log in button
   // Methods
   /** Initialize the window */
   public void initialize() {
@@ -55,15 +49,15 @@ public class LoginController {
 
       // Check credentials
       MySQL mysql = new MySQL();
-      ArrayList<Boolean> LoginResult = new ArrayList<Boolean>();
+      ArrayList<Boolean> LoginResult = new ArrayList<>();
       try {
           LoginResult = mysql.login(enteredUsername, enteredPassword);
       }
       catch (Exception e){
-        System.out.println(e);
+        System.out.println("Login via MySQL fail" + e);
       }
-      Boolean isCyclist = LoginResult.get(0);
-      Boolean successfulLogin = LoginResult.get(1);
+      Boolean isCyclist = LoginResult.get(0); // TODO fix these magic numbers. not good @Tom
+      Boolean successfulLogin = LoginResult.get(1); // TODO fix these magic numbers. not good @Tom
 
       // If CYCLIST authenticated, tell GUIManager
       if (successfulLogin && isCyclist) {
@@ -71,6 +65,7 @@ public class LoginController {
         userLoggedIn(); // formats GUI
         Platform.runLater(()-> {
           try {
+            // TODO set GUIManager.getInstanceGUIManager().setCyclistAccount( NEW CYCLIST) @tom
             GUIManager.getInstanceGUIManager().cyclistAuthenticated();
           } catch (Exception e) {
             e.printStackTrace();
@@ -83,6 +78,7 @@ public class LoginController {
         userLoggedIn(); // formats GUI
         Platform.runLater(()-> {
           try {
+            // TODO set GUIManager.getInstanceGUIManager().setCyclistAccount(NEW ANALYST) @tom
             GUIManager.getInstanceGUIManager().analystAuthenticated();
           } catch (Exception e) {
             e.printStackTrace();
