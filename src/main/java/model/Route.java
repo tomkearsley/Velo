@@ -49,6 +49,10 @@ public class Route implements Mappable {
    */
   private int gender;
 
+  /**
+   * Users that have travelled this route will have their usernames added to this field
+   */
+  private ArrayList<String> travelledBy;
 
   //Methods
   public int getDuration() {
@@ -135,7 +139,57 @@ public class Route implements Mappable {
     gender = newGender;
   }
 
+  /**
+   * Avoid using this unless testing/brute-forcing. Use travelledByContains
+   *
+   * @return an ArrayList of cyclist usernames
+   */
+  public ArrayList<String> getTravelledBy() {
+    return travelledBy;
+  }
+
+  /**
+   * use this only to brute-force set all usernames
+   * @param travelledBy
+   */
+  public void setTravelledBy(ArrayList<String> travelledBy) {
+    this.travelledBy = travelledBy;
+  }
+
+  /**
+   * Adds the given string to the list of usernames
+   * @param newUser
+   */
+  public void addTravelledBy(String newUser) {
+    travelledBy.add(newUser);
+  }
+
+  /**
+   * username user is removed from travelledBy if travelledBy contained it. Unchanged otherwise
+   * @param user
+   */
+  public void removeTravelledBy(String user) {
+    travelledBy.remove(user);
+
+  }
+
+  /**
+   * Use this to check if a user has travelled a route
+   * @param user
+   * @return true if user exists in travelledBy, false otherwise
+   */
+  public boolean travelledByContains(String user) {
+    if(travelledBy.contains(user)) {
+      return true;
+    }
+    return false;
+  }
   //Extra getters for tableview usability
+
+  /**
+   * Method only exists for tableview functionality. Use getStartStation().getName() for any other usage
+   * @return String name of the start station
+   */
   public String getStartStationName() {
     if (mapPoints.get(0) instanceof Station) {
       Station start = (Station) mapPoints.get(0);
@@ -145,6 +199,10 @@ public class Route implements Mappable {
     }
   }
 
+  /**
+   * Method only exists for tableview functionality. Use getStopStation().getName() for any other usage
+   * @return String name of the stop station
+   */
   public String getStopStationName() {
     int len = mapPoints.size();
     if (mapPoints.get(len - 1) instanceof Station) {
@@ -161,7 +219,7 @@ public class Route implements Mappable {
   }
 
   /**
-   * sets the mapPoints arrayList of POIs to be the arrayList given ArrayList must be at least two
+   * sets the mapPoints arrayList of POIs to be the arrayList given. The ArrayList must be at least two
    * points long and the first and last points must be of type Station
    */
   public void setMapPoints(ArrayList<POI> mapPoints) {
@@ -175,7 +233,7 @@ public class Route implements Mappable {
   }
 
   /**
-   * Adds a POI in the second index of the mapPoints ArrayList
+   * Adds a POI in the second index of the mapPoints ArrayList. Use setStartStation to change the first point
    */
   public void insertPointFirst(POI newPoint) {
     mapPoints.add(1, newPoint);
@@ -183,7 +241,7 @@ public class Route implements Mappable {
 
   /**
    * Adds a POI in the second-last index of the mapPoints ArrayList If this is not possible, it will
-   * be inserted as the second item (same as inserPointFirst
+   * be inserted as the second item (same as insertPointFirst). Use setStopStation to change the last point
    */
   public void insertPointLast(POI newPoint) {
     int len = mapPoints.size();
