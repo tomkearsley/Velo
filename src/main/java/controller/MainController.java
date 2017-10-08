@@ -65,14 +65,16 @@ public class MainController {
 
 
   // ArrayLists of all data types
-  private ArrayList<Hotspot> hotspots = new ArrayList<>();
-  private ArrayList<Retailer> retailers = new ArrayList<>();
-  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
-  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
-  private ArrayList<Route> routes = new ArrayList<>();
-  private ArrayList<Station> stations = new ArrayList<>();
 
-  private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
+//  private ArrayList<Hotspot> hotspots = new ArrayList<>();
+//  private ArrayList<Retailer> retailers = new ArrayList<>();
+//  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
+//  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
+//  private ArrayList<Route> routes = new ArrayList<>();
+//  private ArrayList<Station> stations = new ArrayList<>();
+//
+//  private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
+
   private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
   // and are to be added to history //TODO implement saving of this arrayList to database
   private ArrayList<ImageView> buttons = new ArrayList<>();
@@ -140,7 +142,7 @@ public class MainController {
    */
   public void initialize() throws URISyntaxException {
 
-    boolean ArrayListsIsPopulated = populateArrayLists();
+    boolean ArrayListsIsPopulated = GUIManager.getInstanceGUIManager().populateArrayLists();
     if (!ArrayListsIsPopulated) {
       Alert loadingError = new Alert(AlertType.ERROR, "Couldn't load initial data", ButtonType.OK);
       loadingError.showAndWait();
@@ -181,6 +183,34 @@ public class MainController {
     initStationTable();
     initRouteTable();
     initUserRouteTable();
+  }
+
+  public ArrayList<Retailer> getRetailers() {
+    return GUIManager.getInstanceGUIManager().getRetailers();
+  }
+
+  public ArrayList<Hotspot> getHotspots() {
+    return GUIManager.getInstanceGUIManager().getHotspots();
+  }
+
+  public ArrayList<PublicPOI> getPublicPOIs() {
+    return GUIManager.getInstanceGUIManager().getPublicPOIs();
+  }
+
+  public ArrayList<UserPOI> getUserPOIs() {
+    return GUIManager.getInstanceGUIManager().getUserPOIs();
+  }
+
+  public ArrayList<Station> getStations() {
+    return GUIManager.getInstanceGUIManager().getStations();
+  }
+
+  public ArrayList<Route> getRoutes() {
+    return GUIManager.getInstanceGUIManager().getRoutes();
+  }
+
+  public ArrayList<Route> getUserRouteHistory() {
+    return GUIManager.getInstanceGUIManager().getUserRouteHistory();
   }
 
   /* Tab action handlers */
@@ -239,43 +269,6 @@ public class MainController {
     window.setMember("aBridge",aBridge);
     window.call("loadPPOIS",rdr.readPublicPOIS("/test/PublicPOIS.csv",false));
     PPOISLoaded = true;
-  }
-
-  /**
-   * populates arrayLists used for temporary local storage
-   *
-   * @return true if populating was successful, otherwise false
-   */
-  private boolean populateArrayLists() {
-    Reader rdr = new Reader();
-    Alert alert = null;
-    try {
-      //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
-      MySQL mysql = new MySQL();
-
-      hotspots = mysql.getHotspots();
-      retailers = mysql.getRetailers();
-
-      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
-
-
-      stations = rdr.readStations("/file/stations.json");
-      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
-      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
-      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
-      //TODO populate userRouteHistory
-    } catch (IOException e) {
-      alert = new Alert(AlertType.ERROR, "There was an error loading an inital data file", ButtonType.OK);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      alert = new Alert(AlertType.ERROR, "There was an error with the format of an initial data file",
-          ButtonType.OK);
-    } catch(Exception e) {
-      System.out.println(e);
-    }
-    if (alert != null) {
-      alert.showAndWait();
-    }
-    return true;
   }
 
   private void setImages() throws URISyntaxException{
@@ -619,7 +612,7 @@ public class MainController {
    */
   private void initRetailerTable() {
     //converting the arraylist to an observable list
-    ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
+    ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(getRetailers());
     //each 2 line section creates one table heading and set of values
     //TODO lat and long from address?
     TableColumn<Retailer, String> nameCol = new TableColumn<>(
@@ -709,7 +702,7 @@ public class MainController {
    * from hotspots to be shown in the table. also enables filtering and sorting
    */
   private void initHotspotTable() {
-    ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
+    ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(getHotspots());
 
     TableColumn<Hotspot, String> idCol = new TableColumn<>("Name");
     idCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -790,7 +783,7 @@ public class MainController {
   private void initPublicPOITable() {
 
     //lat, long, name, description
-    ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
+    ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(getPublicPOIs());
     TableColumn<PublicPOI, Double> latCol = new TableColumn<>("Latitude");
     latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
     TableColumn<PublicPOI, Double> longCol = new TableColumn<>("Longitude");
@@ -854,7 +847,7 @@ public class MainController {
    */
   public void initUserPOITable() {
     //lat, long, name, description
-    ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(userPOIs);
+    ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(getUserPOIs());
 
     TableColumn<UserPOI, Double> latCol = new TableColumn<>("Latitude");
     latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
@@ -919,7 +912,7 @@ public class MainController {
    */
   public void initStationTable() {
     //latitude, longitude, name, ID
-    ObservableList<Station> oListStations = FXCollections.observableArrayList(stations);
+    ObservableList<Station> oListStations = FXCollections.observableArrayList(getStations());
 
     TableColumn<Station, Double> latCol = new TableColumn<>("Latitude");
     latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
@@ -984,7 +977,7 @@ public class MainController {
    */
   public void initRouteTable() {
     //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
-    ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
+    ObservableList<Route> oListRoutes = FXCollections.observableArrayList(getRoutes());
 
     TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
     startStationCol
@@ -1053,7 +1046,7 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
-            userRouteHistory.add(selected_item);
+            GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
             initUserRouteTable();
           }
         }
@@ -1066,7 +1059,7 @@ public class MainController {
    */
   public void initUserRouteTable() {
     //TODO do we want this table to be filterable?
-    ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(userRouteHistory);
+    ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getUserRouteHistory());
 
     TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
     startStationCol
@@ -1136,7 +1129,7 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
-            userRouteHistory.remove(selected_item);
+            GUIManager.getInstanceGUIManager().removeUserRouteHistory(selected_item);
             initUserRouteTable();
           }
         }
@@ -1180,25 +1173,31 @@ public class MainController {
    * Allows the user to export their routes to a custom csv file. Shows alert based on result
    */
   public void exportUserRoutes() {
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Export CSV File");
-    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV FILES", "*.csv"));
-    File saveFile = fileChooser.showSaveDialog(null);
     Alert alert = null;
-    if (saveFile != null) {
-      try {
-        Writer writer = new Writer();
-        if (saveFile.getPath().endsWith(".csv")) {
-          writer.writeRoutesToFile(routes, saveFile.getPath());
-        } else {
-          writer.writeRoutesToFile(routes, saveFile.getPath() + ".csv");
-        }
-        alert = new Alert(AlertType.NONE, "Routes successfully exported", ButtonType.OK);
+    if (getUserRouteHistory().size() == 0) {
+      alert = new Alert(AlertType.ERROR, "Route history is empty", ButtonType.OK);
+      alert.showAndWait();
+    } else {
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.setTitle("Export CSV File");
+      fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV FILES", "*.csv"));
+      File saveFile = fileChooser.showSaveDialog(null);
 
-      } catch (IOException e) {
-        alert = new Alert(AlertType.ERROR, "Error exporting routes", ButtonType.OK);
-      } finally {
-        alert.showAndWait();
+      if (saveFile != null) {
+        try {
+          Writer writer = new Writer();
+          if (saveFile.getPath().endsWith(".csv")) {
+            writer.writeRoutesToFile(getUserRouteHistory(), saveFile.getPath());
+          } else {
+            writer.writeRoutesToFile(getUserRouteHistory(), saveFile.getPath() + ".csv");
+          }
+          alert = new Alert(AlertType.NONE, "Routes successfully exported", ButtonType.OK);
+
+        } catch (IOException e) {
+          alert = new Alert(AlertType.ERROR, "Error exporting routes", ButtonType.OK);
+        } finally {
+          alert.showAndWait();
+        }
       }
     }
   }
@@ -1217,12 +1216,10 @@ public class MainController {
         ArrayList<Hotspot> hotspotsToAdd = reader
             .readHotspots(importFilePath, true); //NOTE Will not work when importing
         // initial hotspots as external file due to index handling changes between internal & external files
-        prevSize = hotspots.size();
-        for (Hotspot hotspot : hotspotsToAdd) {
-          hotspots.add(hotspot);
-        }
+        prevSize = getHotspots().size();
+        GUIManager.getInstanceGUIManager().addHotspots(hotspotsToAdd);
         alert = new Alert(AlertType.NONE,
-            hotspots.size() - prevSize + " Hotspots succesfully imported", ButtonType.OK);
+            getHotspots().size() - prevSize + " Hotspots succesfully imported", ButtonType.OK);
         initHotspotTable();
       } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading hotspots");
@@ -1230,13 +1227,11 @@ public class MainController {
     } else if (importType.getValue().equals("Retailer")) {
       try {
         ArrayList<Retailer> retailersToAdd = reader.readRetailers(importFilePath, true);
-        prevSize = retailers.size();
-        for (Retailer retailer : retailersToAdd) {
-          retailers.add(retailer);
-        }
+        prevSize = getRetailers().size();
+        GUIManager.getInstanceGUIManager().addRetailers(retailersToAdd);
         initRetailerTable();
         alert = new Alert(AlertType.NONE,
-            retailers.size() - prevSize + " Retailers succesfully imported", ButtonType.OK);
+            getRetailers().size() - prevSize + " Retailers succesfully imported", ButtonType.OK);
       } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading retailers");
       }
@@ -1244,12 +1239,10 @@ public class MainController {
       try {
         ArrayList<PublicPOI> publicPOIsToAdd = reader
             .readPublicPOIS(importFilePath, true);
-        prevSize = publicPOIs.size();
-        for (PublicPOI publicPOI : publicPOIsToAdd) {
-          publicPOIs.add(publicPOI);
-        }
+        prevSize = getPublicPOIs().size();
+        GUIManager.getInstanceGUIManager().addPublicPOIs(publicPOIsToAdd);
         alert = new Alert(AlertType.NONE,
-            publicPOIs.size() - prevSize + " Public POIs succesfully imported", ButtonType.OK);
+            getPublicPOIs().size() - prevSize + " Public POIs succesfully imported", ButtonType.OK);
         initPublicPOITable();
       } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading public POIs");
@@ -1258,12 +1251,10 @@ public class MainController {
       try {
         ArrayList<UserPOI> userPOIsToAdd = reader
             .readUserPOIS(importFilePath, true);
-        prevSize = userPOIs.size();
-        for (UserPOI userPOI : userPOIsToAdd) {
-          userPOIs.add(userPOI);
-        }
+        prevSize = getUserPOIs().size();
+        GUIManager.getInstanceGUIManager().addUserPOIs(userPOIsToAdd);
         alert = new Alert(AlertType.NONE,
-            userPOIs.size() - prevSize + " User POIs succesfully imported", ButtonType.OK);
+            getUserPOIs().size() - prevSize + " User POIs succesfully imported", ButtonType.OK);
         initUserPOITable();
       } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading user POIs");
@@ -1271,12 +1262,10 @@ public class MainController {
     } else if (importType.getValue().equals("Route")) {
       try {
         ArrayList<Route> routesToAdd = reader
-            .readRoutes(importFilePath, stations, true);
-        prevSize = routes.size();
-        for (Route route : routesToAdd) {
-          routes.add(route);
-        }
-        alert = new Alert(AlertType.NONE, routes.size() - prevSize + " Routes succesfully imported",
+            .readRoutes(importFilePath, getStations(), true);
+        prevSize = getRoutes().size();
+        GUIManager.getInstanceGUIManager().addRoutes(routesToAdd);
+        alert = new Alert(AlertType.NONE, getRoutes().size() - prevSize + " Routes succesfully imported",
             ButtonType.OK);
         initRouteTable();
       } catch (IOException| ArrayIndexOutOfBoundsException e) {

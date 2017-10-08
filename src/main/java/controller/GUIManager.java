@@ -1,9 +1,25 @@
 package controller;
 
+import com.sun.org.apache.regexp.internal.RE;
+import filehandler.MySQL;
+import filehandler.Reader;
+import java.io.IOException;
+import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import model.Analyst;
 import model.Cyclist;
+import model.Hotspot;
+import model.PublicPOI;
+import model.Retailer;
+import model.Route;
+import model.Station;
+import model.UserPOI;
 import window.Join;
 import window.Login;
 import window.Main;
@@ -23,6 +39,15 @@ public class GUIManager extends Application {
   private MainAnalyst mainAnalyst = new MainAnalyst();
   private UpdateAccount updateAccount = new UpdateAccount();
   private Stage primaryStage;
+
+  private ArrayList<Hotspot> hotspots = new ArrayList<>();
+  private ArrayList<Retailer> retailers = new ArrayList<>();
+  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
+  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
+  private ArrayList<Route> routes = new ArrayList<>();
+  private ArrayList<Station> stations = new ArrayList<>();
+
+  private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
 
 
   // Methods
@@ -190,5 +215,98 @@ public class GUIManager extends Application {
     //Close any other window, begin Login window
     loginWindow.start(primaryStage);
   }
+
+  /**
+   * populates arrayLists used for temporary local storage
+   *
+   * @return true if populating was successful, otherwise false
+   */
+  public boolean populateArrayLists() {
+    Reader rdr = new Reader();
+    Alert alert = null;
+    try {
+      //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
+      MySQL mysql = new MySQL();
+
+      hotspots = mysql.getHotspots();
+      retailers = mysql.getRetailers();
+
+      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
+
+      stations = rdr.readStations("/file/stations.json");
+      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
+      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
+      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
+      //TODO populate userRouteHistory
+    } catch (IOException e) {
+      alert = new Alert(AlertType.ERROR, "There was an error loading an inital data file", ButtonType.OK);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      alert = new Alert(AlertType.ERROR, "There was an error with the format of an initial data file",
+          ButtonType.OK);
+    } catch(Exception e) {
+      System.out.println(e);
+    }
+    if (alert != null) {
+      alert.showAndWait();
+    }
+    return true;
+  }
+
+  public ArrayList<Retailer> getRetailers() {
+    return retailers;
+  }
+
+  public ArrayList<Hotspot> getHotspots() {
+    return hotspots;
+  }
+
+  public ArrayList<PublicPOI> getPublicPOIs() {
+    return publicPOIs;
+  }
+
+  public ArrayList<Station> getStations() {
+    return stations;
+  }
+
+  public ArrayList<UserPOI> getUserPOIs() {
+    return userPOIs;
+  }
+
+  public ArrayList<Route> getRoutes() {
+    return routes;
+  }
+
+  public ArrayList<Route> getUserRouteHistory() {
+    return userRouteHistory;
+  }
+
+  public void addRetailers(ArrayList<Retailer> newRetailers) {
+    retailers.addAll(newRetailers);
+  }
+
+  public void addHotspots(ArrayList<Hotspot> newHotspots) {
+    hotspots.addAll(newHotspots);
+  }
+
+  public void addPublicPOIs(ArrayList<PublicPOI> newPublicPOIs) {
+    publicPOIs.addAll(newPublicPOIs);
+  }
+
+  public void addUserPOIs(ArrayList<UserPOI> newUserPOIs) {
+    userPOIs.addAll(newUserPOIs);
+  }
+
+  public void addRoutes(ArrayList<Route> newRoutes) {
+    routes.addAll(newRoutes);
+  }
+
+  public void addUserRouteHistory(Route route) {
+    userRouteHistory.add(route);
+  }
+
+  public void removeUserRouteHistory(Route route) {
+    userRouteHistory.remove(route);
+  }
+
 
 }
