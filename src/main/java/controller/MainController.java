@@ -688,10 +688,11 @@ public class MainController {
           Retailer selected_item = dataTableRetailer.getSelectionModel().getSelectedItem();
           helper.tableOnClickPopup.create("Retailer", selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
-            double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
-            //TODO change this when retailers have lat/long fields
             try {
-              prettyMarker(loc[0], loc[1], "<b>Test</b>", "retailer");
+              prettyMarker(selected_item.getLatitude(),
+                  selected_item.getLongitude(),
+                  selected_item.getAddress(),
+                  "retailer");
               viewMap();
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");
