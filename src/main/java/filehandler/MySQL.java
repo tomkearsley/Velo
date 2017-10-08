@@ -1,9 +1,6 @@
 package filehandler;
 
-import helper.PasswordHashing;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
-import java.util.Date;
 import model.Analyst;
 import model.Retailer;
 
@@ -15,18 +12,18 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import model.Cyclist;
 import model.Hotspot;
+import helper.PasswordStorage;
 
 /**
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
-
+  /**
   public static void main(String[] args) throws Exception {
-  Cyclist c = new Cyclist("John","Mayer","cyclist","password1",
-      LocalDate.now(),1,80,72);
-  insertCyclist(c);
 
-  }
+
+
+  }**/
 
   public static void insertRetailer(Connection conn,Retailer retailer)  throws Exception{
     try {
@@ -118,12 +115,19 @@ public class MySQL {
   public static void insertCyclist(Cyclist cyclist){
     try {
       LocalDate dob = cyclist.getDOB();
-      dob.toString();
+      String strDOB = dob.toString();
       Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO Users (username,password,birthDate,gender,weight,height) VALUES "
-              + "('" + cyclist.getUsername() + "','" + cyclist.getPassword() + "',"
-              + ""+ dob + ", "+ cyclist.getGender() +", "+ cyclist.getWeight() +", "+ cyclist.getHeight() +")");
+          "INSERT INTO Users (username,password,birthDate,gender,weight,height) VALUES (?,?,?,?,?,?)");
+      inserted.setString(1,cyclist.getUsername());
+      PasswordStorage p = new PasswordStorage();
+      String hashedPassword = p.createHash(cyclist.getPassword());
+      inserted.setString(2,hashedPassword);
+      inserted.setString(3,strDOB);
+      inserted.setInt(4,cyclist.getGender());
+      inserted.setDouble(5,cyclist.getWeight());
+      inserted.setInt(6,cyclist.getHeight());
+
       inserted.executeUpdate();
     }
     catch (Exception e) {
@@ -141,9 +145,12 @@ public class MySQL {
   public static void insertAnalyst(Analyst analyst) {
     try {
       Connection conn = getConnection();
+      PasswordStorage p = new PasswordStorage();
+      String hashedPassword = PasswordStorage.createHash(analyst.getPassword());
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO Users (username,password) VALUES "
-              + "('" + analyst.getUsername() + "','" + analyst.getPassword() + "')");
+          "INSERT INTO Users (username,password) VALUES(?,?)");
+      inserted.setString(1,analyst.getUsername());
+      inserted.setString(2,hashedPassword);
       inserted.executeUpdate();
     } catch (Exception e) {
       System.out.println(e);
@@ -263,7 +270,9 @@ public class MySQL {
           else {
             LoginResult.add(isCyclist);
           }
-          if (result.getString("password").equals(password)) {
+          String RealPassword = result.getString("password");
+          PasswordStorage p = new PasswordStorage();
+          if (p.verifyPassword(password,RealPassword)) {
             successfulLogin = true;
             LoginResult.add(successfulLogin);
             System.out.println("Successfully Logged in");
