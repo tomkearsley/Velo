@@ -688,7 +688,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Retailer selected_item = dataTableRetailer.getSelectionModel().getSelectedItem();
-          helper.tableOnClickPopup.create("Retailer", selected_item);
+          helper.tableOnClickPopup.create("Retailer", selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
             double[] loc = filehandler.Google.stringToLocation(selected_item.getAddress());
             //TODO change this when retailers have lat/long fields
@@ -768,7 +768,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Hotspot selected_item = dataTableHotspot.getSelectionModel().getSelectedItem();
-          helper.tableOnClickPopup.create("Hotspot",  selected_item);
+          helper.tableOnClickPopup.create("Hotspot",  selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -833,7 +833,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           PublicPOI selected_item = dataTablePublicPOI.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI",  selected_item);
+          tableOnClickPopup.create("Public POI",  selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -898,7 +898,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           UserPOI selected_item = dataTableUserPOI.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("User POI",  selected_item);
+          tableOnClickPopup.create("User POI",  selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -963,7 +963,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Station selected_item = dataTableStation.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Public POI",  selected_item);
+          tableOnClickPopup.create("Public POI",  selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
@@ -1040,7 +1040,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRoute.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Route",  selected_item);
+          tableOnClickPopup.create("Route",  selected_item, true);
           if (tableOnClickPopup.return_value == 1) {
             try {
 
@@ -1054,7 +1054,7 @@ public class MainController {
             }
           } else if (tableOnClickPopup.return_value == 2) {
             userRouteHistory.add(selected_item);
-            System.out.println(userRouteHistory.get(userRouteHistory.size()-1).toString());
+            initUserRouteTable();
           }
         }
       }
@@ -1123,7 +1123,7 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRouteHistory.getSelectionModel().getSelectedItem();
-          tableOnClickPopup.create("Personal Route",  selected_item);
+          tableOnClickPopup.create("Personal Route",  selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
             try {
 

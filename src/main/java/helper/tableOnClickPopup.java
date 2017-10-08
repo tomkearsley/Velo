@@ -13,7 +13,7 @@ public class tableOnClickPopup {
 
   public static int return_value = 0;
 
-  public static void create(String title, Mappable clicked_item) {
+  public static void create(String title, Mappable clicked_item, boolean isRouteTableItem) {
     return_value = 0;
     Alert alert = new Alert(AlertType.INFORMATION);
     alert.setTitle(title);
@@ -28,7 +28,7 @@ public class tableOnClickPopup {
 
     ButtonType addRouteButton = new ButtonType("Add to history");;
 
-    if (clicked_item instanceof Route) {
+    if (isRouteTableItem) {
       alert.getButtonTypes().setAll(addRouteButton, showOnMapButton, closeButton);
     } else {
       alert.getButtonTypes().setAll(showOnMapButton, closeButton);
