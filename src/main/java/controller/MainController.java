@@ -1052,6 +1052,8 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
+            selected_item.addTravelledBy(GUIManager.getInstanceGUIManager()
+                .getCyclistAccount().getUsername());
             userRouteHistory.add(selected_item);
             initUserRouteTable();
           }
@@ -1135,6 +1137,8 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
+            selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager()
+                .getCyclistAccount().getUsername());
             userRouteHistory.remove(selected_item);
             initUserRouteTable();
           }
