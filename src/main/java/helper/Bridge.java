@@ -12,7 +12,7 @@ public class Bridge {
   public void outputValue(String test) { System.out.println(test); }
 
   public String getHotspotTitle(Hotspot hotspot) {
-    return hotspot.getRemarks();
+    return hotspot.getDescription();
   }
 
   public String getStationTitle(Station station) { return station.getName(); }
