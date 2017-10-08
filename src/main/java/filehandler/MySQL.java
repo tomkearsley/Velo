@@ -238,6 +238,37 @@ public class MySQL {
   }
 
 
+  public static Cyclist getCyclist(String username){
+    try {
+      Connection conn = getConnection();
+      PreparedStatement statement = conn.prepareStatement("SELECT firstName,lastName,username,password,gender,height,"
+          + "weight,birthDate,userType FROM Users");
+      ResultSet result = statement.executeQuery();
+      while (result.next()){
+        if (result.getString("username").equals(username)) {
+          String firstName = result.getString("firstName");
+          String lastName = result.getString("lastName");
+          String queryUsername = result.getString("username");
+          String password = result.getString("password");
+          String strDOB =  result.getString("birthDate");
+          LocalDate birthDate = LocalDate.parse(strDOB);
+          int gender = result.getInt("gender");
+          int height = result.getInt("height");
+          double weight = result.getDouble("weight");
+          int userType = result.getInt("userType");
+          Cyclist returnCyclist = new Cyclist(firstName,lastName,queryUsername,password,birthDate,gender,weight,height);
+          return returnCyclist;
+        }
+      }
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+
+    return null;
+
+  }
+
+
   /**
    * Used within the login screen returns true if login is successful otherwise false. Additionally
    * tells if username exists
@@ -296,6 +327,8 @@ public class MySQL {
     LoginResult.add(successfulLogin);
     return LoginResult;
   }
+
+
 
   /**
    * Creates a connection between Computer and database. Connects to the Velo Schema.
