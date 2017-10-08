@@ -1,5 +1,6 @@
 package controller;
 
+import filehandler.MySQL;
 import filehandler.Reader;
 import filehandler.Writer;
 import helper.Bridge;
@@ -251,12 +252,14 @@ public class MainController {
     Alert alert = null;
     try {
       //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
-      //MySQL mysql = new MySQL();
-      //hotspots = mysql.getHotspots();
+      MySQL mysql = new MySQL();
+
+      hotspots = mysql.getHotspots();
+      retailers = mysql.getRetailers();
 
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
-      hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
-      retailers = rdr.readRetailers("/file/InitialRetailers.csv", false);
+
+
       stations = rdr.readStations("/file/stations.json");
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
@@ -267,6 +270,8 @@ public class MainController {
     } catch (ArrayIndexOutOfBoundsException e) {
       alert = new Alert(AlertType.ERROR, "There was an error with the format of an initial data file",
           ButtonType.OK);
+    } catch(Exception e) {
+      System.out.println(e);
     }
     if (alert != null) {
       alert.showAndWait();

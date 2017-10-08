@@ -3,6 +3,7 @@ package filehandler;
 import helper.PasswordHashing;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
+import java.util.Date;
 import model.Analyst;
 import model.Retailer;
 
@@ -116,11 +117,13 @@ public class MySQL {
    */
   public static void insertCyclist(Cyclist cyclist){
     try {
+      LocalDate dob = cyclist.getDOB();
+      dob.toString();
       Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
           "INSERT INTO Users (username,password,birthDate,gender,weight,height) VALUES "
               + "('" + cyclist.getUsername() + "','" + cyclist.getPassword() + "',"
-              + ""+ cyclist.getDOB() + ", "+ cyclist.getGender() +", "+ cyclist.getWeight() +", "+ cyclist.getHeight() +")");
+              + ""+ dob + ", "+ cyclist.getGender() +", "+ cyclist.getWeight() +", "+ cyclist.getHeight() +")");
       inserted.executeUpdate();
     }
     catch (Exception e) {
