@@ -212,6 +212,7 @@ public class MainController {
 
   private void loadHotspots() throws IOException {
     Reader rdr = new Reader();
+    //System.out.println(getDistance(40.758896,-73.985130,40.7678,-73.9718));
     //Run both lines of code
     window.setMember("aBridge", aBridge);
     window.call("loadHotspots", rdr.readHotspots("/file/InitialHotspots.csv", false));
