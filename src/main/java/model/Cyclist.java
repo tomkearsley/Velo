@@ -40,7 +40,6 @@ public class Cyclist {
     this.gender = gender;
     this.weight = weight;
     this.height = height;
-
   }
 
   /**

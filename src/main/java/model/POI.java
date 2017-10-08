@@ -83,6 +83,11 @@ public class POI implements Mappable {
   public boolean equals(Object object) {
     return this.toString().equals(object.toString());
   }
+
+  @Override
+  public String toHTML() {
+    return null;
+  }
 }
 
 
