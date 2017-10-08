@@ -28,7 +28,7 @@ public class tableOnClickPopup {
     ButtonType closeButton = new ButtonType("Close", ButtonData.CANCEL_CLOSE);
 
     ButtonType addRouteButton = new ButtonType("Add to history");
-    ButtonType removeRouteButton = new ButtonType("Remove from history");
+    ButtonType removeRouteButton = new ButtonType("Remove");
 
     if (isRouteTableItem) {
       alert.getButtonTypes().setAll(addRouteButton, showOnMapButton, closeButton);
