@@ -18,13 +18,11 @@ import helper.PasswordStorage;
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
+  /**
   public static void main(String[] args) throws Exception {
-    login("hashTest2","password");
     Cyclist c = getCyclist("cyclist");
-    int size = c.getPassword().length();
-    System.out.println(size);
-
-  }
+    System.out.println(c);
+  }**/
 
   // TODO @Tom add JavaDoc
   public static void insertRetailer(Connection conn,Retailer retailer)  throws Exception{
@@ -112,15 +110,18 @@ public class MySQL {
   /**
    * Takes a Cyclist object and inserts the username,password
    * birthdate,gender weight and height into the database.
+   * userType: Cyclist = 0, Analyst = 1.
    * @param cyclist Cyclist object given.
    */
   public static void insertCyclist(Cyclist cyclist){
     try {
+      int cyclistID = 0;
       LocalDate dob = cyclist.getDOB();
       String strDOB = dob.toString();
       Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO Users (username,password,birthDate,gender,weight,height) VALUES (?,?,?,?,?,?)");
+          "INSERT INTO Users (username,password,birthDate,gender,weight,height,firstName,lastName,"
+              + "userType) VALUES (?,?,?,?,?,?,?,?,?)");
       inserted.setString(1,cyclist.getUsername());
       PasswordStorage p = new PasswordStorage();
       String hashedPassword = p.createHash(cyclist.getPassword());
@@ -129,6 +130,9 @@ public class MySQL {
       inserted.setInt(4,cyclist.getGender());
       inserted.setDouble(5,cyclist.getWeight());
       inserted.setInt(6,cyclist.getHeight());
+      inserted.setString(7,cyclist.getFirstName());
+      inserted.setString(8,cyclist.getLastName());
+      inserted.setInt(9,cyclistID);
 
       inserted.executeUpdate();
     }
@@ -141,18 +145,20 @@ public class MySQL {
 
   /**
    * Takes the given username and password of a Analyst object and appends them to the
-   * database.
+   * database. userType: 1 = Analyst, 0 = Cyclist.
    * @param analyst Analyst object.
    */
   public static void insertAnalyst(Analyst analyst) {
     try {
+      int analystIdentifier = 1; // IDENTIFIER FOR ANALYST is 1.
       Connection conn = getConnection();
       PasswordStorage p = new PasswordStorage();
       String hashedPassword = PasswordStorage.createHash(analyst.getPassword());
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO Users (username,password) VALUES(?,?)");
+          "INSERT INTO Users (username,password,userType) VALUES(?,?,?)");
       inserted.setString(1,analyst.getUsername());
       inserted.setString(2,hashedPassword);
+      inserted.setInt(3,analystIdentifier);
       inserted.executeUpdate();
     } catch (Exception e) {
       System.out.println(e);
