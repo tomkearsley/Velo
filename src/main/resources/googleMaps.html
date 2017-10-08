@@ -143,6 +143,9 @@
 
       directionsService = new google.maps.DirectionsService;
       directionsDisplay = new google.maps.DirectionsRenderer;
+      directionsDisplay.setOptions({
+        suppressMarkers: true
+      })
 
       MarkerClusterer.prototype.remove = function () {};
 
@@ -407,10 +410,12 @@
 
           var location = route.legs[0].start_location;
 
+          createMarker(location.lat(),location.lng(),"Marker 1","default");
           displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
 
           for (var i = 0; i < route.legs.length; i++) {
             location = route.legs[i].end_location;
+            createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default");
             displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
           }
         } else {
