@@ -65,7 +65,8 @@ public class LoginController {
         userLoggedIn(); // formats GUI
         Platform.runLater(()-> {
           try {
-            // TODO set GUIManager.getInstanceGUIManager().setCyclistAccount( NEW CYCLIST) @tom
+            System.out.println(MySQL.getCyclist(enteredUsername));
+            GUIManager.getInstanceGUIManager().setCyclistAccount(MySQL.getCyclist(enteredUsername));
             GUIManager.getInstanceGUIManager().cyclistAuthenticated();
           } catch (Exception e) {
             e.printStackTrace();
