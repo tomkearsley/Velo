@@ -1,11 +1,8 @@
 package helper;
 
 
-import java.util.logging.Filter;
 import javafx.collections.transformation.FilteredList;
-import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import javax.xml.soap.Text;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -17,6 +14,7 @@ import model.UserPOI;
  * static class containing all filters used by the different data tables
  */
 public class filters {
+
   /**
    * Determines if string is an integer
    *
@@ -31,7 +29,14 @@ public class filters {
     }
     return true;
   }
-  public static FilteredList<Hotspot> hotspotFilter(TextField HotspotFilterField, FilteredList<Hotspot> fListHotspots) {
+
+  /**
+   * Filters the given filteredList by predetermined fields (borough, type, provider)
+   *
+   * @return filtered version of fListHotspots
+   */
+  public static FilteredList<Hotspot> hotspotFilter(TextField HotspotFilterField,
+      FilteredList<Hotspot> fListHotspots) {
     HotspotFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListHotspots.setPredicate(Hotspot -> {
         //if filter is empty, show all
@@ -54,7 +59,13 @@ public class filters {
     return fListHotspots;
   }
 
-  public static FilteredList<Retailer> retailerFilter(TextField RetailerFilterField, FilteredList<Retailer> fListRetailers) {
+  /**
+   * Filters the given FilteredList by predetermined fields (Address, Name, zipcode)
+   *
+   * @return filtered version of fListRetailers
+   */
+  public static FilteredList<Retailer> retailerFilter(TextField RetailerFilterField,
+      FilteredList<Retailer> fListRetailers) {
     RetailerFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListRetailers.setPredicate(Retailer -> {
         //if filter is empty, show all
@@ -83,8 +94,13 @@ public class filters {
     return fListRetailers;
   }
 
-
-  public static FilteredList<PublicPOI> publicPOIFilter (TextField PublicPOIFilterField, FilteredList<PublicPOI> fListPublicPOIs){
+  /**
+   * Filters the given filteredList by predetermined fields (Name)
+   *
+   * @return filtered version of fListPublicPOIs
+   */
+  public static FilteredList<PublicPOI> publicPOIFilter(TextField PublicPOIFilterField,
+      FilteredList<PublicPOI> fListPublicPOIs) {
     PublicPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListPublicPOIs.setPredicate(PublicPOI -> {
         //if filter is empty, show all
@@ -101,10 +117,16 @@ public class filters {
         return false;
       });
     });
-    return  fListPublicPOIs;
+    return fListPublicPOIs;
   }
 
-  public static FilteredList<UserPOI> userPOIFilter (TextField UserPOIFilterField, FilteredList<UserPOI> fListUserPOIs) {
+  /**
+   * Filters the given filteredList by predetermined fields (Name)
+   *
+   * @return filtered version of fListUserPOIs
+   */
+  public static FilteredList<UserPOI> userPOIFilter(TextField UserPOIFilterField,
+      FilteredList<UserPOI> fListUserPOIs) {
     UserPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListUserPOIs.setPredicate(UserPOI -> {
         //if filter is empty, show all
@@ -125,7 +147,13 @@ public class filters {
     return fListUserPOIs;
   }
 
-  public static FilteredList<Station> stationFilter (TextField StationFilterField, FilteredList<Station> fListStations) {
+  /**
+   * Filters the given filteredList by predetermined fields (Name)
+   *
+   * @return filtered version of fListStations
+   */
+  public static FilteredList<Station> stationFilter(TextField StationFilterField,
+      FilteredList<Station> fListStations) {
     StationFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListStations.setPredicate(Station -> {
         //if filter is empty, show all
@@ -147,8 +175,14 @@ public class filters {
     return fListStations;
   }
 
-
-  public static FilteredList<Route> routeFilter (TextField RouteFilterField, FilteredList<Route> fListRoutes) {
+  /**
+   * Filters the given filteredList by predetermined fields (Start/stop location names, bike ID,
+   * gender of cyclist)
+   *
+   * @return filtered version of fListRoutes
+   */
+  public static FilteredList<Route> routeFilter(TextField RouteFilterField,
+      FilteredList<Route> fListRoutes) {
     RouteFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListRoutes.setPredicate(Route -> {
         //if filter is empty, show all
