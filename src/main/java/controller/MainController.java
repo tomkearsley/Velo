@@ -517,6 +517,10 @@ public class MainController {
     window.call("displayRouteClick", locationFrom.getText(), locationTo.getText());
   }
 
+  public void nearbyMarkers(double lat,double lng,double distance,String markerType) {
+    window.setMember("aBridge", aBridge);
+    window.call("nearbyMarkers", lat, lng, distance, markerType);
+  }
 
   /* DATA TAB METHODS */
 

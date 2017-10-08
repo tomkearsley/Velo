@@ -211,6 +211,11 @@
       marker.addListener('click', function() {
         geocodeLatLng(myLatLng,infowindow);
         infowindow.open(map, marker);
+        nearbyMarkers(lat,lng,500,"retailer");
+        nearbyMarkers(lat,lng,500,"hotspot");
+        nearbyMarkers(lat,lng,500,"poi");
+        nearbyMarkers(lat,lng,500,"station");
+        nearbyMarkers(lat,lng,500,"ppoi");
       });
       allMarkers.push(marker);
       switch(markerType) {
@@ -267,6 +272,11 @@
       marker.addListener('click', function() {
         infowindow.setContent(info);
         infowindow.open(map, marker);
+        nearbyMarkers(lat,lng,500,"retailer");
+        nearbyMarkers(lat,lng,500,"hotspot");
+        nearbyMarkers(lat,lng,500,"poi");
+        nearbyMarkers(lat,lng,500,"station");
+        nearbyMarkers(lat,lng,500,"ppoi");
       });
 
       infowindow.setContent(info);
@@ -561,6 +571,36 @@
       showCluster(PPOICluster);
     }
 
+    function nearbyMarkers(lat,lng,distance,markerType) {
+      var location = new google.maps.LatLng(lat,lng);
+      var markerArray;
+      switch(markerType) {
+        case "hotspot":
+          markerArray = hotspotMarkers;
+          break;
+        case "station":
+          markerArray = stationMarkers;
+          break;
+        case "poi":
+          markerArray = POIMarkers;
+          break;
+        case "retailer":
+          markerArray = retailerMarkers;
+          break;
+        case "ppoi":
+          markerArray = PPOIMarkers;
+          break;
+      }
+      for(var i = 0;i<markerArray.length; i++) {
+        var d = google.maps.geometry.spherical.computeDistanceBetween(markerArray[i].position,location);
+        if(d > distance) {
+          markerArray[i].setMap(null)
+        }
+        else {
+          markerArray[i].setMap(map);
+        }
+      }
+    }
 
     //initialize();
     google.maps.event.addDomListener(window, 'load', initialize);
