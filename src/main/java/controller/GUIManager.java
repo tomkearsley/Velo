@@ -59,7 +59,7 @@ public class GUIManager extends Application {
   public void start(Stage primaryStage) throws Exception {
     instanceGUIManager = this; // set the static object GUIManager
     this.primaryStage = primaryStage;
-    primaryStage.setResizable(false); // TODO delete
+    //primaryStage.setResizable(false); // TODO delete
     loginWindow.start(primaryStage);
   }
 
