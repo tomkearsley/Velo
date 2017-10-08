@@ -67,12 +67,6 @@ public class MainController {
 
 
   // ArrayLists of all data types
-  private ArrayList<Hotspot> hotspots = new ArrayList<>();
-  private ArrayList<Retailer> retailers = new ArrayList<>();
-  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
-  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
-  private ArrayList<Route> routes = new ArrayList<>();
-  private ArrayList<Station> stations = new ArrayList<>();
 
 //  private ArrayList<Hotspot> hotspots = new ArrayList<>();
 //  private ArrayList<Retailer> retailers = new ArrayList<>();
@@ -83,7 +77,7 @@ public class MainController {
 //
 //  private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
 
-  private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
+//  private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
   // and are to be added to history //TODO implement saving of this arrayList to database
   private ArrayList<ImageView> buttons = new ArrayList<>();
 
@@ -646,7 +640,6 @@ public class MainController {
     //converting the arraylist to an observable list
     ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(getRetailers());
     //each 2 line section creates one table heading and set of values
-    //TODO lat and long from address?
     TableColumn<Retailer, String> nameCol = new TableColumn<>(
         "Name");//title to be written above column
     nameCol.setCellValueFactory(
@@ -1054,7 +1047,6 @@ public class MainController {
     SortedList<Route> sListRoutes = new SortedList<>(fListRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
     //simple: start and end stations, start and end times
-    //TODO calculate duration of a trip and put it in a column..?
     //sets up simple view
     dataTableRoute.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
@@ -1092,7 +1084,6 @@ public class MainController {
    * Initialiser for the route history table in the user tab
    */
   public void initUserRouteTable() {
-    //TODO do we want this table to be filterable?
     ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getUserRouteHistory());
 
     TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
@@ -1139,7 +1130,6 @@ public class MainController {
     SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
     //simple: start and end stations, start and end times
-    //TODO calculate duration of a trip and put it in a column..?
     //sets up simple view
     dataTableRouteHistory.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
@@ -1193,6 +1183,7 @@ public class MainController {
    * Tells GUIManager the user wants to log out
    */
   @FXML void logOut() throws Exception {
+    //TODO make this clear any user data (route history)
     GUIManager.getInstanceGUIManager().logOut();
   }
 
