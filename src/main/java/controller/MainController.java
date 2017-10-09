@@ -1270,8 +1270,8 @@ public class MainController {
     fileChooser.setTitle("Open CSV File");
     fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
     //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
-    File selectedFile = fileChooser.showOpenDialog(null);
     try {
+      File selectedFile = fileChooser.showOpenDialog(null);
       if (selectedFile != null) {
         if (selectedFile.getPath().endsWith(".csv")) {
           importData(selectedFile.getPath());
