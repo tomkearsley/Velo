@@ -30,6 +30,7 @@
 
     var wayPoints = [];
     var wayPointMarkers = [];
+    var wayPointIntermediateMarkers = [];
 
     var NEARBY_DISTANCE = 500;
 
@@ -41,6 +42,8 @@
     var POICluster;
     var stationCluster;
     var PPOICluster;
+
+    var firstWaypoint = true;
 
     //alert(directionsService.toString());
     function initialize() {
@@ -477,15 +480,6 @@
       }
     }
 
-    function deleteMarkers(markerArray) {
-      aBridge.outputValue("Deleting markers");
-      for (var i = 0;i< markerArray.length; i++) {
-        //markerArray[i].setMap(null);
-        markerArray[i] = null;
-      }
-      markerArray.length = 0; //Sets the array to null
-    }
-
     function hideCluster(markerCluster) {
       markerCluster.set("map", null); // remove the clusterer
       markerCluster.resetViewport();
@@ -501,6 +495,7 @@
     }
 
     function displayRoute(startLat,startLng,endLat,endLng) {
+      route
       //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
       var startLocation = startLat + "," + startLng;
       var endLocation = endLat + "," + endLng;
@@ -559,6 +554,7 @@
     }
 
     function displayRouteWaypointsString(startLocation,endLocation) {
+      clearWaypointIntermediate();
       directionsService.route({
         origin: startLocation + ",New York",
         destination: endLocation + ",New York",
@@ -572,12 +568,12 @@
 
           var location = route.legs[0].start_location;
 
-          createMarker(location.lat(),location.lng(),"Marker 1","default");
+          wayPointMarkers.push(createMarker(location.lat(),location.lng(),"Marker 1","default"));
           displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
 
           for (var i = 0; i < route.legs.length; i++) {
             location = route.legs[i].end_location;
-            createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default");
+            wayPointIntermediateMarkers.push(createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default"));
             displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
           }
         } else {
@@ -812,6 +808,13 @@
     function refreshCluster(markerCluster) {
       markerCluster.resetViewport();
       markerCluster.redraw();
+    }
+
+    function clearWaypointIntermediate() {
+      for(var i = 0;i<wayPointIntermediateMarkers.length;i++) {
+        wayPointIntermediateMarkers[i].setMap(null);
+      }
+      wayPointIntermediateMarkers = [];
     }
 
     //initialize();
