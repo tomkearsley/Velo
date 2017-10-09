@@ -177,6 +177,14 @@
           },
           {
             "featureType": "transit",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
             "elementType": "geometry",
             "stylers": [
               {
@@ -265,6 +273,7 @@
         });
       });
 
+      /*
       google.maps.event.addListener(map,'zoom_changed',function(event) {
         aBridge.outputValue("Zoom changed");
         refreshCluster(retailerCluster);
@@ -273,6 +282,7 @@
         refreshCluster(stationCluster);
         refreshCluster(PPOICluster);
       });
+      */
 
       google.maps.event.addListener(map,'dragend',function(event) {
         aBridge.outputValue("Map moved");
