@@ -7,7 +7,7 @@ public class Retailer extends POI {
   /** The street no + Road name */
   private String address;
 
-  /** The floor (Concourse, Third floor) */
+  /** The floor (i.e. Concourse, Third floor) */
   private String floor;
 
   /** The city in which the retailer is located */

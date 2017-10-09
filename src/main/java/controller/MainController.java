@@ -4,13 +4,18 @@ import filehandler.MySQL;
 import filehandler.Reader;
 import filehandler.Writer;
 import helper.Bridge;
+import helper.filters;
 import helper.tableOnClickPopup;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -22,6 +27,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -39,6 +45,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import model.Cyclist;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -67,12 +74,6 @@ public class MainController {
 
 
   // ArrayLists of all data types
-  private ArrayList<Hotspot> hotspots = new ArrayList<>();
-  private ArrayList<Retailer> retailers = new ArrayList<>();
-  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
-  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
-  private ArrayList<Route> routes = new ArrayList<>();
-  private ArrayList<Station> stations = new ArrayList<>();
 
 //  private ArrayList<Hotspot> hotspots = new ArrayList<>();
 //  private ArrayList<Retailer> retailers = new ArrayList<>();
@@ -83,7 +84,7 @@ public class MainController {
 //
 //  private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
 
-  private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
+//  private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
   // and are to be added to history //TODO implement saving of this arrayList to database
   private ArrayList<ImageView> buttons = new ArrayList<>();
 
@@ -109,13 +110,19 @@ public class MainController {
 
   // Table filter fields. one for each table view
   @FXML private TextField HotspotFilterField;
+  @FXML private ChoiceBox<String> HotspotFilterSelector;
   @FXML private TextField RetailerFilterField;
+  @FXML private ChoiceBox<String> RetailerFilterSelector;
   @FXML private TextField PublicPOIFilterField;
+  @FXML private ChoiceBox<String> PublicPOIFilterSelector;
   @FXML private TextField UserPOIFilterField;
+  @FXML private ChoiceBox<String> UserPOIFilterSelector;
   @FXML private TextField StationFilterField;
+  @FXML private ChoiceBox<String> StationFilterSelector;
   @FXML private TextField RouteFilterField;
-
-  @FXML private TextField routeHistoryFilterField;
+  @FXML private ChoiceBox<String> RouteFilterSelector;
+  @FXML private TextField RouteHistoryFilterField;
+  @FXML private ChoiceBox<String> RouteHistoryFilterSelector;
 
 
   /* Map tab attributes */
@@ -143,6 +150,12 @@ public class MainController {
 
   /* Account tab attributes */
   @FXML private ChoiceBox importType; // ChoiceBox for the Account import button
+  @FXML private Label accountTitle;
+  @FXML private Label username;
+  @FXML private Label birthDate;
+  @FXML private Label height;
+  @FXML private Label weight;
+  @FXML private Label BMI;
 
 
   /* METHODS */
@@ -202,6 +215,16 @@ public class MainController {
     initStationTable();
     initRouteTable();
     initUserRouteTable();
+
+    /* ACCOUNT TAB INITIALIZATION */
+    Cyclist cyclist = GUIManager.getInstanceGUIManager().getCyclistAccount();
+    accountTitle.setText(cyclist.getFirstName() + "'s Account");
+    username.setText(cyclist.getUsername());
+    birthDate.setText(cyclist.getDOB().format(DateTimeFormatter.ofPattern("MM/d/uuuu")));
+    height.setText(Integer.toString(cyclist.getHeight()) + "\"");
+    weight.setText(String.format("%.1f", cyclist.getWeight()) + "lbs");
+    BMI.setText(String.format("%.2f", cyclist.getBMI()));
+
   }
 
   public ArrayList<Retailer> getRetailers() {
@@ -623,20 +646,7 @@ public class MainController {
     }
     routeHistoryIsDetailed = !routeHistoryIsDetailed;
   }
-  /**
-   * Determines if string is an integer
-   *
-   * @param s String  to test
-   * @return true if String is an integer
-   */
-  private boolean isInteger(String s) {
-    try {
-      Integer i = Integer.parseInt(s);
-    } catch (NumberFormatException nfe) {
-      return false;
-    }
-    return true;
-  }
+
 
   /**
    * takes the arrayList retailers, creates table columns and sets these columns along with details
@@ -646,7 +656,6 @@ public class MainController {
     //converting the arraylist to an observable list
     ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(getRetailers());
     //each 2 line section creates one table heading and set of values
-    //TODO lat and long from address?
     TableColumn<Retailer, String> nameCol = new TableColumn<>(
         "Name");//title to be written above column
     nameCol.setCellValueFactory(
@@ -665,31 +674,20 @@ public class MainController {
      * if this returns true, the object is shown. If the filter field is empty,
      * or the attributes below match, then the object is shown
      */
-    RetailerFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListRetailers.setPredicate(Retailer -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
+    fListRetailers = filters.retailerFilter(RetailerFilterField, fListRetailers);
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        /*
-         * Add more Retailer.get__'s below to include more things in the search
-         */
-        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName()
-            .toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        //checking for zipcode. entire zipcode must be entered before a match is found
-        if (isInteger(lowerCaseFilter)) {
-          Integer input = Integer.parseInt(lowerCaseFilter);
-          if (input == Retailer.getZipcode()) {
-            return true;
+    RetailerFilterSelector.getItems().clear();
+    RetailerFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name", "Address", "Zipcode"));
+    RetailerFilterSelector.getSelectionModel().selectFirst();
+    RetailerFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RetailerSelectedIndex = newValue.intValue();
           }
-        }
-        return false;
-      });
-    });
+        });
+    fListRetailers = filters.retailerFilter(RetailerFilterField, fListRetailers);
     /*
      * Sorting:
      * wrapping the filtered list in a sorted list allows the user to click on the title
@@ -757,24 +755,20 @@ public class MainController {
     remarksCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
     FilteredList<Hotspot> fListHotspots = new FilteredList<>(oListHotspots);
-    HotspotFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListHotspots.setPredicate(Hotspot -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        // Add more Hotspot.get__'s below to include more things in the search
+    HotspotFilterSelector.getItems().clear();
+    HotspotFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name", "Borough", "Type", "Provider"));
+    HotspotFilterSelector.getSelectionModel().selectFirst();
+    HotspotFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.HotspotSelectedIndex = newValue.intValue();
 
-        if (Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter) || Hotspot.getType()
-            .toLowerCase().contains(lowerCaseFilter) || Hotspot.getProvider()
-            .toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
+          }
+        });
+    fListHotspots = filters.hotspotFilter(HotspotFilterField, fListHotspots);
 
     SortedList<Hotspot> sListHotspots = new SortedList<>(fListHotspots);
     sListHotspots.comparatorProperty().bind(dataTableHotspot.comparatorProperty());
@@ -827,22 +821,19 @@ public class MainController {
     descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
     FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<>(oListPublicPOIs);
-    PublicPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListPublicPOIs.setPredicate(PublicPOI -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
+    PublicPOIFilterSelector.getItems().clear();
+    PublicPOIFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    PublicPOIFilterSelector.getSelectionModel().selectFirst();
+    PublicPOIFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.PublicPOISelectedIndex = newValue.intValue();
+          }
+        });
+    fListPublicPOIs = filters.publicPOIFilter(PublicPOIFilterField, fListPublicPOIs);
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        // Add more Hotspot.get__'s below to include more things in the search
-
-        if (PublicPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
 
     SortedList<PublicPOI> sListPublicPOIs = new SortedList<>(fListPublicPOIs);
     sListPublicPOIs.comparatorProperty().bind(dataTablePublicPOI.comparatorProperty());
@@ -891,23 +882,22 @@ public class MainController {
     descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
     FilteredList<UserPOI> fListUserPOIs = new FilteredList<>(oListUserPOIs);
-    UserPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListUserPOIs.setPredicate(UserPOI -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        /*
-         * Add more UserPOI.get__'s below to include more things in the search
-         */
-        if (UserPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
+    UserPOIFilterSelector.getItems().clear();
+    UserPOIFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    UserPOIFilterSelector.getSelectionModel().selectFirst();
+    UserPOIFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.UserPOISelectedIndex = newValue.intValue();
+          }
+        });
+
+    fListUserPOIs = filters.userPOIFilter(UserPOIFilterField, fListUserPOIs);
+
+
 
     SortedList<UserPOI> sListUserPOIs = new SortedList<>(fListUserPOIs);
     sListUserPOIs.comparatorProperty().bind(dataTableUserPOI.comparatorProperty());
@@ -956,23 +946,19 @@ public class MainController {
     idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
     FilteredList<Station> fListStations = new FilteredList<>(oListStations);
-    StationFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListStations.setPredicate(Station -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        /*
-         * Add more Station.get__'s below to include more things in the search
-         */
-        if (Station.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
+    StationFilterSelector.getItems().clear();
+    StationFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    StationFilterSelector.getSelectionModel().selectFirst();
+    StationFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.StationSelectedIndex = newValue.intValue();
+          }
+        });
+    fListStations = filters.stationFilter(StationFilterField, fListStations);
 
     SortedList<Station> sListStations = new SortedList<>(fListStations);
     sListStations.comparatorProperty().bind(dataTableStation.comparatorProperty());
@@ -1025,36 +1011,23 @@ public class MainController {
 
     FilteredList<Route> fListRoutes = new FilteredList<>(oListRoutes);
 
-    RouteFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListRoutes.setPredicate(Route -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
-
-        String lowerCaseFilter = newValue.toLowerCase();
-        /*
-         * Add more Route.get__'s below to include more things in the search
-         */
-        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
-            Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        //filtering by gender of rider or bike ID. needs to be an exact match before anything is shown
-        if (isInteger(lowerCaseFilter)) {
-          Integer input = Integer.parseInt(lowerCaseFilter);
-          if (Route.getBikeID() == input || Route.getGender() == input) {
-            return true;
+    RouteFilterSelector.getItems().clear();
+    RouteFilterSelector.getItems().addAll(FXCollections.observableArrayList("Starts at:", "Ends at:", "Bike ID", "Gender"));
+    RouteFilterSelector.getSelectionModel().selectFirst();
+    RouteFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RouteSelectedIndex = newValue.intValue();
           }
-        }
-        return false;
-      });
-    });
+        });
+    fListRoutes = filters.routeFilter(RouteFilterField, fListRoutes);
+
 
     SortedList<Route> sListRoutes = new SortedList<>(fListRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
     //simple: start and end stations, start and end times
-    //TODO calculate duration of a trip and put it in a column..?
     //sets up simple view
     dataTableRoute.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
@@ -1092,7 +1065,6 @@ public class MainController {
    * Initialiser for the route history table in the user tab
    */
   public void initUserRouteTable() {
-    //TODO do we want this table to be filterable?
     ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getUserRouteHistory());
 
     TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
@@ -1109,37 +1081,23 @@ public class MainController {
 
     FilteredList<Route> fListUserRoutes = new FilteredList<>(oListUserRoutes);
 
-        routeHistoryFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListUserRoutes.setPredicate(Route -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
-
-        String lowerCaseFilter = newValue.toLowerCase();
-
-          //Add more Route.get__'s below to include more things in the search
-
-    if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
-        Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
-      return true;
-    }
-    //filtering by gender of rider or bike ID. needs to be an exact match before anything is shown
-    if (isInteger(lowerCaseFilter)) {
-      Integer input = Integer.parseInt(lowerCaseFilter);
-      if (Route.getBikeID() == input || Route.getGender() == input) {
-        return true;
-      }
-    }
-    return false;
-  });
-});
+    RouteHistoryFilterSelector.getItems().clear();
+    RouteHistoryFilterSelector.getItems().addAll(FXCollections.observableArrayList("Starts at:", "Ends at:", "Bike ID"));
+    RouteHistoryFilterSelector.getSelectionModel().selectFirst();
+    RouteHistoryFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RouteHistorySelectedIndex = newValue.intValue();
+          }
+        });
+    fListUserRoutes = filters.routeHistoryFilter(RouteHistoryFilterField, fListUserRoutes);
 
 
     SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
     //simple: start and end stations, start and end times
-    //TODO calculate duration of a trip and put it in a column..?
     //sets up simple view
     dataTableRouteHistory.getColumns()
         .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
@@ -1193,6 +1151,7 @@ public class MainController {
    * Tells GUIManager the user wants to log out
    */
   @FXML void logOut() throws Exception {
+    //TODO make this clear any user data (route history)
     GUIManager.getInstanceGUIManager().logOut();
   }
 

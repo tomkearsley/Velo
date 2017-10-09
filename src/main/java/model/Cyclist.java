@@ -85,4 +85,10 @@ public class Cyclist {
   public LocalDate getDOB() {
     return birthDate;
   }
+
+  public Double getBMI() {
+    double heightM = height * 0.0254;
+    double weightKG = weight * 0.45359237;
+    return  weightKG / heightM;
+  }
 }

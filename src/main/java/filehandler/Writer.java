@@ -21,12 +21,8 @@ public class Writer {
 
   private String[] getAttributeFormat (String[] attributes) {
     for (int i = 0; i < attributes.length; i++) {
-      try {
-        if (attributes[i].contains(",")) {
-          attributes[i] = "\"" + attributes[i] + "\"";
-        }
-      } catch (NullPointerException e) {
-        System.out.println();
+      if (attributes[i].contains(",")) {
+        attributes[i] = "\"" + attributes[i] + "\"";
       }
     }
     return attributes;
