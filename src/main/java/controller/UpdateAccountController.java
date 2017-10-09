@@ -69,6 +69,8 @@ public class UpdateAccountController {
       int newHeightFeet = cyclist.getHeight() / 12;
       int newHeightInches = cyclist.getHeight() % 12;
       // TODO set heightFeet and heightInches
+      heightFeet.setValue(Integer.toString(newHeightFeet));
+      heightInches.setValue(Integer.toString(newHeightInches));
       weight.setText(String.valueOf(cyclist.getWeight()));
       username.setText(cyclist.getUsername());
 
