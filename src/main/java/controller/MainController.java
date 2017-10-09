@@ -23,6 +23,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker.State;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.PieChart.Data;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -156,6 +158,7 @@ public class MainController {
   @FXML private Label height;
   @FXML private Label weight;
   @FXML private Label BMI;
+  @FXML private PieChart distanceChart;
 
 
   /* METHODS */
@@ -186,10 +189,10 @@ public class MainController {
     dataViewTab.setText("");
     historyViewTab.setText("");
     userViewTab.setText("");
-    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap.png")));
-    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace.png")));
-    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory.png")));
-    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount.png")));
+    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap 2.png")));
+    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace 2.png")));
+    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory 2.png")));
+    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount 2.png")));
 
     // MAPS TAB INITIALIZATION
     URL url = getClass().getResource("/googleMaps.html");
@@ -228,6 +231,7 @@ public class MainController {
     height.setText(Integer.toString(cyclist.getHeight()) + "\"");
     weight.setText(String.format("%.1f", cyclist.getWeight()) + "lbs");
     BMI.setText(String.format("%.2f", cyclist.getBMI()));
+    setDistanceChart();
 
   }
 
@@ -1052,6 +1056,7 @@ public class MainController {
           } else if (tableOnClickPopup.return_value == 2) {
             selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
+            //TODO update selected_item in the database
             initUserRouteTable();
           }
         }
@@ -1126,9 +1131,9 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
-            //TODO make this not throw null pointers
             selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().removeUserRouteHistory(selected_item);
+            //TODO update selected_item in the database
             initUserRouteTable();
           }
         }
@@ -1158,6 +1163,25 @@ public class MainController {
   @FXML void logOut() throws Exception {
     //TODO make this clear any user data (route history)
     GUIManager.getInstanceGUIManager().logOut();
+  }
+
+  /** Generates and populates the data for the user's distance chart *
+   * The chart displays user distance travelled over the last four weeks
+   * This week, last week, two weeks ago, and three weeks ago in a 100% pie chart
+   */
+  private void setDistanceChart() {
+
+    ObservableList<Data> distanceChartData = FXCollections.observableArrayList(
+        new PieChart.Data("This week", 13),
+        new PieChart.Data("Last week", 25),
+        new PieChart.Data("Two Weeks Ago", 10),
+        new PieChart.Data("Three Weeks Ago", 22)
+    );
+
+    distanceChart.setData(distanceChartData);
+
+    // TODO set this to actual data @Kyle @Andrew
+
   }
 
   /**
@@ -1212,8 +1236,7 @@ public class MainController {
    * Imports additional items from a csv file to the appropriate ArrayList based on the selected
    * datatype from the ChoiceBox
    */
-  public void importData(
-      String importFilePath) { //TODO expand for rest of data types, file path differences
+  public void importData(String importFilePath) { //TODO expand for rest of data types, file path differences
     Reader reader = new Reader();
     int prevSize;
     Alert alert = null;

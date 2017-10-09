@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<SplitPane dividerPositions="0.18147448015122875" orientation="VERTICAL" prefHeight="531.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainAnalystController">
+   <items>
+      <GridPane prefHeight="100.0" prefWidth="600.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Analysis" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+               <font>
+                  <Font size="48.0" />
+               </font>
+            </Label>
+         </children>
+      </GridPane>
+      <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="461.0" prefWidth="600.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab closable="false" text="Hotspots">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="418.0" minHeight="10.0" prefHeight="377.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="379.0" minHeight="0.0" prefHeight="51.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportHotspots" prefHeight="27.0" prefWidth="135.0" text="Export Hotspots" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <PieChart fx:id="hotspotsChart" layoutX="44.0" layoutY="14.0" prefHeight="246.0" prefWidth="600.0" title="Hotspots per City" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <Button layoutX="161.0" layoutY="388.0" mnemonicParsing="false" onAction="#importHotspots" text="Import Hotspots" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                     </children>
+                  </GridPane>
+               </content>
+          </Tab>
+            <Tab closable="false" text="Retailers">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="378.0" minHeight="10.0" prefHeight="378.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="206.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRetailers" prefHeight="27.0" prefWidth="135.0" text="Export Retailers" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <Button layoutX="161.0" layoutY="388.0" mnemonicParsing="false" onAction="#importRetailers" text="Import Retailers" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Public POIs">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="378.0" minHeight="10.0" prefHeight="378.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="210.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportPublicPOIs" prefHeight="27.0" prefWidth="135.0" text="Export Public POIs" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <Button layoutX="147.0" layoutY="389.0" mnemonicParsing="false" onAction="#importPublicPOIs" text="Import Public POIs" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Stations">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="382.0" minHeight="10.0" prefHeight="380.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="209.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#exportStations" prefHeight="27.0" prefWidth="135.0" text="Export Stations" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <Button mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+          <Tab closable="false" text="Routes">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="389.0" minHeight="10.0" prefHeight="380.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="209.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Button fx:id="exportRoutes" layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRoutes" prefHeight="27.0" prefWidth="135.0" text="Export Routes" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="67.0" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                        <LineChart fx:id="routesChart" layoutX="44.0" layoutY="14.0" prefHeight="320.0" prefWidth="480.0" title="Distance Travelled per Month">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </LineChart>
+                        <Button layoutX="173.0" layoutY="389.0" mnemonicParsing="false" onAction="#importRoutes" text="Import Routes" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin></Button>
+                     </children>
+                  </GridPane>
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </items>
+</SplitPane>
