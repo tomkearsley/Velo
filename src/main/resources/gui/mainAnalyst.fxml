@@ -32,7 +32,7 @@
                   <Font size="48.0" />
                </font>
             </Label>
-            <Button fx:id="logOut" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="111.0" text="Log Out" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+            <Button fx:id="logOut" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="111.0" text="Log Out" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>

@@ -54,7 +54,7 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Insert Completed");
+      System.out.println("Inserted retailer to MySQL database");
     }
 
   }
@@ -80,7 +80,7 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Insert Completed");
+      System.out.println("Inserted publicPOI to MySQL database");
     }
 
   }
@@ -109,7 +109,7 @@ public class MySQL {
     } catch(Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Insert Completed.");
+      System.out.println("Inserted route to MySQL database");
     }
 
   }
@@ -138,7 +138,7 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Insert Completed");
+      System.out.println("Inserted hotspot to MySQL database");
     }
   }
 
@@ -174,7 +174,7 @@ public class MySQL {
     catch (Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Inserted cyclist to MySQL");
+      System.out.println("Inserted cyclist to MySQL database");
     }
   }
 
@@ -198,7 +198,7 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     } finally {
-      System.out.println("Inserted analyst to MySQL");
+      System.out.println("Inserted analyst to MySQL database");
     }
   }
 
@@ -234,11 +234,10 @@ public class MySQL {
       }
       return hotspots;
 
-
     } catch (Exception e) {
       System.out.println(e);
     }
-    System.out.println("Record was not found.");
+    System.out.println("ERROR: Hotspot record was not found in MySQL database.");
     return null;
   }
 
@@ -276,7 +275,7 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     }
-    System.out.println("Record was not found.");
+    System.out.println("ERROR: Retailer record was not found in MySQL database.");
     return null;
   }
 
@@ -310,7 +309,7 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     }
-
+    System.out.println("ERROR: Cyclist was not found in MySQL database.");
     return null;
 
   }
@@ -356,7 +355,7 @@ public class MySQL {
             System.out.println("Successfully logged in via MySQL");
             return LoginResult;
           } else {
-            System.out.println("Password is incorrect");
+            System.out.println("ERROR: Password is incorrect");
             LoginResult.add(successfulLogin);
             return LoginResult;
           }
@@ -365,8 +364,8 @@ public class MySQL {
     } catch (Exception e) {
       System.out.println(e);
     }
-    if (usernameExists == false) {
-      System.out.println("Username does not exist!");
+    if (!usernameExists) {
+      System.out.println("ERROR: Username does not exist on MySQL database!");
       LoginResult.add(isCyclist);
       LoginResult.add(successfulLogin);
     }
@@ -392,12 +391,12 @@ public class MySQL {
       Class.forName(driver);
 
       Connection conn = DriverManager.getConnection(url, username, password);
-      System.out.println("Connected to MySQL database");
+      System.out.println("Connection established to MySQL database");
       return conn;
     } catch (Exception e) {
       System.out.println(e);
     }
-
+    System.out.println("ERROR: Failed to establish connection to MySQL database");
     return null;
   }
 
