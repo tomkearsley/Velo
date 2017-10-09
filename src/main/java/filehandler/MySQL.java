@@ -63,6 +63,7 @@ public class MySQL {
   }
 
 
+
   // DATA INSERTING
 
   /**
@@ -284,9 +285,8 @@ public class MySQL {
    * @return Returns an array of the longitude and latitude if found, else returns null
    * @throws Exception Exception is thrown if an error occurs with the database.
    */
-  public static ArrayList<Hotspot> getHotspots() throws Exception {
+  public static ArrayList<Hotspot> getHotspots(Connection conn) throws Exception {
     try {
-      Connection conn = getConnection();
       PreparedStatement statement = conn.prepareStatement("SELECT longitude,latitude,LocationAddress,"
           + "city,postcode,type,SSID,borough,remarks,provider,name FROM Hotspots");
 
@@ -334,9 +334,8 @@ public class MySQL {
   }
 
 
-  public static ArrayList<Retailer> getRetailers() throws Exception {
+  public static ArrayList<Retailer> getRetailers(Connection conn) throws Exception {
     try {
-      Connection conn = getConnection();
       PreparedStatement statement = conn.prepareStatement("SELECT name,address,longitude,latitude,"
           + "floor,city,zipCode,state,block,secondaryDescription FROM Retailers");
 

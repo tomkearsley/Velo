@@ -4,6 +4,7 @@ import com.sun.org.apache.regexp.internal.RE;
 import filehandler.MySQL;
 import filehandler.Reader;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
@@ -253,9 +254,9 @@ public class GUIManager extends Application {
     try {
       //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
       MySQL mysql = new MySQL();
-
-      hotspots = mysql.getHotspots();
-      retailers = mysql.getRetailers();
+      Connection conn = mysql.getConnection();
+      ArrayList<Retailer> retailers = mysql.getRetailers(conn);
+      ArrayList<Hotspot> hotspots = mysql.getHotspots(conn);
 
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
 
