@@ -304,7 +304,13 @@ public class GUIManager extends Application {
   }
 
   public ArrayList<Route> getUserRouteHistory() {
-    return userRouteHistory;
+    ArrayList<Route> routeHistory = new ArrayList<>();
+    for (Route route : getRoutes()) {
+      if (route.travelledByContains(cyclistAccount.getUsername())) {
+        routeHistory.add(route);
+      }
+    }
+    return routeHistory;
   }
 
   public void addRetailers(ArrayList<Retailer> newRetailers) {
@@ -328,11 +334,11 @@ public class GUIManager extends Application {
   }
 
   public void addUserRouteHistory(Route route) {
-    userRouteHistory.add(route);
+    route.addTravelledBy(GUIManager.getInstanceGUIManager().cyclistAccount.getUsername());
   }
 
   public void removeUserRouteHistory(Route route) {
-    userRouteHistory.remove(route);
+    route.removeTravelledBy(GUIManager.getInstanceGUIManager().cyclistAccount.getUsername());
   }
 
 
