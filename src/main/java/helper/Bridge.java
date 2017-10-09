@@ -46,6 +46,6 @@ public class Bridge {
   }
 
   public double[] getRetailerLocation(Retailer retailer) {
-    return stringToLocation(retailer.getAddress());
+    return stringToLocation(retailer.getAddress() + ", New york");
   }
 }
