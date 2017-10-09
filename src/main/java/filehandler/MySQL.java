@@ -1,5 +1,6 @@
 package filehandler;
 
+import com.sun.org.apache.regexp.internal.RE;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -27,19 +28,16 @@ import model.UserPOI;
  */
 public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
-
+  /**
   public static void main(String[] args) throws Exception {
     Connection conn = getConnection();
-    ArrayList<UserPOI> userPOIS = getUserPOI(conn,"cyclist");
-    System.out.println(userPOIS);
-
-    /**
-    EMPTY DATABASE CODE
-    PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
-    stmt.executeUpdate();
-    PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
-    stmt2.executeUpdate();**/
-  }
+    Reader rdr = new Reader();
+    ArrayList<Station> stations = rdr.readStations("/file/stations.json");
+    int size = stations.size();
+    for (int i = 0; i < size; i++) {
+      insertStation(conn,stations.get(i));
+    }
+  } **/
 
 
 
@@ -131,7 +129,7 @@ public class MySQL {
       insert.setInt(3,station.getAvailableDocs());
       insert.setInt(4,station.getTotalDocks());
       insert.setDouble(5,station.getLatitude());
-      insert.setDouble(6,station.getLatitude());
+      insert.setDouble(6,station.getLongitude());
       insert.setString(7,station.getStatusValue());
       insert.setInt(8,station.getStatusKey());
       insert.setInt(9,station.getAvailableBikes());
@@ -326,8 +324,8 @@ public class MySQL {
           + "Description FROM PublicPOI");
       ResultSet result = statement.executeQuery();
       while(result.next()) {
-        PublicPOI publicPOI = new PublicPOI(result.getDouble("Longitude"),
-            result.getDouble("Latitude"),result.getString("Name"),
+        PublicPOI publicPOI = new PublicPOI(result.getDouble("Latitude"),
+            result.getDouble("Longitude"),result.getString("Name"),
             result.getString("Description"));
         publicPOIS.add(publicPOI);
 

@@ -267,9 +267,9 @@ public class GUIManager extends Application {
       publicPOIs = mysql.getPublicPOI(conn);
       routes = mysql.getAllRoutes(conn);
       String username = GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername();
-      //userPOIs = mysql.getUserPOI(conn,username);
+      userPOIs = mysql.getUserPOI(conn,username);
 
-      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
+      //userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
 
       //TODO populate userRouteHistory
     } catch (IOException e) {
