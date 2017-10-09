@@ -87,7 +87,7 @@
                   <ComboBox fx:id="heightInches" onKeyTyped="#clearHeightInchesStyle" onMouseClicked="#clearHeightInchesStyle" prefHeight="27.0" prefWidth="199.0" promptText="Height (in)" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
-            <TextField fx:id="username" editable="false" onKeyTyped="#clearUsernameStyle" onMouseClicked="#clearUsernameStyle" promptText="Username" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <TextField fx:id="username" disable="true" editable="false" focusTraversable="false" onKeyTyped="#clearUsernameStyle" onMouseClicked="#clearUsernameStyle" pickOnBounds="false" promptText="Username" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
             <PasswordField fx:id="password" onKeyTyped="#clearPasswordStyle" onMouseClicked="#clearPasswordStyle" promptText="Password" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
             <GridPane GridPane.rowIndex="2">
               <columnConstraints>

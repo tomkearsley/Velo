@@ -3,6 +3,7 @@ package controller;
 import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -12,6 +13,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import model.Cyclist;
 import filehandler.MySQL;
 
@@ -43,15 +46,19 @@ public class JoinController {
     username.setTooltip(new Tooltip("50 character limit and must be unique"));
     password.setTooltip(new Tooltip("80 character limit"));
 
-    //TODO make enter press the continue button
-//    gridPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//      @Override
-//      public void handle(KeyEvent keyEvent) {
-//        if (keyEvent.getCode() == KeyCode.ENTER)  {
-//          createCyclist();
-//        }
-//      }
-//    });
+    EventHandler<KeyEvent> listener = (keyEvent) -> {
+      if (keyEvent.getCode() == KeyCode.ENTER)  {
+        createCyclist();
+      }
+    };
+    firstName.setOnKeyPressed(listener);
+    lastName.setOnKeyPressed(listener);
+    birthDate.setOnKeyPressed(listener);
+    heightFeet.setOnKeyPressed(listener);
+    heightInches.setOnKeyPressed(listener);
+    weight.setOnKeyPressed(listener);
+    username.setOnKeyPressed(listener);
+    password.setOnKeyPressed(listener);
 
     ObservableList feet = FXCollections.observableArrayList(
         "1", "2", "3", "4", "5", "6", "7", "8"
@@ -65,8 +72,7 @@ public class JoinController {
   }
 
   /** Attempts to create a bicyclist user using form fields */
-  @FXML
-  private void createCyclist() {
+  @FXML private void createCyclist() {
 
     boolean validData = true;
     String newFirstName = "";
@@ -191,8 +197,7 @@ public class JoinController {
   /** Back button action
    * Tells the GUI manager that the user wants to cancel joining
    */
-  @FXML
-  private void userJoinCancelled() throws Exception {
+  @FXML private void userJoinCancelled() throws Exception {
     System.out.println("User cancelled joining.");
     GUIManager.getInstanceGUIManager().cyclistJoinCancelled();
   }
@@ -262,57 +267,49 @@ public class JoinController {
   }
 
   /** Clears the CSS style for the firstName element */
-  @FXML
-  private void clearFirstNameStyle() {
+  @FXML private void clearFirstNameStyle() {
     firstName.setStyle("-fx-background-color: null");
     firstName.setStyle("-fx-border-color: null");
   }
 
   /** Clears the CSS style for the lastName element */
-  @FXML
-  private void clearLastNameStyle() {
+  @FXML private void clearLastNameStyle() {
     lastName.setStyle("-fx-background-color: null");
     lastName.setStyle("-fx-border-color: null");
   }
 
   /** Clears the CSS style for the birthDate element */
-  @FXML
-  private void clearBirthDateStyle() {
+  @FXML private void clearBirthDateStyle() {
     birthDate.setStyle("-fx-background-color: null");
     birthDate.setStyle("-fx-border-color: null");
   }
 
   /** Clears the CSS style for the heightFeet element */
-  @FXML
-  private void clearHeightFeetStyle() {
+  @FXML private void clearHeightFeetStyle() {
     heightFeet.setStyle("-fx-background-color: null");
     heightFeet.setStyle("-fx-border-color: null");
   }
 
   /** Clears the CSS style for the heightInches element */
-  @FXML
-  private void clearHeightInchesStyle() {
+  @FXML private void clearHeightInchesStyle() {
     heightInches.setStyle("-fx-background-color: null");
     heightInches.setStyle("-fx-border-color: null");
   }
 
   /** Clears the CSS style for the weight element */
-  @FXML
-  private void clearWeightStyle() {
+  @FXML private void clearWeightStyle() {
     weight.setStyle("-fx-background-color: null");
     weight.setStyle("-fx-border-color: null");
   }
 
   /** Clears the CSS style for the username element */
-  @FXML
-  private void clearUsernameStyle() {
+  @FXML private void clearUsernameStyle() {
     username.setStyle("-fx-background-color: null");
     username.setStyle("-fx-border-color: null");
   }
 
   /** Clears the CSS style for the password element */
-  @FXML
-  private void clearPasswordStyle() {
+  @FXML private void clearPasswordStyle() {
     password.setStyle("-fx-background-color: null");
     password.setStyle("-fx-border-color: null");
   }
@@ -325,17 +322,15 @@ public class JoinController {
   private static String toDisplayCase(String s) {
 
     final String ACTIONABLE_DELIMITERS = " '-/"; // these cause the character following
-    // to be capitalized
-
     StringBuilder sb = new StringBuilder();
     boolean capNext = true;
 
-    for (char c : s.toCharArray()) {
-      c = (capNext)
-          ? Character.toUpperCase(c)
-          : Character.toLowerCase(c);
-      sb.append(c);
-      capNext = (ACTIONABLE_DELIMITERS.indexOf((int) c) >= 0); // explicit cast not needed
+    for (char ch : s.toCharArray()) {
+      ch = (capNext)
+          ? Character.toUpperCase(ch)
+          : Character.toLowerCase(ch);
+      sb.append(ch);
+      capNext = (ACTIONABLE_DELIMITERS.indexOf((int) ch) >= 0); // explicit cast not needed
     }
     return sb.toString();
   }
