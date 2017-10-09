@@ -3,6 +3,7 @@ package filehandler;
 import java.time.LocalDate;
 import java.util.Date;
 import model.Analyst;
+import model.PublicPOI;
 import model.Retailer;
 
 import java.sql.Connection;
@@ -62,21 +63,19 @@ public class MySQL {
   // DATA INSERTING
 
   /**
-   * Inserts a new Public POI Point into the database
-   *
-   * @param longitude Longitude of POI Point
-   * @param latitude Latitude of POI Point
-   * @param name Name given for Public POI
-   * @param description Short description of POI
-   * @throws Exception Thrown if insert fails, too many values, incorrect format ect.
+   * Inserts Public POI into database
+   * @param publicPOI Public POI Object
+   * @throws Exception Exception thrown if insert is unsuccessful.
    */
-  public static void insertPublicPOI(double longitude, double latitude, String name,
-      String description) throws Exception {
+  public static void insertPublicPOI(PublicPOI publicPOI) throws Exception {
     try {
       Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO PublicPOI (Longitude,Latitude,Name,Description) VALUES (" + longitude + ","
-              + latitude + ",'" + name + "','" + description + "')");
+          "INSERT INTO PublicPOI (Longitude,Latitude,Name,Description) VALUES (?,?,?,?)");
+      inserted.setDouble(1,publicPOI.getLongitude());
+      inserted.setDouble(2,publicPOI.getLatitude());
+      inserted.setString(3,publicPOI.getName());
+      inserted.setString(4,publicPOI.getDescription());
       inserted.executeUpdate(); //UPDATE = SEND QUERY = Retrieve
     } catch (Exception e) {
       System.out.println(e);
