@@ -34,44 +34,65 @@ public class Google {
     return string.replaceAll(" ", "+");
   }
 
-  public static JSONObject urlToJson(String string) throws NullPointerException{
+  public static JSONObject locationToJson(double lat, double lng) throws NullPointerException{
     String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
     String JsonString =
-        "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string)
+        "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng
             + "&key=" + apiKey;
-    InputStream input = null;
-    StringBuilder sb = new StringBuilder();
-
-    try {
-      URL googleURL = new URL(JsonString);
-      BufferedReader in = new BufferedReader(new InputStreamReader(googleURL.openStream()));
-      String inputLine;
-      while ((inputLine = in.readLine()) != null) {
-        sb.append(inputLine);
-      }
-      in.close();
+    return urlToJson(JsonString);
     }
 
-    catch (MalformedURLException e) {
-      System.out.println("Something went wrong!\nCheck that you've entered a valid location");
-      return null;
-    } catch (IOException e) {
-      System.out.println(
-          "Something went wrong!\nThere was an error in reading the location. Please retry");
-      return null;
-    } catch (JSONException e) {
-      System.out.println(
-          "Something went wrong!\nThere was an error in parsing the location details. Please retry");
-      return null;
-    } catch (Exception e) {
-      System.out.print("Whoops! Something went wrong:\n" + e);
-      return null;
+    public static JSONObject stringToJson(String string) throws NullPointerException{
+      String apiKey = "AIzaSyAnsKL3XnguaCwUM9kICe223bxI2KAoQkM";
+      String JsonString =
+          "https://maps.googleapis.com/maps/api/geocode/json?address=" + toGoogleString(string)
+              + "&key=" + apiKey;
+
+      return urlToJson(JsonString);
+    }
+
+    public static JSONObject urlToJson(String url) {
+      InputStream input = null;
+      StringBuilder sb = new StringBuilder();
+
+      try {
+        URL googleURL = new URL(url);
+        BufferedReader in = new BufferedReader(new InputStreamReader(googleURL.openStream()));
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+          sb.append(inputLine);
+        }
+        in.close();
+      }
+
+      catch (MalformedURLException e) {
+        System.out.println("Something went wrong!\nCheck that you've entered a valid location");
+        return null;
+      } catch (IOException e) {
+        System.out.println(
+            "Something went wrong!\nThere was an error in reading the location. Please retry");
+        return null;
+      } catch (JSONException e) {
+        System.out.println(
+            "Something went wrong!\nThere was an error in parsing the location details. Please retry");
+        return null;
+      } catch (Exception e) {
+        System.out.print("Whoops! Something went wrong:\n" + e);
+        return null;
     }
 
     return new JSONObject(sb.toString());
   }
 
-  public static double[] jsonToLocation(JSONObject jsonObj) throws NullPointerException{
+  public static String jsonToString(JSONObject jsonObj) throws NullPointerException{
+    JSONArray resultArray = jsonObj.getJSONArray("results");
+
+    JSONObject addressObject = resultArray.getJSONObject(0);
+
+    return addressObject.getString("formatted_address");
+  }
+
+  public static double[] jsonToLocation(JSONObject jsonObj) throws NullPointerException {
     JSONArray resultArray = jsonObj.getJSONArray("results");
     //JSONObject result1 = resultArray.getJSONObject(1);
     JSONObject addressObject = resultArray.getJSONObject(0);
@@ -89,31 +110,20 @@ public class Google {
     return location;
   }
 
+
   public static double[] stringToLocation(String string) {
-    try {
-      JSONObject jsonObj = urlToJson(string);
-      return jsonToLocation(jsonObj);
-    }
-    catch(NullPointerException e) {
-      create("Invalid location","Could not find location");
-      return new double[]{0,0};
-    }
-      //Double latitude =   jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("latitude");
-      //Double longitude = jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("longitude");
+    return jsonToLocation(stringToJson(string));
   }
 
-  /*
   public static String locationToString(double lat,double lng) {
-    try {
-      JSONObject jsonObj = urlToJson()
-    }
+    return jsonToString(locationToJson(lat,lng));
   }
-  */
+
 
   public static void main(String[] args) {
     System.out.println(stringToLocation("1 Liberty Plaza")[0]);
     System.out.println(stringToLocation("1 Liberty Plaza")[1]);
-
+    System.out.println(locationToString(40.709722,-74.011389));
 //    Reader rdr = new Reader();
 //    Bridge aBridge = new Bridge();
 //    ArrayList<Retailer> retailerArrayList = new ArrayList<Retailer>();
