@@ -30,6 +30,7 @@
 
     var wayPoints = [];
     var wayPointMarkers = [];
+    var wayPointIntermediateMarkers = [];
 
     var NEARBY_DISTANCE = 500;
 
@@ -41,6 +42,8 @@
     var POICluster;
     var stationCluster;
     var PPOICluster;
+
+    var firstWaypoint = true;
 
     //alert(directionsService.toString());
     function initialize() {
@@ -177,6 +180,14 @@
           },
           {
             "featureType": "transit",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
             "elementType": "geometry",
             "stylers": [
               {
@@ -263,6 +274,31 @@
         wayPoints.push({
           location: new google.maps.LatLng(event.latLng.lat(),event.latLng.lng())
         });
+      });
+
+      /*
+      google.maps.event.addListener(map,'zoom_changed',function(event) {
+        aBridge.outputValue("Zoom changed");
+        refreshCluster(retailerCluster);
+        refreshCluster(hotspotCluster);
+        refreshCluster(POICluster);
+        refreshCluster(stationCluster);
+        refreshCluster(PPOICluster);
+      });
+      */
+
+      google.maps.event.addListener(map,'dragend',function(event) {
+        aBridge.outputValue("Map moved");
+        refreshCluster(retailerCluster);
+        refreshCluster(hotspotCluster);
+        refreshCluster(POICluster);
+        refreshCluster(stationCluster);
+        refreshCluster(PPOICluster);
+      });
+
+      google.maps.event.addListener(infowindow,'click',function(event) {
+        aBridge.outputValue("Clicked infowindow");
+        refreshMarkers();
       });
 
       //var bikeLayer = new google.maps.BicyclingLayer();
@@ -392,7 +428,7 @@
       });
     }
 
-    function prettyMarker(lat,lng,info,markerType) {
+    function prettyMarker(lat,lng,info,markerType,infoText) {
       map.setZoom(17); // 15 = Streets, 20 = Buildings. 17 seems middle-ground enough
       var myLatLng = new google.maps.LatLng(lat, lng);
       //alert("lat: " + lat + "\nlng: " + lng + "\nLocation: " + myLatLng);
@@ -406,7 +442,7 @@
       map.setCenter(myLatLng); //Sets focus to marker
 
       marker.addListener('click', function() {
-        infowindow.setContent(info);
+        infowindow.setContent(infoText);
         infowindow.open(map, marker);
         displayNearby(lat,lng,NEARBY_DISTANCE);
       });
@@ -449,15 +485,6 @@
       }
     }
 
-    function deleteMarkers(markerArray) {
-      aBridge.outputValue("Deleting markers");
-      for (var i = 0;i< markerArray.length; i++) {
-        //markerArray[i].setMap(null);
-        markerArray[i] = null;
-      }
-      markerArray.length = 0; //Sets the array to null
-    }
-
     function hideCluster(markerCluster) {
       markerCluster.set("map", null); // remove the clusterer
       markerCluster.resetViewport();
@@ -470,25 +497,6 @@
       markerCluster.resetViewport();
       markerCluster.redraw();
       aBridge.outputValue("Showing cluster");
-    }
-
-    function displayRoute(startLat,startLng,endLat,endLng) {
-      //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-      var startLocation = startLat + "," + startLng;
-      var endLocation = endLat + "," + endLng;
-      directionsService.route({
-        origin: startLocation,
-        destination: endLocation,
-        travelMode: 'BICYCLING'
-      }, function(response, status) {
-        //alert("as");
-        if (status === 'OK') {
-          directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
-      });
-      //alert("Test");
     }
 
     function displayRouteString(startLocation,endLocation) {
@@ -509,8 +517,8 @@
       var startLocation = startLat + "," + startLng;
       var endLocation = endLat + "," + endLng;
       directionsService.route({
-        origin: startLocation,
-        destination: endLocation,
+        origin: startLocation + ",New York",
+        destination: endLocation + ",New York",
         waypoints: wayPoints,
         travelMode: 'BICYCLING'
       }, function(response, status) {
@@ -519,9 +527,15 @@
           var route = response.routes[0];
           aBridge.outputValue("Displaying route");
 
-          displayNearby(startLat,startLng,NEARBY_DISTANCE);
+          var location = route.legs[0].start_location;
+
+          wayPointMarkers.push(createMarker(location.lat(),location.lng(),"Marker 1","default"));
+          displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
+
           for (var i = 0; i < route.legs.length; i++) {
-            var location = route.legs[i].end_location;
+            location = route.legs[i].end_location;
+            wayPointIntermediateMarkers.push(createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default"));
+            displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
           }
         } else {
           window.alert('Directions request failed due to ' + status);
@@ -530,7 +544,37 @@
       clearWaypoints();
     }
 
+    function displayRoute(startLat,startLng,endLat,endLng) {
+      //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      var startLocation = aBridge.locationToStringBridge(startLat,startLng);
+      var endLocation = aBridge.locationToStringBridge(endLat,endLng);
+
+      directionsService.route({
+        origin: startLocation,
+        destination: endLocation,
+        travelMode: 'BICYCLING'
+      }, function(response, status) {
+        aBridge.outputValue("displaying route");
+        //alert("as");
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+          aBridge.outputValue("Displaying route");
+
+          wayPointMarkers.push(createMarker(startLat,startLng,"Start","default"));
+          displayNearby(startLat(),startLng(),NEARBY_DISTANCE);
+
+          wayPointMarkers.push(createMarker(endLat,endLng,"End","default"));
+          displayNearby(endLat(),endLng(),NEARBY_DISTANCE);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+          aBridge.outputValue(status);
+        }
+      });
+      clearWaypoints();
+    }
+
     function displayRouteWaypointsString(startLocation,endLocation) {
+      clearWaypointIntermediate();
       directionsService.route({
         origin: startLocation + ",New York",
         destination: endLocation + ",New York",
@@ -544,12 +588,12 @@
 
           var location = route.legs[0].start_location;
 
-          createMarker(location.lat(),location.lng(),"Marker 1","default");
+          wayPointMarkers.push(createMarker(location.lat(),location.lng(),"Marker 1","default"));
           displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
 
           for (var i = 0; i < route.legs.length; i++) {
             location = route.legs[i].end_location;
-            createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default");
+            wayPointIntermediateMarkers.push(createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default"));
             displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
           }
         } else {
@@ -587,7 +631,7 @@
     }
 
     function loadRetailers(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying retailers");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -597,14 +641,14 @@
         //aBridge.testValue("test2");
         title = aBridge.getRetailerTitle(infoArray.get(i));
         //title = "test string";
+        infoText = aBridge.getRetailerHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"retailer");
+        createMarkerWithText(lat,lng,title,"retailer",infoText);
       }
-      createMarker(10,10,title,"t9-square");
     }
 
     function loadHotspots(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying hotspots");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -614,13 +658,14 @@
         //aBridge.testValue("test2");
         title = aBridge.getHotspotTitle(infoArray.get(i));
         //title = "test string";
+        infoText = aBridge.getHotspotHTML(infoArray.get(i));
         //aBridge.outputValue(title);
-        createMarker(lat,lng,title,"hotspot");
+        createMarkerWithText(lat,lng,title,"hotspot",infoText);
       }
     }
 
     function loadPOIS(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying POIS");
       for(var i = 0;i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -629,13 +674,14 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getTitle(infoArray.get(i));
+        infoText = aBridge.getPOIHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"poi");
+        createMarkerWithText(lat,lng,title,"poi",infoText);
       }
     }
 
     function loadStations(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying stations");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -644,13 +690,14 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getStationTitle(infoArray.get(i));
+        infoText = aBridge.getStationHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"station");
+        createMarkerWithText(lat,lng,title,"station",infoText);
       }
     }
 
     function loadPPOIS(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying public POIS");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -659,8 +706,9 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getTitle(infoArray.get(i));
+        infoText = aBridge.getPPOIHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"ppoi");
+        createMarkerWithText(lat,lng,title,"ppoi",infoText);
       }
     }
 
@@ -744,12 +792,14 @@
       }
       for(var i = 0;i<markerArray.length; i++) {
         var d = aBridge.getDistance(markerArray[i].position.lat(),markerArray[i].position.lng(),location.lat(),location.lng());
-        if(d > distance) {
-          markerArray[i].setMap(null)
+        if(d <= distance) {
+          markerArray[i].setMap(map);
         }
+        /*
         else {
           markerArray[i].setMap(map);
         }
+        */
       }
     }
 
@@ -777,11 +827,39 @@
       return toReturn;
     }
 
-    //initialize();
-    google.maps.event.addDomListener(window, 'load', initialize);
-    //google.maps.event.addListener(window, 'click', function(event) {
-    //  alert(event.latLng);  // in event.latLng  you have the coordinates of click
-    //});
+    function refreshCluster(markerCluster) {
+      markerCluster.resetViewport();
+      markerCluster.redraw();
+    }
+
+    function refreshMarker(markerArray) {
+      for (var i = 0; i < markerArray.length; i++) {
+        if (markerArray[i].getMap()) {
+        }
+        markerArray[i].setMap(map);
+      }
+
+      function refreshMarkers() {
+        refreshMarker(retailerMarkers);
+        refreshMarker(hotspotMarkers);
+        refreshMarker(POIMarkers);
+        refreshMarker(stationMarkers);
+        refreshMarker(PPOIMarkers)
+      }
+
+      function clearWaypointIntermediate() {
+        for (var i = 0; i < wayPointIntermediateMarkers.length; i++) {
+          wayPointIntermediateMarkers[i].setMap(null);
+        }
+        wayPointIntermediateMarkers = [];
+      }
+
+      //initialize();
+      //google.maps.event.addDomListener(window, 'load', initialize);
+      //google.maps.event.addListener(window, 'click', function(event) {
+      //  alert(event.latLng);  // in event.latLng  you have the coordinates of click
+      //});
+    }
   </script>
 </head>
 <body>
