@@ -3,10 +3,14 @@ package helper;
 import static filehandler.Google.stringToLocation;
 import static filehandler.Google.locationToString;
 
+import java.util.Date;
 import model.Hotspot;
 import model.POI;
+import model.PublicPOI;
 import model.Retailer;
+import model.Route;
 import model.Station;
+import model.UserPOI;
 
 public class Bridge {
 
@@ -49,11 +53,34 @@ public class Bridge {
     return stringToLocation(retailer.getAddress() + ", New york");
   }
 
-   public void addPublicPOI(double lat,double lng,String name,String description) {
-    outputValue("Adding public POI");
-   }
-
   public void addUserPOI(double lat,double lng,String name,String description) {
     outputValue("Adding user POI");
+  }
+
+  public Route addRoute(double startLat,double startLng,double endLat,double endLng,double[][] waypoints) {
+    double[] startLocation = {startLat,startLng};
+    double[] endLocation = {endLat,endLng};
+
+    return null; //Can't do this part
+  }
+
+  public String getRetailerHTML(Retailer retailer) {
+    return "<h3>Retailer</h3>\n";
+  }
+
+  public String getHotspotHTML(Hotspot hotspot) {
+    return "<h3>Hotspot</h3>";
+  }
+
+  public String getPOIHTML(UserPOI userPOI) {
+    return "<h3>User's point of interest</h3>";
+  }
+
+  public String getStationHTML(Retailer retailer) {
+    return "<h3>Station</h3>";
+  }
+
+  public String getPPOIHTML(PublicPOI POI) {
+    return "<h3>Public point of interest</h3>";
   }
 }
