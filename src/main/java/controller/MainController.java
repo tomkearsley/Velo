@@ -155,6 +155,8 @@ public class MainController {
   private boolean retailersLoaded = false;
   private boolean PPOISLoaded = false;
 
+  private boolean mapLoaded = false;
+
   /* Account tab attributes */
   @FXML private ChoiceBox importType; // ChoiceBox for the Account import button
   @FXML private Label accountTitle;
@@ -215,6 +217,7 @@ public class MainController {
         System.out.println(
             "Initialisation complete"); // Maybe don't let them switch to map view until this is initialised or just default to table view to give time for this to load.
       }
+      initializeMap();
     });
     mapEngine.load(url.toExternalForm());
     mapEngine.setJavaScriptEnabled(true);
@@ -288,13 +291,13 @@ public class MainController {
     mainPane.getSelectionModel().select(historyViewTab);
   }
 
-  private void loadRetailers() throws IOException {
+  private void loadRetailers(){
     window.setMember("aBridge", aBridge);
     window.call("loadRetailers", getRetailers());
     retailersLoaded = true;
   }
 
-  private void loadHotspots() throws IOException {
+  private void loadHotspots(){
     //System.out.println(getDistance(40.758896,-73.985130,40.7678,-73.9718));
     //Run both lines of code
     window.setMember("aBridge", aBridge);
@@ -303,19 +306,19 @@ public class MainController {
     //testPretty();
   }
 
-  private void loadStations() throws IOException {
+  private void loadStations(){
     window.setMember("aBridge", aBridge);
     window.call("loadStations", getStations());
     stationsLoaded = true;
   }
 
-  public void loadPOIS() throws IOException {
+  public void loadPOIS(){
     window.setMember("aBridge", aBridge);
     window.call("loadPOIS", getUserPOIs());
     POISLoaded = true;
   } // TODO implement Imas
 
-  public void loadPPOIS() throws IOException{
+  public void loadPPOIS(){
     window.setMember("aBridge",aBridge);
     window.call("loadPPOIS",getPublicPOIs());
     PPOISLoaded = true;
@@ -379,7 +382,7 @@ public class MainController {
       } else {
         loadRetailers();
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       System.out.println("Error occurred while reading retailers");
       System.out.println(e);
     }
@@ -393,7 +396,7 @@ public class MainController {
       } else {
         loadHotspots();
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       System.out.println("Error occurred while reading hotspots");
       System.out.println(e);
     }
@@ -407,7 +410,7 @@ public class MainController {
       } else {
         loadPOIS();
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       System.out.println("Error occurred while reading POIs");
       System.out.println(e);
     }
@@ -421,7 +424,7 @@ public class MainController {
       } else {
         loadStations();
       }
-    } catch (IOException e) {
+    } catch (Exception e) {
       System.out.println("Error occurred while reading stations");
       System.out.println(e);
     }
@@ -435,7 +438,7 @@ public class MainController {
       } else {
         loadPPOIS();
       }
-    } catch(IOException e) {
+    } catch(Exception e) {
       System.out.println(e);
     }
     toggleButton(4);
@@ -540,6 +543,27 @@ public class MainController {
   public void hidePPOIS() {
     window.setMember("aBridge", aBridge);
     window.call("hidePPOIS");
+  }
+
+  public void initializeMap() {
+    try {
+      window.setMember("aBridge", aBridge);
+      window.call("initialize");
+      loadHotspots();
+      loadRetailers();
+      loadPPOIS();
+      loadPOIS();
+      loadStations();
+      hideHotspots();
+      hideRetailers();
+      hidePPOIS();
+      hidePOIS();
+      hideStations();
+    }
+    catch (NullPointerException e) {
+      //Happens as bridge isn't loaded, not allowing the hotspots to be created
+      System.out.println("Map initialized confirmation");
+    }
   }
 
   /*
