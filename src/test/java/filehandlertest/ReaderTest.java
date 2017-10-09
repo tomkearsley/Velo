@@ -5,6 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -217,9 +221,21 @@ public class ReaderTest {
     Date date2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse("2017-09-20 10:13:52 PM");
     Date date3 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse("2017-09-20 10:14:02 PM");
 
-    Station station1 = new Station(72,"W 52 St & 11 Ave",28,39,40.76727216,-73.99392888,"In Service",1,10,"W 52 St & 11 Ave","","","","","",false,date1,"");
-    Station station2 = new Station(79,"Franklin St & W Broadway",18,33,40.71911552,-74.00666661,"In Service",1,14,"Franklin St & W Broadway","","","","","",false,date2,"");
-    Station station3 = new Station(82,"St James Pl & Pearl St",3,27,40.71117416,-74.00016545,"In Service",1,24,"St James Pl & Pearl St","","","","","",false,date3,"");
+    Instant instant1 = date1.toInstant();
+    ZonedDateTime zdt1 = instant1.atZone(ZoneId.systemDefault());
+    LocalDate localDate1 = zdt1.toLocalDate();
+
+    Instant instant2 = date2.toInstant();
+    ZonedDateTime zdt2 = instant2.atZone(ZoneId.systemDefault());
+    LocalDate localDate2 = zdt2.toLocalDate();
+
+    Instant instant3 = date3.toInstant();
+    ZonedDateTime zdt3 = instant3.atZone(ZoneId.systemDefault());
+    LocalDate localDate3 = zdt3.toLocalDate();
+
+    Station station1 = new Station(72,"W 52 St & 11 Ave",28,39,40.76727216,-73.99392888,"In Service",1,10,"W 52 St & 11 Ave","","","","","",false,localDate1,"");
+    Station station2 = new Station(79,"Franklin St & W Broadway",18,33,40.71911552,-74.00666661,"In Service",1,14,"Franklin St & W Broadway","","","","","",false,localDate2,"");
+    Station station3 = new Station(82,"St James Pl & Pearl St",3,27,40.71117416,-74.00016545,"In Service",1,24,"St James Pl & Pearl St","","","","","",false,localDate3,"");
 
     compareStations.add(station1);
     compareStations.add(station2);

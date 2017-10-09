@@ -1,6 +1,6 @@
 package model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * The class Station defines the object type for CitiBike rental locations
@@ -64,7 +64,7 @@ public class Station extends POI {
   private boolean testStation;
 
   /***/
-  private Date lastCommunicationTime;
+  private LocalDate lastCommunicationTime;
 
   /**
    * Name of landmark if it a landmark
@@ -177,11 +177,11 @@ public class Station extends POI {
     this.testStation = testStation;
   }
 
-  public Date getLastCommunicationTime() {
+  public LocalDate getLastCommunicationTime() {
     return lastCommunicationTime;
   }
 
-  public void setLastCommunicationTime(Date lastCommunicationTime) {
+  public void setLastCommunicationTime(LocalDate lastCommunicationTime) {
     this.lastCommunicationTime = lastCommunicationTime;
   }
 
@@ -204,7 +204,7 @@ public class Station extends POI {
   public Station(int ID, String name, int availableDocks, int totalDocks, double latitude,
       double longitude, String statusValue, int statusKey, int availableBikes,
       String streetAddress1, String streetAddress2, String city, String postalCode, String location,
-      String altitude, boolean testStation, Date lastCommunicationTime, String landMark) {
+      String altitude, boolean testStation, LocalDate lastCommunicationTime, String landMark) {
     super(name, "", latitude, longitude);
     this.ID = ID;
     //this.stationName = stationName;
