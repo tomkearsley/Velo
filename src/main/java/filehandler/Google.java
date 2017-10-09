@@ -102,6 +102,14 @@ public class Google {
       //Double longitude = jsonObj.getJSONObject("results").getJSONObject("geometry").getJSONObject("location").getDouble("longitude");
   }
 
+  /*
+  public static String locationToString(double lat,double lng) {
+    try {
+      JSONObject jsonObj = urlToJson()
+    }
+  }
+  */
+
   public static void main(String[] args) {
     System.out.println(stringToLocation("1 Liberty Plaza")[0]);
     System.out.println(stringToLocation("1 Liberty Plaza")[1]);
