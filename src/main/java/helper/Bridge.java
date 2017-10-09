@@ -69,11 +69,11 @@ public class Bridge {
   }
 
   public String getHotspotHTML(Hotspot hotspot) {
-    return "<h3>Hotspot</h3><b>Name:</b> " + hotspot.getName() + "<br><b>Address:</b> " + hotspot.getLocationAddress() + "<br><b>Remarks:</b> " + hotspot.getRemarks();
+    return "<h3>Hotspot</h3><b>Name:</b> " + hotspot.getName() + "<br><b>Address:</b> " + hotspot.getLocationAddress() + "<br><b>Remarks:</b> " + hotspot.getDescription();
   }
 
   public String getPOIHTML(UserPOI userPOI) {
-    return "<h3>User's Point of Interest</h3>\n<b>Name:</b> " + userPOI.getName() + "<br><b>Address:</b> " + locationToString(userPOI.getLatitude(),userPOI.getLongitude()) + "<br><b>Description:</b> " + userPOI.getDescription();
+    return "<h3>User's Point of Interest</h3><b>Name:</b> " + userPOI.getName() + "<br><b>Address:</b> " + locationToString(userPOI.getLatitude(),userPOI.getLongitude()) + "<br><b>Description:</b> " + userPOI.getDescription();
   }
 
   public String getStationHTML(Station station) {

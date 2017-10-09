@@ -296,6 +296,11 @@
         refreshCluster(PPOICluster);
       });
 
+      google.maps.event.addListener(infowindow,'click',function(event) {
+        aBridge.outputValue("Clicked infowindow");
+        refreshMarkers();
+      });
+
       //var bikeLayer = new google.maps.BicyclingLayer();
       //bikeLayer.setMap(map);
       //alert("Test");
@@ -772,12 +777,14 @@
       }
       for(var i = 0;i<markerArray.length; i++) {
         var d = aBridge.getDistance(markerArray[i].position.lat(),markerArray[i].position.lng(),location.lat(),location.lng());
-        if(d > distance) {
-          markerArray[i].setMap(null)
+        if(d <= distance) {
+          markerArray[i].setMap(map);
         }
+        /*
         else {
           markerArray[i].setMap(map);
         }
+        */
       }
     }
 
@@ -810,18 +817,34 @@
       markerCluster.redraw();
     }
 
-    function clearWaypointIntermediate() {
-      for(var i = 0;i<wayPointIntermediateMarkers.length;i++) {
-        wayPointIntermediateMarkers[i].setMap(null);
+    function refreshMarker(markerArray) {
+      for (var i = 0; i < markerArray.length; i++) {
+        if (markerArray[i].getMap()) {
+        }
+        markerArray[i].setMap(map);
       }
-      wayPointIntermediateMarkers = [];
-    }
 
-    //initialize();
-    google.maps.event.addDomListener(window, 'load', initialize);
-    //google.maps.event.addListener(window, 'click', function(event) {
-    //  alert(event.latLng);  // in event.latLng  you have the coordinates of click
-    //});
+      function refreshMarkers() {
+        refreshMarker(retailerMarkers);
+        refreshMarker(hotspotMarkers);
+        refreshMarker(POIMarkers);
+        refreshMarker(stationMarkers);
+        refreshMarker(PPOIMarkers)
+      }
+
+      function clearWaypointIntermediate() {
+        for (var i = 0; i < wayPointIntermediateMarkers.length; i++) {
+          wayPointIntermediateMarkers[i].setMap(null);
+        }
+        wayPointIntermediateMarkers = [];
+      }
+
+      //initialize();
+      //google.maps.event.addDomListener(window, 'load', initialize);
+      //google.maps.event.addListener(window, 'click', function(event) {
+      //  alert(event.latLng);  // in event.latLng  you have the coordinates of click
+      //});
+    }
   </script>
 </head>
 <body>
