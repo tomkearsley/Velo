@@ -1,6 +1,7 @@
 package filehandler;
 
 import java.time.LocalDate;
+import java.util.Date;
 import model.Analyst;
 import model.Retailer;
 
@@ -13,18 +14,24 @@ import java.util.ArrayList;
 import model.Cyclist;
 import model.Hotspot;
 import helper.PasswordStorage;
+import model.Route;
 
 /**
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
+  // TODO: Optimisation by initialising one connection at beginning.
   /**
   public static void main(String[] args) throws Exception {
-    Cyclist c = getCyclist("cyclist");
-    System.out.println(c);
   }**/
 
-  // TODO @Tom add JavaDoc
+  /**
+   * Inserts Retailer into Database. Mainly used for intial load of 700+ Retailers
+   * But can also be used if a user wants to add databases later
+   * @param conn Connection to Server
+   * @param retailer Retailer Object
+   * @throws Exception Exception thrown if insertion was unsuccessful.
+   */
   public static void insertRetailer(Connection conn,Retailer retailer)  throws Exception{
     try {
       PreparedStatement inserted = conn.prepareStatement("INSERT INTO Retailers (name,address,"
@@ -42,7 +49,7 @@ public class MySQL {
       inserted.setString(10,retailer.getSecondaryDescription());
 
 
-      inserted.executeUpdate(); //UPDATE = SEND QUERY = Retrieve
+      inserted.executeUpdate(); //UPDATE = SEND, QUERY = Retrieve
     } catch (Exception e) {
       System.out.println(e);
     } finally {
@@ -75,6 +82,35 @@ public class MySQL {
       System.out.println(e);
     } finally {
       System.out.println("Insert Completed");
+    }
+
+  }
+
+  public static void insertRoute(Connection conn,Route route,String username){
+    try {
+      PreparedStatement insert = conn.prepareStatement("INSERT INTO RouteHistory (duration,startDate,"
+          + "stopDate,startStation,endStation,bikeID,birthYear,gender,username) VALUES (?,?,?,?,?,?,?,?,?)");
+      insert.setInt(1,route.getDuration());
+      Date sDate = route.getStartDate(); // CONVERSION FOR DATABASE.
+      String startDate = sDate.toString();
+      Date eDate = route.getStopDate();
+      String endDate = eDate.toString();
+      insert.setString(2,startDate);
+      insert.setString(3,endDate);
+      insert.setString(4,route.getStartStationName());
+      insert.setString(5,route.getStopStationName());
+      insert.setInt(6,route.getBikeID());
+      insert.setInt(7,route.getBirthYear());
+      insert.setInt(8,route.getGender());
+      insert.setString(9,username);
+      insert.executeUpdate();
+
+
+
+    } catch(Exception e) {
+      System.out.println(e);
+    } finally {
+      System.out.println("Insert Completed.");
     }
 
   }
@@ -245,7 +281,11 @@ public class MySQL {
     return null;
   }
 
-
+  /**
+   * Takes a username parameter and returns the corresponding Cyclist object (password still hashed)
+   * @param username username of desired cyclist object in database.
+   * @return Cyclist object
+   */
   public static Cyclist getCyclist(String username){
     try {
       Connection conn = getConnection();
