@@ -1,6 +1,7 @@
 package helper;
 
 import static filehandler.Google.stringToLocation;
+import static filehandler.Google.locationToString;
 
 import model.Hotspot;
 import model.POI;
@@ -27,7 +28,7 @@ public class Bridge {
 
   public double[] getDisplayRouteArray(String location) {return stringToLocation(location);}
 
-  public String locationToString(Double[] location) {return locationToString(location); }
+  public String locationToStringBridge(double lat,double lng) {return locationToString(lat,lng); }
 
   public double getDistance(double startLat,double startLng,double endLat,double endLng) {
 

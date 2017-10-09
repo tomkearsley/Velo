@@ -202,6 +202,47 @@
       wayPoints.splice(position,0,{location: location,stopover: stopover});
     }
 
+    function createMarkerWithText(lat,lng,title,markerType,infoText) {
+      //Images should be ~ 23 * 23.
+      var myLatLng = new google.maps.LatLng(lat, lng);
+      //alert("lat: " + lat + "\nlng: " + lng + "\nLocation: " + myLatLng);
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        title: title,
+        map: map,
+        icon: "image/" + markerType + ".png"
+      });
+
+      marker.addListener('click', function() {
+        infowindow.setContent(infoText);
+        infowindow.open(map, marker);
+        displayNearby(lat,lng,NEARBY_DISTANCE);
+      });
+      allMarkers.push(marker);
+      switch(markerType) {
+        case "hotspot":
+          hotspotMarkers.push(marker);
+          hotspotCluster.addMarker(marker);
+          break;
+        case "station":
+          stationMarkers.push(marker);
+          stationCluster.addMarker(marker);
+          break;
+        case "poi":
+          POIMarkers.push(marker);
+          POICluster.addMarker(marker);
+          break;
+        case "retailer":
+          retailerMarkers.push(marker);
+          retailerCluster.addMarker(marker);
+          break;
+        case "ppoi":
+          PPOIMarkers.push(marker);
+          PPOICluster.addMarker(marker);
+          break;
+      }
+      return marker;
+    }
 
     function createMarker(lat,lng,title,markerType) {
       //Images should be ~ 23 * 23.
@@ -425,8 +466,6 @@
       clearWaypoints();
     }
 
-
-
     function testCluster() {
       markerCluster.addMarker(createMarker(40.758896,-73.985130,"Test","hotspot"));
       markerCluster.addMarker(createMarker(40.8,-73.985130,"Test","hotspot"));
@@ -440,21 +479,6 @@
     }
 
     function geocodeLatLng(latlng,infowindow) {
-      geocoder.geocode({'location': latlng}, function(results, status) {
-        if (status === 'OK') {
-          if (results[0]) {
-            //alert(results[0].formatted_address);
-            infowindow.setContent(results[0].formatted_address);
-          } else {
-            alert('No results found');
-          }
-        } else {
-          alert('Geocoder failed due to: ' + status);
-        }
-      });
-    }
-
-    function geocodeLatLngRetailer(latlng,infowindow) {
       geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
           if (results[0]) {
