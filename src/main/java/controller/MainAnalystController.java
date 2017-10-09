@@ -44,10 +44,6 @@ public class MainAnalystController {
     return GUIManager.getInstanceGUIManager().getRoutes();
   }
 
-  public ArrayList<UserPOI> getUserPOIs() {
-    return GUIManager.getInstanceGUIManager().getUserPOIs();
-  }
-
   public ArrayList<PublicPOI> getPublicPOIs() {
     return GUIManager.getInstanceGUIManager().getPublicPOIs();
   }
@@ -108,13 +104,6 @@ public class MainAnalystController {
    */
   public void exportHotspots() {
     exportPOIs(getHotspots(), "Hotspots");
-  }
-
-  /**
-   * Allows an analyst to export the User POIs to a file
-   */
-  public void exportUserPOIs() {
-    exportPOIs(getUserPOIs(), "User Pois");
   }
 
   /**
