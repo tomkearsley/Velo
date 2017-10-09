@@ -38,9 +38,10 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportHotspots" prefHeight="27.0" prefWidth="135.0" text="Export Hotspot" />
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportHotspots" prefHeight="27.0" prefWidth="135.0" text="Export Hotspot" />
                         <PieChart fx:id="hotspotsChart" layoutX="44.0" layoutY="14.0" prefHeight="330.0" prefWidth="480.0" title="Hotspots per City" />
                         <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+                        <Button layoutX="161.0" layoutY="388.0" mnemonicParsing="false" onAction="#importHotspots" text="Import Hotspots" />
                      </children>
                   </AnchorPane>
             </content>
@@ -49,8 +50,9 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRetailers" prefHeight="27.0" prefWidth="135.0" text="Export Retailers" />
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRetailers" prefHeight="27.0" prefWidth="135.0" text="Export Retailers" />
                         <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+                        <Button layoutX="161.0" layoutY="388.0" mnemonicParsing="false" onAction="#importRetailers" text="Import Retailers" />
                      </children>
                   </AnchorPane>
               </content>
@@ -59,8 +61,9 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="218.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportPublicPOIs" prefHeight="27.0" prefWidth="135.0" text="Export Public POIs" />
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportPublicPOIs" prefHeight="27.0" prefWidth="135.0" text="Export Public POIs" />
                         <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+                        <Button layoutX="147.0" layoutY="389.0" mnemonicParsing="false" onAction="#importPublicPOIs" text="Import Public POIs" />
                      </children>
                   </AnchorPane>
               </content>
@@ -79,7 +82,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="exportRoutes" layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRoutes" prefHeight="27.0" prefWidth="135.0" text="Export Routes" />
+                        <Button fx:id="exportRoutes" layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRoutes" prefHeight="27.0" prefWidth="135.0" text="Export Routes" />
                         <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="67.0" text="Log Out" />
                         <LineChart fx:id="routesChart" layoutX="44.0" layoutY="14.0" prefHeight="320.0" prefWidth="480.0" title="Distance Travelled per Month">
                           <xAxis>
@@ -89,6 +92,7 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </LineChart>
+                        <Button layoutX="173.0" layoutY="389.0" mnemonicParsing="false" onAction="#importRoutes" text="Import Routes" />
                      </children>
                   </AnchorPane>
             </content>

@@ -19,6 +19,12 @@ import model.UserPOI;
  */
 public class Writer {
 
+  /**
+   * Formats a list of attributes to wrap them in surrounding quotemarks if an attribute contains a comma
+   * Used for proper specification of commas that aren't splitters for CSV writing
+   * @param attributes  The list of String attributes to check (and format)
+   * @return The list after formatting necessary attribute Strings
+   */
   private String[] getAttributeFormat (String[] attributes) {
     for (int i = 0; i < attributes.length; i++) {
       if (attributes[i].contains(",")) {
@@ -28,6 +34,12 @@ public class Writer {
     return attributes;
   }
 
+  /**
+   * Fetches the appropriate list of String attributes from a generic POI based on what child class of POI it
+   * is an instance of.
+   * @param poi The instance of the POI child class
+   * @return The list of String attributes for that POI-type
+   */
   private String[] getAttributesFromPOI (POI poi) {
     if (poi instanceof Retailer) {
       Retailer ret = (Retailer) poi;
@@ -67,6 +79,11 @@ public class Writer {
     return null;
   }
 
+  /**
+   * Returns a list of String attributes for a route
+   * @param rte An instance of a route to grab attributes from
+   * @return The list of String attributes
+   */
   private String[] getAttributesFromRoute(Route rte) {
     return new String[]{String.valueOf(rte.getDuration()), rte.getStartDate().toString(),
         rte.getStopDate().toString(), String.valueOf(rte.getStartStation().getID()),
@@ -78,6 +95,13 @@ public class Writer {
     };
   }
 
+  /**
+   * Writes attributes of an object split by commas to an already specified file using the created
+   * Buffered Writer
+   * @param writer  The instance of the BufferedWriter
+   * @param attributes  The list of String attributes
+   * @throws IOException If there was an error writing to the file
+   */
   private void writeLinesToFile(BufferedWriter writer, String[] attributes) throws IOException {
     for (int i = 0; i < attributes.length; i++) {
       if (attributes[i] != null) {
@@ -95,7 +119,7 @@ public class Writer {
    * Writes a list of retailer objects to a given CSV file
    * @param POIs The list of retailer objects
    * @param filename  The file to write to
-   * @throws IOException  If there is an error opening the file
+   * @throws IOException  If there is an error writing to the file
    */
   public void writePOIsToFile (List<? extends POI> POIs, String filename) throws IOException {
     FileWriter outFile = new FileWriter(filename, true);
@@ -109,6 +133,12 @@ public class Writer {
     writer.close();
   }
 
+  /**
+   * Writes routes to a csv file given a filename.
+   * @param routes The list of routes to write to the file
+   * @param filename  The filename to write to
+   * @throws IOException  If there is an error writing to the file
+   */
   public void writeRoutesToFile (List<Route> routes, String filename) throws IOException {
     FileWriter outFile = new FileWriter(filename, true);
     BufferedWriter writer = new BufferedWriter(outFile);

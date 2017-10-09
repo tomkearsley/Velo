@@ -1,5 +1,6 @@
 package controller;
 
+import filehandler.Reader;
 import filehandler.Writer;
 import java.io.File;
 import java.io.IOException;
@@ -68,14 +69,33 @@ public class MainAnalystController {
   /* Chart Methods */
   /** Generates and populates the data for the hotspots chart */
   private void setHotspotsChart() {
+    ArrayList<String> cities = new ArrayList<>();
+    ArrayList<Integer> cityCounts = new ArrayList<>();
+    String city;
+    for (Hotspot hotspot : getHotspots()) {
+      city = hotspot.getCity();
+      if (cities.contains(city)) {
+        Integer count = cityCounts.get(cities.indexOf(city));
+        cityCounts.set(cities.indexOf(city), new Integer(count.intValue() + 1));
+      } else {
+        cities.add(city);
+        cityCounts.add(new Integer(1));
+      }
+    }
+    ArrayList<Data> dataPoints = new ArrayList<>();
+    for (int i=0; i<cities.size(); i++) {
+      dataPoints.add(new PieChart.Data(cities.get(i), cityCounts.get(i)));
+    }
 
-    ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(
-            new PieChart.Data("Grapefruit", 13),
-            new PieChart.Data("Oranges", 25),
-            new PieChart.Data("Plums", 10),
-            new PieChart.Data("Pears", 22),
-            new PieChart.Data("Apples", 30)
-    );
+    ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(dataPoints);
+
+//    ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(
+//            new PieChart.Data("Grapefruit", 13),
+//            new PieChart.Data("Oranges", 25),
+//            new PieChart.Data("Plums", 10),
+//            new PieChart.Data("Pears", 22),
+//            new PieChart.Data("Apples", 30)
+//    );
 
     hotspotsChart.setData(hotspotsChartData);
 
@@ -126,7 +146,7 @@ public class MainAnalystController {
           } else {
             writer.writeRoutesToFile(getRoutes(), saveFile.getPath() + ".csv");
           }
-          alert = new Alert(AlertType.NONE, "Routes successfully exported", ButtonType.OK);
+          alert = new Alert(AlertType.NONE, "Route(s) successfully exported", ButtonType.OK);
         } catch (IOException e) {
           alert = new Alert(AlertType.ERROR, "Error exporting routes",
               ButtonType.OK);
@@ -203,4 +223,77 @@ public class MainAnalystController {
       alert.showAndWait();
     }
   }
+
+  public File getImportFile() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open CSV File");
+    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
+    //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
+    File selectedFile = fileChooser.showOpenDialog(null);
+    if (selectedFile != null) {
+      return selectedFile;
+    }
+    return null;
+  }
+
+  public void importRetailers() {
+    Reader reader = new Reader();
+    File inFile = getImportFile();
+    try {
+      ArrayList<Retailer> retailersToAdd = reader.readRetailers(inFile.getPath(), true);
+      int prevSize = getRetailers().size();
+      GUIManager.getInstanceGUIManager().addRetailers(retailersToAdd);
+      Alert alert = new Alert(AlertType.NONE,
+          getRetailers().size() - prevSize + " Retailer(s) successfully imported", ButtonType.OK);
+      alert.showAndWait();
+    } catch (IOException| ArrayIndexOutOfBoundsException e) {
+      System.out.println("Error loading retailers");
+    }
+  }
+
+  public void importHotspots() {
+    Reader reader = new Reader();
+    File inFile = getImportFile();
+    try {
+      ArrayList<Hotspot> hotspotsToAdd = reader.readHotspots(inFile.getPath(), true);
+      int prevSize = getHotspots().size();
+      GUIManager.getInstanceGUIManager().addHotspots(hotspotsToAdd);
+      Alert alert = new Alert(AlertType.NONE,
+          getHotspots().size() - prevSize + " Hotspot(s) successfully imported", ButtonType.OK);
+      alert.showAndWait();
+    } catch (IOException| ArrayIndexOutOfBoundsException e) {
+      System.out.println("Error loading hotspots");
+    }
+  }
+
+  public void importPublicPOIs() {
+    Reader reader = new Reader();
+    File inFile = getImportFile();
+    try {
+      ArrayList<PublicPOI> publicPOIsToAdd = reader.readPublicPOIS(inFile.getPath(), true);
+      int prevSize = getPublicPOIs().size();
+      GUIManager.getInstanceGUIManager().addPublicPOIs(publicPOIsToAdd);
+      Alert alert = new Alert(AlertType.NONE,
+          getPublicPOIs().size() - prevSize + " Public POI(s) successfully imported", ButtonType.OK);
+      alert.showAndWait();
+    } catch (IOException| ArrayIndexOutOfBoundsException e) {
+      System.out.println("Error loading public POIs");
+    }
+  }
+
+  public void importRoutes() {
+    Reader reader = new Reader();
+    File inFile = getImportFile();
+    try {
+      ArrayList<Route> routesToAdd = reader.readRoutes(inFile.getPath(), getStations(),true);
+      int prevSize = getRoutes().size();
+      GUIManager.getInstanceGUIManager().addRoutes(routesToAdd);
+      Alert alert = new Alert(AlertType.NONE,
+          getRoutes().size() - prevSize + " Route(s) successfully imported", ButtonType.OK);
+      alert.showAndWait();
+    } catch (IOException| ArrayIndexOutOfBoundsException e) {
+      System.out.println("Error loading routes");
+    }
+  }
+
 }
