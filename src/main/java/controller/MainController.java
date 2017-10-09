@@ -11,6 +11,11 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoPeriod;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -198,10 +203,10 @@ public class MainController {
     URL url = getClass().getResource("/googleMaps.html");
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
-    String[] dataTypeStrings = new String[]{"Hotspot", "Retailer", "Public POI", "User POI", "Route"};
+    String[] dataTypeStrings = new String[]{"User POI", "Route"};
     ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
     importType.setItems(dataTypes);
-    importType.setValue("Hotspot");
+    importType.setValue("User POI");
     setImages(); // Set map images
     mapEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
       if (newState == State.SUCCEEDED) {
@@ -1240,43 +1245,7 @@ public class MainController {
     Reader reader = new Reader();
     int prevSize;
     Alert alert = null;
-    if (importType.getValue().equals("Hotspot")) {
-      try {
-        ArrayList<Hotspot> hotspotsToAdd = reader
-            .readHotspots(importFilePath, true); //NOTE Will not work when importing
-        // initial hotspots as external file due to index handling changes between internal & external files
-        prevSize = getHotspots().size();
-        GUIManager.getInstanceGUIManager().addHotspots(hotspotsToAdd);
-        alert = new Alert(AlertType.NONE,
-            getHotspots().size() - prevSize + " Hotspots succesfully imported", ButtonType.OK);
-        initHotspotTable();
-      } catch (IOException| ArrayIndexOutOfBoundsException e) {
-        System.out.println("Error loading hotspots");
-      }
-    } else if (importType.getValue().equals("Retailer")) {
-      try {
-        ArrayList<Retailer> retailersToAdd = reader.readRetailers(importFilePath, true);
-        prevSize = getRetailers().size();
-        GUIManager.getInstanceGUIManager().addRetailers(retailersToAdd);
-        initRetailerTable();
-        alert = new Alert(AlertType.NONE,
-            getRetailers().size() - prevSize + " Retailers succesfully imported", ButtonType.OK);
-      } catch (IOException| ArrayIndexOutOfBoundsException e) {
-        System.out.println("Error loading retailers");
-      }
-    } else if (importType.getValue().equals("Public POI")) {
-      try {
-        ArrayList<PublicPOI> publicPOIsToAdd = reader
-            .readPublicPOIS(importFilePath, true);
-        prevSize = getPublicPOIs().size();
-        GUIManager.getInstanceGUIManager().addPublicPOIs(publicPOIsToAdd);
-        alert = new Alert(AlertType.NONE,
-            getPublicPOIs().size() - prevSize + " Public POIs succesfully imported", ButtonType.OK);
-        initPublicPOITable();
-      } catch (IOException| ArrayIndexOutOfBoundsException e) {
-        System.out.println("Error loading public POIs");
-      }
-    } else if (importType.getValue().equals("User POI")) {
+    if (importType.getValue().equals("User POI")) {
       try {
         ArrayList<UserPOI> userPOIsToAdd = reader
             .readUserPOIS(importFilePath, true);
@@ -1288,7 +1257,7 @@ public class MainController {
       } catch (IOException| ArrayIndexOutOfBoundsException e) {
         System.out.println("Error loading user POIs");
       }
-    } else if (importType.getValue().equals("Route")) {
+    } else {
       try {
         ArrayList<Route> routesToAdd = reader
             .readRoutes(importFilePath, getStations(), true);

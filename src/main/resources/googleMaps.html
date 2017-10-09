@@ -177,6 +177,14 @@
           },
           {
             "featureType": "transit",
+            "stylers": [
+              {
+                "visibility": "off"
+              }
+            ]
+          },
+          {
+            "featureType": "transit",
             "elementType": "geometry",
             "stylers": [
               {
@@ -263,6 +271,26 @@
         wayPoints.push({
           location: new google.maps.LatLng(event.latLng.lat(),event.latLng.lng())
         });
+      });
+
+      /*
+      google.maps.event.addListener(map,'zoom_changed',function(event) {
+        aBridge.outputValue("Zoom changed");
+        refreshCluster(retailerCluster);
+        refreshCluster(hotspotCluster);
+        refreshCluster(POICluster);
+        refreshCluster(stationCluster);
+        refreshCluster(PPOICluster);
+      });
+      */
+
+      google.maps.event.addListener(map,'dragend',function(event) {
+        aBridge.outputValue("Map moved");
+        refreshCluster(retailerCluster);
+        refreshCluster(hotspotCluster);
+        refreshCluster(POICluster);
+        refreshCluster(stationCluster);
+        refreshCluster(PPOICluster);
       });
 
       //var bikeLayer = new google.maps.BicyclingLayer();
@@ -587,7 +615,7 @@
     }
 
     function loadRetailers(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying retailers");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -597,14 +625,14 @@
         //aBridge.testValue("test2");
         title = aBridge.getRetailerTitle(infoArray.get(i));
         //title = "test string";
+        infoText = aBridge.getRetailerHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"retailer");
+        createMarkerWithText(lat,lng,title,"retailer",infoText);
       }
-      createMarker(10,10,title,"t9-square");
     }
 
     function loadHotspots(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying hotspots");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -614,13 +642,14 @@
         //aBridge.testValue("test2");
         title = aBridge.getHotspotTitle(infoArray.get(i));
         //title = "test string";
+        infoText = aBridge.getHotspotHTML(infoArray.get(i));
         //aBridge.outputValue(title);
-        createMarker(lat,lng,title,"hotspot");
+        createMarkerWithText(lat,lng,title,"hotspot",infoText);
       }
     }
 
     function loadPOIS(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying POIS");
       for(var i = 0;i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -629,13 +658,14 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getTitle(infoArray.get(i));
+        infoText = aBridge.getPOIHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"poi");
+        createMarkerWithText(lat,lng,title,"poi",infoText);
       }
     }
 
     function loadStations(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying stations");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -644,13 +674,14 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getStationTitle(infoArray.get(i));
+        infoText = aBridge.getStationHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"station");
+        createMarkerWithText(lat,lng,title,"station",infoText);
       }
     }
 
     function loadPPOIS(infoArray) {
-      var lat,lng,title;
+      var lat,lng,title,infoText;
       aBridge.outputValue("Displaying public POIS");
       for(var i = 0; i < infoArray.size(); i++) {
         //aBridge.testValue("test");
@@ -659,8 +690,9 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getTitle(infoArray.get(i));
+        infoText = aBridge.getPPOIHTML(infoArray.get(i));
         //aBridge.testValue("test3");
-        createMarker(lat,lng,title,"ppoi");
+        createMarkerWithText(lat,lng,title,"ppoi",infoText);
       }
     }
 
@@ -775,6 +807,11 @@
         toReturn.push([wayPointsArray[i].location.lat(),wayPointsArray[i].lng()]);
       }
       return toReturn;
+    }
+
+    function refreshCluster(markerCluster) {
+      markerCluster.resetViewport();
+      markerCluster.redraw();
     }
 
     //initialize();
