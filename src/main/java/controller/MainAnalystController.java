@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -16,7 +17,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.Hotspot;
@@ -89,16 +93,23 @@ public class MainAnalystController {
 
     ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(dataPoints);
 
-//    ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(
-//            new PieChart.Data("Grapefruit", 13),
-//            new PieChart.Data("Oranges", 25),
-//            new PieChart.Data("Plums", 10),
-//            new PieChart.Data("Pears", 22),
-//            new PieChart.Data("Apples", 30)
-//    );
-
     hotspotsChart.setData(hotspotsChartData);
 
+    final Label caption = new Label("");
+    caption.setTextFill(Color.DARKORANGE);
+    caption.setStyle("-fx-font: 24 arial;");
+
+    for (final PieChart.Data data : hotspotsChart.getData()) {
+      data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,
+          new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent e) {
+              System.out.print("AAA");
+              caption.setTranslateX(e.getSceneX());
+              caption.setTranslateY(e.getSceneY());
+              caption.setText(String.valueOf(data.getPieValue()) + "%");
+            }
+          });
+    }
   }
 
   /** Generates and populates the data for the retailers chart */

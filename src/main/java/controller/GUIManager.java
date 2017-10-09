@@ -252,14 +252,16 @@ public class GUIManager extends Application {
     Reader rdr = new Reader();
     Alert alert = null;
     try {
+      /* OLD FILE READING
       //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
+      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
+      //stations = rdr.readStations("/file/stations.json");
+      */
       MySQL mysql = new MySQL();
       Connection conn = mysql.getConnection();
       hotspots = mysql.getHotspots(conn);
       retailers = mysql.getRetailers(conn);
       stations = mysql.getStations(conn);
-
-      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
 
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
@@ -304,7 +306,13 @@ public class GUIManager extends Application {
   }
 
   public ArrayList<Route> getUserRouteHistory() {
-    return userRouteHistory;
+    ArrayList<Route> routeHistory = new ArrayList<>();
+    for (Route route : getRoutes()) {
+      if (route.travelledByContains(cyclistAccount.getUsername())) {
+        routeHistory.add(route);
+      }
+    }
+    return routeHistory;
   }
 
   public void addRetailers(ArrayList<Retailer> newRetailers) {
@@ -328,11 +336,11 @@ public class GUIManager extends Application {
   }
 
   public void addUserRouteHistory(Route route) {
-    userRouteHistory.add(route);
+    route.addTravelledBy(GUIManager.getInstanceGUIManager().cyclistAccount.getUsername());
   }
 
   public void removeUserRouteHistory(Route route) {
-    userRouteHistory.remove(route);
+    route.removeTravelledBy(GUIManager.getInstanceGUIManager().cyclistAccount.getUsername());
   }
 
 
