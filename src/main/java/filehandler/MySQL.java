@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
+import javax.jws.soap.SOAPBinding.Use;
 import model.Analyst;
 import model.PublicPOI;
 import model.Retailer;
@@ -28,20 +29,16 @@ public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
 
   public static void main(String[] args) throws Exception {
-    Reader rdr = new Reader();
     Connection conn = getConnection();
-    ArrayList<PublicPOI> publicPOIS = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv",false);
-    int size = publicPOIS.size();
-    for (int i = 0; i < size; i++) {
-      insertPublicPOI(conn,publicPOIS.get(i));
-    }
-   /**
+    ArrayList<UserPOI> userPOIS = getUserPOI(conn,"cyclist");
+    System.out.println(userPOIS);
 
+    /**
     EMPTY DATABASE CODE
     PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
     stmt.executeUpdate();
     PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
-    stmt2.executeUpdate(); **/
+    stmt2.executeUpdate();**/
   }
 
 
@@ -104,15 +101,15 @@ public class MySQL {
     }
 
   }
-  public static void insertUserPOI(UserPOI userPOI) throws Exception {
+  public static void insertUserPOI(Connection conn,UserPOI userPOI,String username) throws Exception {
     try {
-      Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO UserPOI (Longitude,Latitude,Name,Description) VALUES (?,?,?,?)");
+          "INSERT INTO UserPOI (Longitude,Latitude,Name,Description,username) VALUES (?,?,?,?,?)");
       inserted.setDouble(1,userPOI.getLongitude());
       inserted.setDouble(2,userPOI.getLatitude());
       inserted.setString(3,userPOI.getName());
       inserted.setString(4,userPOI.getDescription());
+      inserted.setString(5,username);
       inserted.executeUpdate(); //UPDATE = SEND QUERY = Retrieve
     } catch (Exception e) {
       System.out.println(e);
@@ -480,6 +477,30 @@ public class MySQL {
   }
     System.out.println("Record was not found.");
     return null;
+  }
+
+  public static ArrayList<UserPOI> getUserPOI(Connection conn,String username) throws Exception {
+    try{
+      PreparedStatement statement = conn.prepareStatement("SELECT Longitude,Latitude,Name,Description,username FROM UserPOI");
+      ResultSet result = statement.executeQuery();
+
+      ArrayList<UserPOI> userPOIS = new ArrayList<UserPOI>();
+      while(result.next()) {
+        if (result.getString("username").equals(username)) {
+          Double longitude = result.getDouble("Longitude");
+          Double latitude = result.getDouble("Latitude");
+          String name = result.getString("Name");
+          String description = result.getString("Description");
+          UserPOI userPOI = new UserPOI(latitude,longitude,name,description);
+          userPOIS.add(userPOI);
+        }
+
+
+      }return userPOIS;
+
+    } catch (Exception e) {
+      System.out.println(e);
+    } return null;
   }
 
 

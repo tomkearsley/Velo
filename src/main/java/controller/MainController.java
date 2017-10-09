@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -1283,8 +1284,23 @@ public class MainController {
       }
     } else {
       try {
+        MySQL mysql = new MySQL();
+
         ArrayList<Route> routesToAdd = reader
             .readRoutes(importFilePath, getStations(), true);
+        int size = routesToAdd.size();
+        String username = GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername();
+        try {
+          Connection conn = mysql.getConnection();
+          for (int i = 0; i < size; i++) {
+            mysql.insertRoute(conn,routesToAdd.get(i),username);
+          }
+
+        } catch (Exception e) {
+          System.out.println(e);
+        }
+
+
         prevSize = getRoutes().size();
         GUIManager.getInstanceGUIManager().addRoutes(routesToAdd);
         alert = new Alert(AlertType.NONE, getRoutes().size() - prevSize + " Routes succesfully imported",

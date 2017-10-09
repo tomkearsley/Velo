@@ -266,6 +266,8 @@ public class GUIManager extends Application {
       stations = mysql.getStations(conn);
       publicPOIs = mysql.getPublicPOI(conn);
       routes = mysql.getAllRoutes(conn);
+      String username = GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername();
+      //userPOIs = mysql.getUserPOI(conn,username);
 
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
 
