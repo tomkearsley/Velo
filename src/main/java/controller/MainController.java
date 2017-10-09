@@ -1165,6 +1165,7 @@ public class MainController {
           } else if (tableOnClickPopup.return_value == 2) {
             selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().removeUserRouteHistory(selected_item);
+            setDistanceChart();
             //TODO update selected_item in the database
             initUserRouteTable();
           }
