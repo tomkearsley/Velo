@@ -1046,8 +1046,7 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
-            //TODO make this not throw Null pointers
-            //selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
+            selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
             initUserRouteTable();
           }
@@ -1060,8 +1059,8 @@ public class MainController {
    * Initialiser for the route history table in the user tab
    */
   public void initUserRouteTable() {
-    ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getUserRouteHistory());
-
+    //ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getUserRouteHistory());
+    ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getRoutes());
     TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
     startStationCol
         .setCellValueFactory(new PropertyValueFactory<>("startStationName"));
@@ -1075,6 +1074,12 @@ public class MainController {
     durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
     FilteredList<Route> fListUserRoutes = new FilteredList<>(oListUserRoutes);
+        fListUserRoutes.setPredicate(Route -> {
+      if(Route.travelledByContains(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername())) {
+        return true;
+      }
+      return false;
+    });
 
     RouteHistoryFilterSelector.getItems().clear();
     RouteHistoryFilterSelector.getItems().addAll(FXCollections.observableArrayList("Starts at:", "Ends at:", "Bike ID"));
@@ -1087,8 +1092,7 @@ public class MainController {
             filters.RouteHistorySelectedIndex = newValue.intValue();
           }
         });
-    fListUserRoutes = filters.routeHistoryFilter(RouteHistoryFilterField, fListUserRoutes);
-
+    fListUserRoutes = filters.routeHistoryFilter(RouteHistoryFilterField, fListUserRoutes, GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
 
     SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
     sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
@@ -1103,6 +1107,8 @@ public class MainController {
       public void handle(MouseEvent event) {
         if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
           Route selected_item = dataTableRouteHistory.getSelectionModel().getSelectedItem();
+          System.out.println(selected_item.getTravelledBy());
+          System.out.println(selected_item.travelledByContains(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername()));
           tableOnClickPopup.create("Personal Route",  selected_item, false);
           if (tableOnClickPopup.return_value == 1) {
             try {
@@ -1117,7 +1123,7 @@ public class MainController {
             }
           } else if (tableOnClickPopup.return_value == 2) {
             //TODO make this not throw null pointers
-            //selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
+            selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().removeUserRouteHistory(selected_item);
             initUserRouteTable();
           }

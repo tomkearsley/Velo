@@ -1,6 +1,7 @@
 package helper;
 
 
+import controller.GUIManager;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.TextField;
 import model.Hotspot;
@@ -272,30 +273,30 @@ public class filters {
 
 
   public static FilteredList<Route> routeHistoryFilter(TextField RouteFilterField,
-      FilteredList<Route> fListRoutes) {
+      FilteredList<Route> fListRoutes, String username) {
     RouteFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListRoutes.setPredicate(Route -> {
         //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
+        if ((newValue == null || newValue.isEmpty()) && Route.travelledByContains(username)) {
           return true;
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
         switch(RouteHistorySelectedIndex) {
           case 0: //STARTS AT
-            if(Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+            if(Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) && Route.travelledByContains(username)) {
               return true;
             }
             break;
           case 1: //ENDS AT
-            if (Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+            if (Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter) && Route.travelledByContains(username)) {
               return true;
             }
             break;
           case 2: //BIKE ID
             if (isInteger(lowerCaseFilter)) {
               Integer input = Integer.parseInt(lowerCaseFilter);
-              if (Route.getBikeID() == input) {
+              if (Route.getBikeID() == input && Route.travelledByContains(username)) {
                 return true;
               }
             }
