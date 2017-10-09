@@ -256,16 +256,19 @@ public class GUIManager extends Application {
       //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
       //stations = rdr.readStations("/file/stations.json");
+      //publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
+      //routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
       */
       MySQL mysql = new MySQL();
       Connection conn = mysql.getConnection();
       hotspots = mysql.getHotspots(conn);
       retailers = mysql.getRetailers(conn);
       stations = mysql.getStations(conn);
+      publicPOIs = mysql.getPublicPOI(conn);
+      routes = mysql.getAllRoutes(conn);
 
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
-      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
-      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
+
       //TODO populate userRouteHistory
     } catch (IOException e) {
       alert = new Alert(AlertType.ERROR, "There was an error loading an inital data file", ButtonType.OK);

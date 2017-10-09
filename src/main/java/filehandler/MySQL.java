@@ -26,15 +26,23 @@ import model.UserPOI;
  */
 public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
-  /**
+
   public static void main(String[] args) throws Exception {
+    Reader rdr = new Reader();
+    Connection conn = getConnection();
+    ArrayList<PublicPOI> publicPOIS = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv",false);
+    int size = publicPOIS.size();
+    for (int i = 0; i < size; i++) {
+      insertPublicPOI(conn,publicPOIS.get(i));
+    }
+   /**
 
     EMPTY DATABASE CODE
     PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
     stmt.executeUpdate();
     PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
-    stmt2.executeUpdate();
-  } **/
+    stmt2.executeUpdate(); **/
+  }
 
 
 
@@ -80,9 +88,8 @@ public class MySQL {
    * @param publicPOI Public POI Object
    * @throws Exception Exception thrown if insert is unsuccessful.
    */
-  public static void insertPublicPOI(PublicPOI publicPOI) throws Exception {
+  public static void insertPublicPOI(Connection conn,PublicPOI publicPOI) throws Exception {
     try {
-      Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
           "INSERT INTO PublicPOI (Longitude,Latitude,Name,Description) VALUES (?,?,?,?)");
       inserted.setDouble(1,publicPOI.getLongitude());
