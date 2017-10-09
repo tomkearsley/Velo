@@ -8,10 +8,13 @@ import helper.filters;
 import helper.tableOnClickPopup;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -104,6 +107,8 @@ public class MainController {
 
   // Table filter fields. one for each table view
   @FXML private TextField HotspotFilterField;
+  @FXML private ChoiceBox<String> HotspotFilterSelector;
+
   @FXML private TextField RetailerFilterField;
   @FXML private TextField PublicPOIFilterField;
   @FXML private TextField UserPOIFilterField;
@@ -714,8 +719,20 @@ public class MainController {
     remarksCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
     FilteredList<Hotspot> fListHotspots = new FilteredList<>(oListHotspots);
-    fListHotspots = filters.hotspotFilter(HotspotFilterField, fListHotspots);
 
+    HotspotFilterSelector.getItems().clear();
+    HotspotFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name", "Borough", "Type", "Provider"));
+    HotspotFilterSelector.getSelectionModel().selectFirst();
+    HotspotFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.HotspotSelectedIndex = newValue.intValue();
+
+          }
+        });
+    fListHotspots = filters.hotspotFilter1(HotspotFilterField, fListHotspots);
     SortedList<Hotspot> sListHotspots = new SortedList<>(fListHotspots);
     sListHotspots.comparatorProperty().bind(dataTableHotspot.comparatorProperty());
 

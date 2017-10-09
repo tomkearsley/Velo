@@ -14,6 +14,7 @@ import model.UserPOI;
  * static class containing all filters used by the different data tables
  */
 public class filters {
+  public static int HotspotSelectedIndex;
 
   /**
    * Determines if string is an integer
@@ -35,8 +36,9 @@ public class filters {
    *
    * @return filtered version of fListHotspots
    */
-  public static FilteredList<Hotspot> hotspotFilter(TextField HotspotFilterField,
+  public static FilteredList<Hotspot> hotspotFilter1(TextField HotspotFilterField,
       FilteredList<Hotspot> fListHotspots) {
+
     HotspotFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
       fListHotspots.setPredicate(Hotspot -> {
         //if filter is empty, show all
@@ -46,11 +48,30 @@ public class filters {
 
         String lowerCaseFilter = newValue.toLowerCase();
         // Add more Hotspot.get__'s below to include more things in the search
-
-        if (Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter) || Hotspot.getType()
-            .toLowerCase().contains(lowerCaseFilter) || Hotspot.getProvider()
-            .toLowerCase().contains(lowerCaseFilter)) {
-          return true;
+        System.out.println(HotspotSelectedIndex);
+        switch (HotspotSelectedIndex) {
+          case 0: //NAME
+            if(Hotspot.getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 1: //BOROUGH
+            if(Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 2: //TYPE
+            if(Hotspot.getType().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 3: //PROVIDER
+            if(Hotspot.getProvider().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          default:
+            return false;
         }
         return false;
       });
