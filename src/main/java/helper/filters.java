@@ -15,7 +15,12 @@ import model.UserPOI;
  */
 public class filters {
   public static int HotspotSelectedIndex;
-
+  public static int RetailerSelectedIndex;
+  public static int PublicPOISelectedIndex;
+  public static int UserPOISelectedIndex;
+  public static int StationSelectedIndex;
+  public static int RouteSelectedIndex;
+  public static int RouteHistorySelectedIndex;
   /**
    * Determines if string is an integer
    *
@@ -36,7 +41,7 @@ public class filters {
    *
    * @return filtered version of fListHotspots
    */
-  public static FilteredList<Hotspot> hotspotFilter1(TextField HotspotFilterField,
+  public static FilteredList<Hotspot> hotspotFilter(TextField HotspotFilterField,
       FilteredList<Hotspot> fListHotspots) {
 
     HotspotFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -98,16 +103,27 @@ public class filters {
         /*
          * Add more Retailer.get__'s below to include more things in the search
          */
-        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName()
-            .toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        //checking for zipcode. entire zipcode must be entered before a match is found
-        if (isInteger(lowerCaseFilter)) {
-          Integer input = Integer.parseInt(lowerCaseFilter);
-          if (input == Retailer.getZipcode()) {
-            return true;
-          }
+        switch (RetailerSelectedIndex) {
+          case 0: //NAME
+            if (Retailer.getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 1: //ADDRESS
+            if(Retailer.getAddress().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 2: //ZIPCODE
+            if (isInteger(lowerCaseFilter)) {
+              Integer input = Integer.parseInt(lowerCaseFilter);
+              if (input == Retailer.getZipcode()) {
+                return true;
+              }
+            }
+            break;
+          default:
+            return false;
         }
         return false;
       });
@@ -128,12 +144,15 @@ public class filters {
         if (newValue == null || newValue.isEmpty()) {
           return true;
         }
-
         String lowerCaseFilter = newValue.toLowerCase();
-        // Add more Hotspot.get__'s below to include more things in the search
 
-        if (PublicPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
+        switch(PublicPOISelectedIndex) {
+
+          case 0:
+            if (PublicPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
         }
         return false;
       });
@@ -154,13 +173,14 @@ public class filters {
         if (newValue == null || newValue.isEmpty()) {
           return true;
         }
-
         String lowerCaseFilter = newValue.toLowerCase();
-        /*
-         * Add more UserPOI.get__'s below to include more things in the search
-         */
-        if (UserPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
+
+        switch (UserPOISelectedIndex) {
+          case 0:
+            if (UserPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
         }
         return false;
       });
@@ -183,11 +203,13 @@ public class filters {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /*
-         * Add more Station.get__'s below to include more things in the search
-         */
-        if (Station.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
+
+        switch (StationSelectedIndex) {
+          case 0:
+            if (Station.getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
         }
         return false;
       });
@@ -212,19 +234,74 @@ public class filters {
         }
 
         String lowerCaseFilter = newValue.toLowerCase();
-        /*
-         * Add more Route.get__'s below to include more things in the search
-         */
-        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
-            Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+        switch(RouteSelectedIndex) {
+          case 0: //STARTS AT
+            if(Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 1: //ENDS AT
+            if (Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 2: //BIKE ID
+            if (isInteger(lowerCaseFilter)) {
+              Integer input = Integer.parseInt(lowerCaseFilter);
+              if (Route.getBikeID() == input) {
+                return true;
+              }
+            }
+              break;
+          case 3: //GENDER
+            if (isInteger(lowerCaseFilter)) {
+              Integer input = Integer.parseInt(lowerCaseFilter);
+              if(Route.getGender() == input) {
+                return true;
+              }
+            }
+            break;
+          default:
+            return false;
+        }
+        return false;
+      });
+    });
+    return fListRoutes;
+  }
+
+
+  public static FilteredList<Route> routeHistoryFilter(TextField RouteFilterField,
+      FilteredList<Route> fListRoutes) {
+    RouteFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
+      fListRoutes.setPredicate(Route -> {
+        //if filter is empty, show all
+        if (newValue == null || newValue.isEmpty()) {
           return true;
         }
-        //filtering by gender of rider or bike ID. needs to be an exact match before anything is shown
-        if (isInteger(lowerCaseFilter)) {
-          Integer input = Integer.parseInt(lowerCaseFilter);
-          if (Route.getBikeID() == input || Route.getGender() == input) {
-            return true;
-          }
+
+        String lowerCaseFilter = newValue.toLowerCase();
+        switch(RouteHistorySelectedIndex) {
+          case 0: //STARTS AT
+            if(Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 1: //ENDS AT
+            if (Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
+              return true;
+            }
+            break;
+          case 2: //BIKE ID
+            if (isInteger(lowerCaseFilter)) {
+              Integer input = Integer.parseInt(lowerCaseFilter);
+              if (Route.getBikeID() == input) {
+                return true;
+              }
+            }
+            break;
+          default:
+            return false;
         }
         return false;
       });
@@ -232,3 +309,4 @@ public class filters {
     return fListRoutes;
   }
 }
+

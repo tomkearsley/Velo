@@ -108,14 +108,18 @@ public class MainController {
   // Table filter fields. one for each table view
   @FXML private TextField HotspotFilterField;
   @FXML private ChoiceBox<String> HotspotFilterSelector;
-
   @FXML private TextField RetailerFilterField;
+  @FXML private ChoiceBox<String> RetailerFilterSelector;
   @FXML private TextField PublicPOIFilterField;
+  @FXML private ChoiceBox<String> PublicPOIFilterSelector;
   @FXML private TextField UserPOIFilterField;
+  @FXML private ChoiceBox<String> UserPOIFilterSelector;
   @FXML private TextField StationFilterField;
+  @FXML private ChoiceBox<String> StationFilterSelector;
   @FXML private TextField RouteFilterField;
-
-  @FXML private TextField routeHistoryFilterField;
+  @FXML private ChoiceBox<String> RouteFilterSelector;
+  @FXML private TextField RouteHistoryFilterField;
+  @FXML private ChoiceBox<String> RouteHistoryFilterSelector;
 
 
   /* Map tab attributes */
@@ -652,6 +656,19 @@ public class MainController {
      * or the attributes below match, then the object is shown
      */
     fListRetailers = filters.retailerFilter(RetailerFilterField, fListRetailers);
+
+    RetailerFilterSelector.getItems().clear();
+    RetailerFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name", "Address", "Zipcode"));
+    RetailerFilterSelector.getSelectionModel().selectFirst();
+    RetailerFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RetailerSelectedIndex = newValue.intValue();
+          }
+        });
+    fListRetailers = filters.retailerFilter(RetailerFilterField, fListRetailers);
     /*
      * Sorting:
      * wrapping the filtered list in a sorted list allows the user to click on the title
@@ -732,7 +749,8 @@ public class MainController {
 
           }
         });
-    fListHotspots = filters.hotspotFilter1(HotspotFilterField, fListHotspots);
+    fListHotspots = filters.hotspotFilter(HotspotFilterField, fListHotspots);
+
     SortedList<Hotspot> sListHotspots = new SortedList<>(fListHotspots);
     sListHotspots.comparatorProperty().bind(dataTableHotspot.comparatorProperty());
 
@@ -784,7 +802,19 @@ public class MainController {
     descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
     FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<>(oListPublicPOIs);
+    PublicPOIFilterSelector.getItems().clear();
+    PublicPOIFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    PublicPOIFilterSelector.getSelectionModel().selectFirst();
+    PublicPOIFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.PublicPOISelectedIndex = newValue.intValue();
+          }
+        });
     fListPublicPOIs = filters.publicPOIFilter(PublicPOIFilterField, fListPublicPOIs);
+
 
     SortedList<PublicPOI> sListPublicPOIs = new SortedList<>(fListPublicPOIs);
     sListPublicPOIs.comparatorProperty().bind(dataTablePublicPOI.comparatorProperty());
@@ -833,7 +863,22 @@ public class MainController {
     descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
     FilteredList<UserPOI> fListUserPOIs = new FilteredList<>(oListUserPOIs);
+
+    UserPOIFilterSelector.getItems().clear();
+    UserPOIFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    UserPOIFilterSelector.getSelectionModel().selectFirst();
+    UserPOIFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.UserPOISelectedIndex = newValue.intValue();
+          }
+        });
+
     fListUserPOIs = filters.userPOIFilter(UserPOIFilterField, fListUserPOIs);
+
+
 
     SortedList<UserPOI> sListUserPOIs = new SortedList<>(fListUserPOIs);
     sListUserPOIs.comparatorProperty().bind(dataTableUserPOI.comparatorProperty());
@@ -882,6 +927,18 @@ public class MainController {
     idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
     FilteredList<Station> fListStations = new FilteredList<>(oListStations);
+
+    StationFilterSelector.getItems().clear();
+    StationFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    StationFilterSelector.getSelectionModel().selectFirst();
+    StationFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.StationSelectedIndex = newValue.intValue();
+          }
+        });
     fListStations = filters.stationFilter(StationFilterField, fListStations);
 
     SortedList<Station> sListStations = new SortedList<>(fListStations);
@@ -934,6 +991,18 @@ public class MainController {
     durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
     FilteredList<Route> fListRoutes = new FilteredList<>(oListRoutes);
+
+    RouteFilterSelector.getItems().clear();
+    RouteFilterSelector.getItems().addAll(FXCollections.observableArrayList("Starts at:", "Ends at:", "Bike ID", "Gender"));
+    RouteFilterSelector.getSelectionModel().selectFirst();
+    RouteFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RouteSelectedIndex = newValue.intValue();
+          }
+        });
     fListRoutes = filters.routeFilter(RouteFilterField, fListRoutes);
 
 
@@ -992,7 +1061,19 @@ public class MainController {
     durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
 
     FilteredList<Route> fListUserRoutes = new FilteredList<>(oListUserRoutes);
-    fListUserRoutes = filters.routeFilter(routeHistoryFilterField, fListUserRoutes);
+
+    RouteHistoryFilterSelector.getItems().clear();
+    RouteHistoryFilterSelector.getItems().addAll(FXCollections.observableArrayList("Starts at:", "Ends at:", "Bike ID"));
+    RouteHistoryFilterSelector.getSelectionModel().selectFirst();
+    RouteHistoryFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RouteHistorySelectedIndex = newValue.intValue();
+          }
+        });
+    fListUserRoutes = filters.routeHistoryFilter(RouteHistoryFilterField, fListUserRoutes);
 
 
     SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
