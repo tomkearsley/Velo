@@ -1272,7 +1272,11 @@ public class MainController {
     //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
     File selectedFile = fileChooser.showOpenDialog(null);
     if (selectedFile != null) {
-      importData(selectedFile.getPath());
+      if (selectedFile.getPath().endsWith(".csv")) {
+        importData(selectedFile.getPath());
+      } else {
+        new Alert(AlertType.ERROR, "Invalid File", ButtonType.OK).showAndWait();
+      }
     }
   }
 

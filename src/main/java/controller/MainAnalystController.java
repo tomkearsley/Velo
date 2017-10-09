@@ -352,7 +352,11 @@ public class MainAnalystController {
     //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
     File selectedFile = fileChooser.showOpenDialog(null);
     if (selectedFile != null) {
-      return selectedFile;
+      if (selectedFile.getPath().endsWith(".csv")) {
+        return selectedFile;
+      } else {
+        new Alert(AlertType.ERROR, "Invalid File", ButtonType.OK).showAndWait();
+      }
     }
     return null;
   }
