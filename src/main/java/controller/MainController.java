@@ -49,6 +49,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -166,7 +167,7 @@ public class MainController {
   @FXML private Label height;
   @FXML private Label weight;
   @FXML private Label BMI;
-  @FXML private PieChart distanceChart;
+  @FXML private PieChart userRoutesChart;
 
 
   /* METHODS */
@@ -1086,6 +1087,7 @@ public class MainController {
           } else if (tableOnClickPopup.return_value == 2) {
             selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
+            setDistanceChart();
             //TODO update selected_item in the database
             initUserRouteTable();
           }
@@ -1195,21 +1197,65 @@ public class MainController {
     GUIManager.getInstanceGUIManager().logOut();
   }
 
+  private void setChartLabels(PieChart chart) {
+    final Label caption = new Label("");
+    caption.setTextFill(Color.DARKORANGE);
+    caption.setStyle("-fx-font: 24 arial;");
+
+    for (final PieChart.Data data : chart.getData()) {
+      data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,
+          new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent e) {
+              caption.setTranslateX(e.getSceneX());
+              caption.setTranslateY(e.getSceneY());
+              caption.setText(String.valueOf(data.getPieValue()) + "%");
+            }
+          });
+    }
+  }
+
   /** Generates and populates the data for the user's distance chart *
    * The chart displays user distance travelled over the last four weeks
    * This week, last week, two weeks ago, and three weeks ago in a 100% pie chart
    */
   private void setDistanceChart() {
+    ArrayList<String> durations = new ArrayList<>();
+    ArrayList<Integer> durationCount = new ArrayList<>();
 
-    ObservableList<Data> distanceChartData = FXCollections.observableArrayList(
-        new PieChart.Data("This week", 13),
-        new PieChart.Data("Last week", 25),
-        new PieChart.Data("Two Weeks Ago", 10),
-        new PieChart.Data("Three Weeks Ago", 22)
-    );
+    int duration;
+    String durationStr;
+    for (Route route : GUIManager.getInstanceGUIManager().getUserRouteHistory()) {
+      duration = route.getDuration();
+      if (duration < 120) {
+        durationStr = "< 2 minutes";
+      } else if (duration < 300) {
+        durationStr = "2-5 minutes";
+      } else if (duration < 900) {
+        durationStr = "5-15 minutes";
+      } else if (duration < 1800) {
+        durationStr = "15-30 minutes";
+      } else {
+        durationStr = "> 30 minutes";
+      }
 
-    distanceChart.setData(distanceChartData);
+      if (durations.contains(durationStr)) {
+        Integer count = durationCount.get(durations.indexOf(durationStr));
+        durationCount.set(durations.indexOf(durationStr), count+1);
+      } else {
+        durations.add(durationStr);
+        durationCount.add(1);
+      }
+    }
 
+    ArrayList<Data> dataPoints = new ArrayList<>();
+    for (int i=0; i<durations.size(); i++) {
+      dataPoints.add(new PieChart.Data(durations.get(i), durationCount.get(i)));
+    }
+
+    ObservableList<Data> userRoutesChartData = FXCollections.observableArrayList(dataPoints);
+
+    userRoutesChart.setData(userRoutesChartData);
+    setChartLabels(userRoutesChart);
     // TODO set this to actual data @Kyle @Andrew
 
   }
