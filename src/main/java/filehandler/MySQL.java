@@ -312,6 +312,15 @@ public class MySQL {
     return null;
   }
 
+  public static ArrayList<Station> getStations(Connection conn) throws Exception{
+    try {
+      PreparedStatement statement = conn.prepareStatement("SELECT ");
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
+
   public static ArrayList<Route> getPastRoutes(String username) throws Exception {
     try {
       Connection conn = getConnection();

@@ -255,8 +255,8 @@ public class GUIManager extends Application {
       //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
       MySQL mysql = new MySQL();
       Connection conn = mysql.getConnection();
-      ArrayList<Retailer> retailers = mysql.getRetailers(conn);
-      ArrayList<Hotspot> hotspots = mysql.getHotspots(conn);
+      hotspots = mysql.getHotspots(conn);
+      retailers = mysql.getRetailers(conn);
 
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
 
