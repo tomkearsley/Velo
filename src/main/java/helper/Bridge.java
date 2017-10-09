@@ -65,22 +65,22 @@ public class Bridge {
   }
 
   public String getRetailerHTML(Retailer retailer) {
-    return "<h3>Retailer</h3>\n";
+    return "<h3>Retailer</h3><b>Name:</b> " + retailer.getName() + "<br><b>Address:</b> " + retailer.getAddress() + "<br><b>Description:</b> " + retailer.getSecondaryDescription();
   }
 
   public String getHotspotHTML(Hotspot hotspot) {
-    return "<h3>Hotspot</h3>";
+    return "<h3>Hotspot</h3><b>Name:</b> " + hotspot.getName() + "<br><b>Address:</b> " + hotspot.getLocationAddress() + "<br><b>Remarks:</b> " + hotspot.getRemarks();
   }
 
   public String getPOIHTML(UserPOI userPOI) {
-    return "<h3>User's point of interest</h3>";
+    return "<h3>User's Point of Interest</h3>\n<b>Name:</b> " + userPOI.getName() + "<br><b>Address:</b> " + locationToString(userPOI.getLatitude(),userPOI.getLongitude()) + "<br><b>Description:</b> " + userPOI.getDescription();
   }
 
-  public String getStationHTML(Retailer retailer) {
-    return "<h3>Station</h3>";
+  public String getStationHTML(Station station) {
+    return "<h3>Station</h3><b>Name:</b> " + station.getName() + "<br><b>Address:</b> " + station.getStreetAddress1() + "<br><b>Description:</b> " + station.getDescription();
   }
 
-  public String getPPOIHTML(PublicPOI POI) {
-    return "<h3>Public point of interest</h3>";
+  public String getPPOIHTML(PublicPOI PPOI) {
+    return "<h3>Public Point of Interest</h3><b>Name:</b> " + PPOI.getName() + "<br><b>Address:</b> " + locationToString(PPOI.getLatitude(),PPOI.getLongitude()) + "<br><b>Description:</b> " + PPOI.getDescription();
   }
 }
