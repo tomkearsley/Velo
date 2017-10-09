@@ -1,5 +1,6 @@
 package filehandler;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
@@ -27,11 +28,12 @@ public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
   /**
   public static void main(String[] args) throws Exception {
-    /** EMPTY DATABASE CODE
-     PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
-     stmt.executeUpdate();
-     PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
-     stmt2.executeUpdate();
+
+    EMPTY DATABASE CODE
+    PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
+    stmt.executeUpdate();
+    PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
+    stmt2.executeUpdate();
   } **/
 
 
@@ -161,8 +163,7 @@ public class MySQL {
   public static void insertRoute(Connection conn,Route route,String username){
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO RouteHistory (duration,startDate,"
-          + "stopDate,startID,startName,startLongitude,startLatitude,endID,endName,endLongitude,endLatitude,"
-          + "endStation,bikeID,birthYear,gender,username) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+          + "stopDate,startName,endName,bikeID,birthYear,gender,username) VALUES (?,?,?,?,?,?,?,?,?)");
       insert.setInt(1,route.getDuration());
       Date sDate = route.getStartDate(); // CONVERSION FOR DATABASE.
       String startDate = sDate.toString();
@@ -170,15 +171,6 @@ public class MySQL {
       String endDate = eDate.toString();
       insert.setString(2,startDate);
       insert.setString(3,endDate);
-      /** START STATION **/
-
-      Station startStation = route.getStartStation();
-      insert.setInt(4,startStation.getID());
-      insert.setString(5,startStation.getName());
-      insert.setDouble(6,startStation.getLongitude());
-      insert.setDouble(7,startStation.getLatitude());
-
-
       insert.setString(4,route.getStartStationName());
       insert.setString(5,route.getStopStationName());
       insert.setInt(6,route.getBikeID());
@@ -323,10 +315,9 @@ public class MySQL {
     return null;
   }
 
-  public static Station getStation(String name) {
+  public static Station getStation(Connection conn,String name) {
     LocalDate lastCommunicationTime = LocalDate.now();
     try {
-      Connection conn = getConnection();
       PreparedStatement statement = conn.prepareStatement(" SELECT stationID,name,availableDocks,totalDocks,"
           + "latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,streetAddress2,city,"
           + "postalCode,location,testStation,lastCommunicationTime,landMark,altitude FROM Stations");
@@ -396,16 +387,34 @@ public class MySQL {
   public static ArrayList<Route> getPastRoutes(Connection conn,String username) throws Exception {
     try {
       PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
-          + "startStation,endStation,bikeID,birthYear,gender,username,userType");
+          + "startName,endName,bikeID,birthYear,gender FROM RouteHistory");
       ResultSet result = statement.executeQuery();
       ArrayList<Route> routes = new ArrayList<Route>();
       while (result.next()) {
         //int duration, Date startDate, Date stopDate, Station startStation,Station stopStation, int bikeID, String userType, int birthYear, int gender
         if (result.getString("username").equals(username)) {
           int duration = result.getInt("duration");
+          SimpleDateFormat format = new SimpleDateFormat("E MMM dd H:mm:ss z yyyy");
+          Date startDate = format.parse(result.getString("startDate"));
+          Date stopDate = format.parse(result.getString("stopDate"));
+          //String strDate = result.getString("startDate");
+          //String stopDate = result.getString("stopDate");
+          /** START STATION **/
+          String startName = result.getString("startName");
+          Station startStation = getStation(conn,startName);
+          /** END STATION **/
+          String stopName = result.getString("endName");
+          Station stopStation = getStation(conn,stopName);
+          int bikeID = result.getInt("bikeID");
+          int birthYear = result.getInt("birthYear");
+          int gender = result.getInt("gender");
+          Route route = new Route(duration,startDate,stopDate,startStation,stopStation,bikeID,"",
+              birthYear,gender);
+          routes.add(route);
+
 
         }
-      }
+      } return routes;
     } catch (Exception e) {
     System.out.println(e);
   }
