@@ -126,11 +126,11 @@ public class Google {
     System.out.println(locationToString(40.709722,-74.011389));
 //    Reader rdr = new Reader();
 //    Bridge aBridge = new Bridge();
-//    ArrayList<Retailer> retailerArrayList = new ArrayList<Retailer>();
+//    ArrayList<Retailer> retailerArrayList = new ArrayList<>();
 //    try {
 //      retailerArrayList = rdr.readRetailers("/file/InitialRetailers.csv", false);
 //    }
-//    catch (FileNotFoundException e) {
+//    catch (IOException e) {
 //
 //    }
 //    double[] location;
@@ -140,26 +140,22 @@ public class Google {
 //    String line;
 //    try {
 //
-//      br = new BufferedReader(new FileReader(new File("src/main/resources/file/InitialRetailers.csv")));
+//      br = new BufferedReader(new FileReader(new File("src/main/resources/file/InitialRetailers2.csv")));
 //      int counter = 0;
 //      while ((line = br.readLine()) != null) {
 //        lines.add(line);
 //        counter++;
 //      }
 //      bw = new BufferedWriter(
-//          new FileWriter(new File("src/main/resources/file/InitialRetailersBU.csv"), true));
+//          new FileWriter(new File("src/main/resources/file/InitialRetailersBUU.csv"), true));
 //
-//      for (int i=730; i < retailerArrayList.size(); i++) {
-//        System.out.println("A");
+//      for (int i=0; i < retailerArrayList.size(); i++) {
 //        System.out.println(i);
-//        System.out.println(retailerArrayList.get(i).getAddress());
 //        location = aBridge.getRetailerLocation(retailerArrayList.get(i));
 //
 //        bw.write(lines.get(i) + "," + location[0] + "," + location[1]);
 //        bw.newLine();
 //      }
-//      System.out.println(stringToLocation(retailerArrayList.get(730).getAddress())[0]);
-//      System.out.println(stringToLocation(retailerArrayList.get(730).getAddress())[1]);
 //    bw.close();
 //    } catch (IOException e){
 //      e.printStackTrace();
