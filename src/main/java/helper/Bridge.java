@@ -43,4 +43,8 @@ public class Bridge {
 
     return EARTH_RADIUS * c * 1000; // <-- d
   }
+
+  public double[] getRetailerLocation(Retailer retailer) {
+    return stringToLocation(retailer.getAddress());
+  }
 }
