@@ -1,5 +1,6 @@
 package controller;
 
+import filehandler.Google;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -64,11 +65,12 @@ public class UserPOIFormController {
     newUserPOI.setName(getName());
     newUserPOI.setDescription(getDescription());
 
-    // TODO Query Google to get latitude and longitude @Imas
-//    newUserPOI.setLatitude(stuff);
-//    newUserPOI.setLongitude(stuff);
+    double[] coordinates = Google.stringToLocation(buildingNumber.getText() + streetName.getText() + city.getText() + state.getText());
+    newUserPOI.setLatitude(coordinates[0]);
+    newUserPOI.setLongitude(coordinates[1]);
 
     // TODO Add newUserPOI to Database
+
 
   }
 

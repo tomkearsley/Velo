@@ -4,6 +4,7 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.ScatterChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -61,6 +62,14 @@
                      <children>
                         <Button layoutX="218.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportPublicPOIs" prefHeight="27.0" prefWidth="135.0" text="Export Public POIs" />
                         <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+                        <ScatterChart layoutX="44.0" layoutY="14.0" legendSide="RIGHT" prefHeight="320.0" prefWidth="480.0" title="Public POIs by Coordinates">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </ScatterChart>
                      </children>
                   </AnchorPane>
               </content>
@@ -81,7 +90,7 @@
                      <children>
                         <Button fx:id="exportRoutes" layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRoutes" prefHeight="27.0" prefWidth="135.0" text="Export Routes" />
                         <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="67.0" text="Log Out" />
-                        <LineChart fx:id="routesChart" layoutX="44.0" layoutY="14.0" prefHeight="320.0" prefWidth="480.0" title="Distance Travelled per Month">
+                        <LineChart fx:id="routesChart" layoutX="44.0" layoutY="14.0" prefHeight="320.0" prefWidth="480.0" title="Duration Travelled per Month">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>

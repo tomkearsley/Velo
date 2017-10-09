@@ -41,10 +41,11 @@ public class UpdateAccountController {
       heightFeet.setTooltip(new Tooltip("Numbers only"));
       heightInches.setTooltip(new Tooltip("Numbers only"));
       weight.setTooltip(new Tooltip("Numbers with decimal points only"));
-      username.setTooltip(new Tooltip("Username has already been set"));
+      username.setTooltip(new Tooltip("Username has already been set and cannot be changed"));
       password.setTooltip(new Tooltip("80 character limit"));
 
       // TODO set username textfield to the username username.setText();
+      username.setText(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
 
       //TODO make enter press the update button
 //    gridPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -147,14 +148,6 @@ public class UpdateAccountController {
         weight.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
       }
 
-      // Test username
-      if (isValidUsername()) {
-        newUsername = username.getText();
-      } else {
-        validData = false;
-        username.setStyle("-fx-background-color: #ffbbbb; -fx-border-color: #f00;");
-      }
-
       // Test password
       if (isValidPassword()) {
         newPassword = password.getText();
@@ -166,11 +159,11 @@ public class UpdateAccountController {
 
       if (validData) {
 
-        // TODO update user cyclist account details with the values taken from the form
+        // TODO update user cyclist account details with the values taken from the form @tom
 
         // If user created successfully, tell GUIManager
         try {
-          System.out.println("User created");
+          System.out.println("User account updated");
           GUIManager.getInstanceGUIManager().accountUpdated();
         } catch (Exception e) {
           e.printStackTrace();
@@ -237,20 +230,12 @@ public class UpdateAccountController {
       return weight.getText().matches("[0-9]*") && !weight.getText().isEmpty();
     }
 
-    /** Determines if the username element's input is valid
-     *
-     * @return true if valid; else false
-     */
-    private boolean isValidUsername() {
-      return username.getText().matches("[A-Za-z]*") && username.getText().length() <= 50 && !username.getText().isEmpty();
-    }
-
     /** Determines if the password element's input is valid
      *
      * @return true if valid; else false
      */
     private boolean isValidPassword() {
-      return password.getLength() > 80;
+      return password.getLength() < 80;
     }
 
     /** Clears the CSS style for the firstName element */

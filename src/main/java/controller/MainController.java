@@ -182,10 +182,14 @@ public class MainController {
 
     // TABS INITIALIZATION / SET IMAGES
     // TODO set tabs to images from resources/images @Andrew
-//    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap.png")));
-//    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace.png")));
-//    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory.png")));
-//    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount.png")));
+    mapViewTab.setText("");
+    dataViewTab.setText("");
+    historyViewTab.setText("");
+    userViewTab.setText("");
+    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap.png")));
+    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace.png")));
+    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory.png")));
+    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount.png")));
 
     // MAPS TAB INITIALIZATION
     URL url = getClass().getResource("/googleMaps.html");
@@ -1052,7 +1056,7 @@ public class MainController {
             }
           } else if (tableOnClickPopup.return_value == 2) {
             //TODO make this not throw Null pointers
-            //selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
+            // selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
             initUserRouteTable();
           }
