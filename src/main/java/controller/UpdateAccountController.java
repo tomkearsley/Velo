@@ -3,6 +3,7 @@ package controller;
 import java.time.LocalDate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -10,8 +11,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.Cyclist;
 
@@ -22,6 +26,9 @@ public class UpdateAccountController {
     @FXML private TextField firstName;
     @FXML private TextField lastName;
     @FXML private ToggleGroup gender;
+    @FXML private Toggle male;
+    @FXML private Toggle female;
+    @FXML private Toggle other;
     @FXML private DatePicker birthDate;
     @FXML private ComboBox heightFeet;
     @FXML private ComboBox heightInches;
@@ -44,18 +51,39 @@ public class UpdateAccountController {
       username.setTooltip(new Tooltip("Username has already been set and cannot be changed"));
       password.setTooltip(new Tooltip("80 character limit"));
 
-      // TODO set username textfield to the username username.setText();
-      username.setText(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
+      Cyclist cyclist = GUIManager.getInstanceGUIManager().getCyclistAccount();
+      firstName.setText(cyclist.getFirstName());
+      lastName.setText(cyclist.getLastName());
+      switch (cyclist.getGender()) {
+        case 0:
+          gender.selectToggle(male);
+          break;
+        case 1:
+          gender.selectToggle(female);
+          break;
+        case 2:
+          gender.selectToggle(other);
+          break;
+      }
+      birthDate.setValue(cyclist.getDOB());
+      int newHeightFeet = cyclist.getHeight() / 12;
+      int newHeightInches = cyclist.getHeight() % 12;
+      // TODO set heightFeet and heightInches
+      weight.setText(String.valueOf(cyclist.getWeight()));
+      username.setText(cyclist.getUsername());
 
-      //TODO make enter press the update button
-//    gridPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//      @Override
-//      public void handle(KeyEvent keyEvent) {
-//        if (keyEvent.getCode() == KeyCode.ENTER)  {
-//          createCyclist();
-//        }
-//      }
-//    });
+
+      EventHandler<KeyEvent> listener = (keyEvent) -> {
+        if (keyEvent.getCode() == KeyCode.ENTER)  {
+          updateCyclist();
+        }
+      };
+      firstName.setOnKeyPressed(listener);
+      lastName.setOnKeyPressed(listener);
+      birthDate.setOnKeyPressed(listener);
+      weight.setOnKeyPressed(listener);
+      username.setOnKeyPressed(listener);
+      password.setOnKeyPressed(listener);
 
       ObservableList feet = FXCollections.observableArrayList(
           "1", "2", "3", "4", "5", "6", "7", "8"
