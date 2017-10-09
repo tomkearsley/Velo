@@ -252,14 +252,16 @@ public class GUIManager extends Application {
     Reader rdr = new Reader();
     Alert alert = null;
     try {
+      /* OLD FILE READING
       //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
+      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
+      //stations = rdr.readStations("/file/stations.json");
+      */
       MySQL mysql = new MySQL();
       Connection conn = mysql.getConnection();
       hotspots = mysql.getHotspots(conn);
       retailers = mysql.getRetailers(conn);
       stations = mysql.getStations(conn);
-
-      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
 
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);

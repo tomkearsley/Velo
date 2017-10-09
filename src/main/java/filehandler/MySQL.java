@@ -27,20 +27,14 @@ public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
   /**
   public static void main(String[] args) throws Exception {
-    Reader rdr = new Reader();
-    Connection conn = getConnection();
-    ArrayList<Station> stations = getStations(conn);
-    int size = stations.size();
-    System.out.println(size);
-    System.out.println(stations);
+    /** EMPTY DATABASE CODE
+     PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
+     stmt.executeUpdate();
+     PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
+     stmt2.executeUpdate();
+  } **/
 
-     /** EMPTY DATABASE CODE
-    PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
-    stmt.executeUpdate();
-    PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
-    stmt2.executeUpdate();
 
-  }**/
 
   /**
    * Inserts Retailer into Database. Mainly used for intial load of 700+ Retailers
@@ -177,6 +171,7 @@ public class MySQL {
       insert.setString(2,startDate);
       insert.setString(3,endDate);
       /** START STATION **/
+
       Station startStation = route.getStartStation();
       insert.setInt(4,startStation.getID());
       insert.setString(5,startStation.getName());
@@ -293,21 +288,7 @@ public class MySQL {
 
 
   // DATA RETRIEVAL
-  public static Station getStation(String name) {
-    try {
-      Connection conn = getConnection();
-      PreparedStatement statement = conn.prepareStatement(" SELECT stationID,availableDocks,totalDocks,"
-          + "latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,streetAddress2,"
-          + "postalCode,location,testStation,lastCommunicationTime,landMark,altitude");
-      ResultSet result = statement.executeQuery();
-      if (result.getString("name").equals(name)) {
 
-      }
-    } catch(Exception e) {
-      System.out.println(e);
-    }
-    return null;
-  }
 
   /**
    * Retrieves the longitude and latitude of a specific Public POI Location
@@ -342,6 +323,38 @@ public class MySQL {
     return null;
   }
 
+  public static Station getStation(String name) {
+    LocalDate lastCommunicationTime = LocalDate.now();
+    try {
+      Connection conn = getConnection();
+      PreparedStatement statement = conn.prepareStatement(" SELECT stationID,name,availableDocks,totalDocks,"
+          + "latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,streetAddress2,city,"
+          + "postalCode,location,testStation,lastCommunicationTime,landMark,altitude FROM Stations");
+      ResultSet result = statement.executeQuery();
+      while (result.next())
+        if (result.getString("name").equals(name)) {
+          Boolean testStation = false;
+          if (result.getInt("testStation") == 1) {
+            testStation = true;
+          }
+          //LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
+          Station station = new Station(result.getInt("stationID"), result.getString("name"),
+              result.getInt("availableDocks"), result.getInt("totalDocks"),
+              result.getDouble("latitude"), result.getDouble("longitude"),
+              result.getString("statusValue"), result.getInt("statusKey"),
+              result.getInt("availableBikes"), result.getString("streetAddress1"),
+              result.getString("streetAddress2"), result.getString("city"),
+              result.getString("postalCode"), result.getString("location"),
+              result.getString("altitude"), testStation, lastCommunicationTime,
+              result.getString("landMark"));
+          return station;
+        }
+    } catch(Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
+
   public static ArrayList<Station> getStations(Connection conn) throws Exception{
     try {
       ArrayList<Station> stations = new ArrayList<Station>();
@@ -356,11 +369,10 @@ public class MySQL {
       String streetAddress1, String streetAddress2, String city, String postalCode, String location,
           String altitude, boolean testStation, Date lastCommunicationTime, String landMark **/
       while (result.next()) {
-        /*
         Boolean testStation = false;
         if (result.getInt("testStation") == 1) {
           testStation = true;
-        }*/
+        }
         //LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
         Station station = new Station(result.getInt("stationID"),result.getString("name"),
             result.getInt("availableDocks"),result.getInt("totalDocks"),
@@ -369,7 +381,7 @@ public class MySQL {
             result.getInt("availableBikes"),result.getString("streetAddress1"),
             result.getString("streetAddress2"),result.getString("city"),
             result.getString("postalCode"),result.getString("location"),
-            result.getString("altitude"),false,lastCommunicationTime,
+            result.getString("altitude"),testStation,lastCommunicationTime,
             result.getString("landMark"));
         stations.add(station);
       }
