@@ -257,11 +257,10 @@ public class GUIManager extends Application {
       Connection conn = mysql.getConnection();
       hotspots = mysql.getHotspots(conn);
       retailers = mysql.getRetailers(conn);
-      //stations = mysql.getStations(conn);
+      stations = mysql.getStations(conn);
 
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
 
-      stations = rdr.readStations("/file/stations.json");
       userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
       publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
       routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);

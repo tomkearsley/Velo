@@ -28,13 +28,19 @@ public class MySQL {
   /**
   public static void main(String[] args) throws Exception {
     Reader rdr = new Reader();
+    Connection conn = getConnection();
+    ArrayList<Station> stations = getStations(conn);
+    int size = stations.size();
+    System.out.println(size);
+    System.out.println(stations);
+
      /** EMPTY DATABASE CODE
     PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
     stmt.executeUpdate();
     PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
     stmt2.executeUpdate();
 
-  } **/
+  }**/
 
   /**
    * Inserts Retailer into Database. Mainly used for intial load of 700+ Retailers
@@ -338,22 +344,24 @@ public class MySQL {
 
   public static ArrayList<Station> getStations(Connection conn) throws Exception{
     try {
+      ArrayList<Station> stations = new ArrayList<Station>();
       PreparedStatement statement = conn.prepareStatement("SELECT stationID,name,availableDocks,"
           + "totalDocks,latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,"
           + "streetAddress2,city,postalCode,location,testStation,lastCommunicationTime,landMark,"
           + "altitude FROM Stations");
       ResultSet result = statement.executeQuery();
+      LocalDate lastCommunicationTime  = LocalDate.now();
       /**ID, String name, int availableDocks, int totalDocks, double latitude,
       double longitude, String statusValue, int statusKey, int availableBikes,
       String streetAddress1, String streetAddress2, String city, String postalCode, String location,
           String altitude, boolean testStation, Date lastCommunicationTime, String landMark **/
-      ArrayList<Station> stations = new ArrayList<Station>();
       while (result.next()) {
+        /*
         Boolean testStation = false;
         if (result.getInt("testStation") == 1) {
           testStation = true;
-        }
-        LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
+        }*/
+        //LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
         Station station = new Station(result.getInt("stationID"),result.getString("name"),
             result.getInt("availableDocks"),result.getInt("totalDocks"),
             result.getDouble("latitude"),result.getDouble("longitude"),
@@ -361,11 +369,13 @@ public class MySQL {
             result.getInt("availableBikes"),result.getString("streetAddress1"),
             result.getString("streetAddress2"),result.getString("city"),
             result.getString("postalCode"),result.getString("location"),
-            result.getString("altitude"),testStation,lastCommunicationTime,
+            result.getString("altitude"),false,lastCommunicationTime,
             result.getString("landMark"));
         stations.add(station);
       }
-    } catch (Exception e) {
+      return stations;
+    }
+    catch (Exception e) {
       System.out.println(e);
     }
     return null;
