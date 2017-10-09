@@ -315,6 +315,26 @@ public class MySQL {
     return null;
   }
 
+  public static ArrayList<PublicPOI> getPublicPOI(Connection conn) {
+    try {
+      ArrayList<PublicPOI> publicPOIS = new ArrayList<PublicPOI>();
+      PreparedStatement statement = conn.prepareStatement("SELECT Longitude,Latitude,Name,"
+          + "Description FROM PublicPOI");
+      ResultSet result = statement.executeQuery();
+      while(result.next()) {
+        PublicPOI publicPOI = new PublicPOI(result.getDouble("Longitude"),
+            result.getDouble("Latitude"),result.getString("Name"),
+            result.getString("Description"));
+        publicPOIS.add(publicPOI);
+
+      }return publicPOIS;
+
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
+
   public static Station getStation(Connection conn,String name) {
     LocalDate lastCommunicationTime = LocalDate.now();
     try {
