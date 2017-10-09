@@ -280,40 +280,35 @@ public class MainController {
   }
 
   private void loadRetailers() throws IOException {
-    Reader rdr = new Reader();
     window.setMember("aBridge", aBridge);
-    window.call("loadRetailers", rdr.readRetailers("/file/InitialRetailers.csv", false));
+    window.call("loadRetailers", getRetailers());
     retailersLoaded = true;
   }
 
   private void loadHotspots() throws IOException {
-    Reader rdr = new Reader();
     //System.out.println(getDistance(40.758896,-73.985130,40.7678,-73.9718));
     //Run both lines of code
     window.setMember("aBridge", aBridge);
-    window.call("loadHotspots", rdr.readHotspots("/file/InitialHotspots.csv", false));
+    window.call("loadHotspots", getHotspots());
     hotspotsLoaded = true;
     //testPretty();
   }
 
   private void loadStations() throws IOException {
-    Reader rdr = new Reader();
     window.setMember("aBridge", aBridge);
-    window.call("loadStations", rdr.readStations("/file/stations.json"));
+    window.call("loadStations", getStations());
     stationsLoaded = true;
   }
 
   public void loadPOIS() throws IOException {
-    Reader rdr = new Reader();
     window.setMember("aBridge", aBridge);
-    window.call("loadPOIS", rdr.readUserPOIS("/test/POIS.csv", false));
+    window.call("loadPOIS", getUserPOIs());
     POISLoaded = true;
   } // TODO implement Imas
 
   public void loadPPOIS() throws IOException{
-    Reader rdr = new Reader();
     window.setMember("aBridge",aBridge);
-    window.call("loadPPOIS",rdr.readPublicPOIS("/test/PublicPOIS.csv",false));
+    window.call("loadPPOIS",getPublicPOIs());
     PPOISLoaded = true;
   }
 
