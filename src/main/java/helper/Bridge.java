@@ -48,4 +48,12 @@ public class Bridge {
   public double[] getRetailerLocation(Retailer retailer) {
     return stringToLocation(retailer.getAddress() + ", New york");
   }
+
+   public void addPublicPOI(double lat,double lng,String name,String description) {
+    outputValue("Adding public POI");
+   }
+
+  public void addUserPOI(double lat,double lng,String name,String description) {
+    outputValue("Adding user POI");
+  }
 }

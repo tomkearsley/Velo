@@ -27,7 +27,14 @@ public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
   /**
   public static void main(String[] args) throws Exception {
-  }**/
+    Reader rdr = new Reader();
+     /** EMPTY DATABASE CODE
+    PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
+    stmt.executeUpdate();
+    PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
+    stmt2.executeUpdate();
+
+  } **/
 
   /**
    * Inserts Retailer into Database. Mainly used for intial load of 700+ Retailers
@@ -108,33 +115,34 @@ public class MySQL {
 
   public static void insertStation(Connection conn,Station station) {
     try {
-      PreparedStatement insert = conn.prepareStatement("INSERT INTO Stations(stationID,availableDocks,"
+      PreparedStatement insert = conn.prepareStatement("INSERT INTO Stations(stationID,name,availableDocks,"
           + "totalDocks,latitude,longitude,statusValue,statusKey,availableBikes,"
           + "streetAddress1,streetAddress2,postalCode,location,testStation,lastCommunicationTime,"
-          + "landMark,altitude) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+          + "landMark,altitude) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
       insert.setInt(1,station.getID());
-      insert.setInt(2,station.getAvailableDocs());
-      insert.setInt(3,station.getTotalDocks());
-      insert.setDouble(4,station.getLatitude());
+      insert.setString(2,station.getName());
+      insert.setInt(3,station.getAvailableDocs());
+      insert.setInt(4,station.getTotalDocks());
       insert.setDouble(5,station.getLatitude());
-      insert.setString(6,station.getStatusValue());
-      insert.setInt(7,station.getStatusKey());
-      insert.setInt(8,station.getAvailableBikes());
-      insert.setString(9,station.getStreetAddress1());
-      insert.setString(10,station.getStreetAddress2());
-      insert.setString(11,station.getPostalCode());
-      insert.setString(12,station.getLocation());
+      insert.setDouble(6,station.getLatitude());
+      insert.setString(7,station.getStatusValue());
+      insert.setInt(8,station.getStatusKey());
+      insert.setInt(9,station.getAvailableBikes());
+      insert.setString(10,station.getStreetAddress1());
+      insert.setString(11,station.getStreetAddress2());
+      insert.setString(12,station.getPostalCode());
+      insert.setString(13,station.getLocation());
       int isTestStation = 0; /** 0 = Not Test Station, 1 = is Test Station **/
       if (station.isTestStation()) {
         isTestStation = 1; /** IS Test Station set to true. **/
       }
-      insert.setInt(13,isTestStation);
+      insert.setInt(14,isTestStation);
       LocalDate dateForm = station.getLastCommunicationTime();
       String LastCommunicationTime = dateForm.toString();
-      insert.setString(14,LastCommunicationTime);
-      insert.setString(15,station.getLandMark());
-      insert.setString(16,station.getAltitude());
+      insert.setString(15,LastCommunicationTime);
+      insert.setString(16,station.getLandMark());
+      insert.setString(17,station.getAltitude());
       insert.executeUpdate();
 
 
@@ -147,6 +155,8 @@ public class MySQL {
 
 
   }
+
+
 
   public static void insertRoute(Connection conn,Route route,String username){
     try {
@@ -277,7 +287,21 @@ public class MySQL {
 
 
   // DATA RETRIEVAL
+  public static Station getStation(String name) {
+    try {
+      Connection conn = getConnection();
+      PreparedStatement statement = conn.prepareStatement(" SELECT stationID,availableDocks,totalDocks,"
+          + "latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,streetAddress2,"
+          + "postalCode,location,testStation,lastCommunicationTime,landMark,altitude");
+      ResultSet result = statement.executeQuery();
+      if (result.getString("name").equals(name)) {
 
+      }
+    } catch(Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
 
   /**
    * Retrieves the longitude and latitude of a specific Public POI Location
@@ -294,7 +318,7 @@ public class MySQL {
 
       ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
       while (result.next()) {
-        Hotspot hotspot = new Hotspot(1,result.getDouble("longitude"),result.getDouble("latitude"),
+        Hotspot hotspot = new Hotspot(1,result.getDouble("latitude"),result.getDouble("longitude"),
             result.getString("LocationAddress"),result.getString("borough"),
             result.getString("city"),result.getInt("postcode"),result.getString("type"),
             result.getString("SSID"),result.getString("name"),
@@ -314,16 +338,41 @@ public class MySQL {
 
   public static ArrayList<Station> getStations(Connection conn) throws Exception{
     try {
-      PreparedStatement statement = conn.prepareStatement("SELECT ");
+      PreparedStatement statement = conn.prepareStatement("SELECT stationID,name,availableDocks,"
+          + "totalDocks,latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,"
+          + "streetAddress2,city,postalCode,location,testStation,lastCommunicationTime,landMark,"
+          + "altitude FROM Stations");
+      ResultSet result = statement.executeQuery();
+      /**ID, String name, int availableDocks, int totalDocks, double latitude,
+      double longitude, String statusValue, int statusKey, int availableBikes,
+      String streetAddress1, String streetAddress2, String city, String postalCode, String location,
+          String altitude, boolean testStation, Date lastCommunicationTime, String landMark **/
+      ArrayList<Station> stations = new ArrayList<Station>();
+      while (result.next()) {
+        Boolean testStation = false;
+        if (result.getInt("testStation") == 1) {
+          testStation = true;
+        }
+        LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
+        Station station = new Station(result.getInt("stationID"),result.getString("name"),
+            result.getInt("availableDocks"),result.getInt("totalDocks"),
+            result.getDouble("latitude"),result.getDouble("longitude"),
+            result.getString("statusValue"),result.getInt("statusKey"),
+            result.getInt("availableBikes"),result.getString("streetAddress1"),
+            result.getString("streetAddress2"),result.getString("city"),
+            result.getString("postalCode"),result.getString("location"),
+            result.getString("altitude"),testStation,lastCommunicationTime,
+            result.getString("landMark"));
+        stations.add(station);
+      }
     } catch (Exception e) {
       System.out.println(e);
     }
     return null;
   }
 
-  public static ArrayList<Route> getPastRoutes(String username) throws Exception {
+  public static ArrayList<Route> getPastRoutes(Connection conn,String username) throws Exception {
     try {
-      Connection conn = getConnection();
       PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
           + "startStation,endStation,bikeID,birthYear,gender,username,userType");
       ResultSet result = statement.executeQuery();
@@ -364,7 +413,7 @@ public class MySQL {
         String block = result.getString("block");
         String secondaryDescription = result.getString("secondaryDescription");
         Retailer retailer = new Retailer(name,address,floor,city,state,zipCode,
-        block,secondaryDescription,"",longitude,latitude);
+        block,secondaryDescription,"",latitude,longitude);
         retailers.add(retailer);
 
 

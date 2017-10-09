@@ -1236,8 +1236,7 @@ public class MainController {
    * Imports additional items from a csv file to the appropriate ArrayList based on the selected
    * datatype from the ChoiceBox
    */
-  public void importData(
-      String importFilePath) { //TODO expand for rest of data types, file path differences
+  public void importData(String importFilePath) { //TODO expand for rest of data types, file path differences
     Reader reader = new Reader();
     int prevSize;
     Alert alert = null;

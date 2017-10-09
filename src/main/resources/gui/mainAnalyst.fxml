@@ -46,15 +46,10 @@
                       <RowConstraints maxHeight="210.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#exportHotspots" prefHeight="27.0" prefWidth="135.0" text="Export Hotspot" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
-                        <PieChart fx:id="hotspotsChart" prefHeight="330.0" prefWidth="480.0" title="Hotspots per City" />
-                        <Button mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportHotspots" prefHeight="27.0" prefWidth="135.0" text="Export Hotspot" />
+                        <PieChart fx:id="hotspotsChart" layoutX="44.0" layoutY="14.0" prefHeight="330.0" prefWidth="480.0" title="Hotspots per City" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+                        <Button layoutX="161.0" layoutY="388.0" mnemonicParsing="false" onAction="#importHotspots" text="Import Hotspots" />
                      </children>
                   </GridPane>
                </content>
@@ -70,14 +65,9 @@
                       <RowConstraints maxHeight="206.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#exportRetailers" prefHeight="27.0" prefWidth="135.0" text="Export Retailers" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
-                        <Button mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRetailers" prefHeight="27.0" prefWidth="135.0" text="Export Retailers" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+                        <Button layoutX="161.0" layoutY="388.0" mnemonicParsing="false" onAction="#importRetailers" text="Import Retailers" />
                      </children>
                   </GridPane>
                </content>
@@ -93,22 +83,9 @@
                       <RowConstraints maxHeight="210.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#exportPublicPOIs" prefHeight="27.0" prefWidth="135.0" text="Export Public POIs" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
-                        <Button mnemonicParsing="false" onAction="#logOut" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
-                        <ScatterChart legendSide="RIGHT" prefHeight="320.0" prefWidth="480.0" title="Public POIs by Coordinates">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </ScatterChart>
+                        <Button layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportPublicPOIs" prefHeight="27.0" prefWidth="135.0" text="Export Public POIs" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
+                        <Button layoutX="147.0" layoutY="389.0" mnemonicParsing="false" onAction="#importPublicPOIs" text="Import Public POIs" />
                      </children>
                   </GridPane>
                </content>
@@ -147,15 +124,9 @@
                       <RowConstraints maxHeight="209.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="exportRoutes" mnemonicParsing="false" onAction="#exportRoutes" prefHeight="27.0" prefWidth="135.0" text="Export Routes" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
-                        <Button mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="67.0" text="Log Out" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </GridPane.margin></Button>
-                        <LineChart fx:id="routesChart" prefHeight="320.0" prefWidth="600.0" title="Duration Travelled per Month">
+                        <Button fx:id="exportRoutes" layoutX="284.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRoutes" prefHeight="27.0" prefWidth="135.0" text="Export Routes" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="67.0" text="Log Out" />
+                        <LineChart fx:id="routesChart" layoutX="44.0" layoutY="14.0" prefHeight="320.0" prefWidth="480.0" title="Distance Travelled per Month">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
@@ -163,6 +134,7 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </LineChart>
+                        <Button layoutX="173.0" layoutY="389.0" mnemonicParsing="false" onAction="#importRoutes" text="Import Routes" />
                      </children>
                   </GridPane>
                </content>
