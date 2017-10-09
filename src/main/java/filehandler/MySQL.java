@@ -130,7 +130,7 @@ public class MySQL {
         isTestStation = 1; /** IS Test Station set to true. **/
       }
       insert.setInt(13,isTestStation);
-      Date dateForm = station.getLastCommunicationTime();
+      LocalDate dateForm = station.getLastCommunicationTime();
       String LastCommunicationTime = dateForm.toString();
       insert.setString(14,LastCommunicationTime);
       insert.setString(15,station.getLandMark());
