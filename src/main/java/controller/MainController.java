@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.collections.FXCollections;
@@ -22,6 +23,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -39,6 +41,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import model.Cyclist;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -143,6 +146,12 @@ public class MainController {
 
   /* Account tab attributes */
   @FXML private ChoiceBox importType; // ChoiceBox for the Account import button
+  @FXML private Label accountTitle;
+  @FXML private Label username;
+  @FXML private Label birthDate;
+  @FXML private Label height;
+  @FXML private Label weight;
+  @FXML private Label BMI;
 
 
   /* METHODS */
@@ -202,6 +211,16 @@ public class MainController {
     initStationTable();
     initRouteTable();
     initUserRouteTable();
+
+    /* ACCOUNT TAB INITIALIZATION */
+    Cyclist cyclist = GUIManager.getInstanceGUIManager().getCyclistAccount();
+    accountTitle.setText(cyclist.getFirstName() + "'s Account");
+    username.setText(cyclist.getUsername());
+    birthDate.setText(cyclist.getDOB().format(DateTimeFormatter.ofPattern("MM/d/uuuu")));
+    height.setText(Integer.toString(cyclist.getHeight()) + "\"");
+    weight.setText(String.format("%.1f", cyclist.getWeight()) + "lbs");
+    BMI.setText(String.format("%.2f", cyclist.getBMI()));
+
   }
 
   public ArrayList<Retailer> getRetailers() {
