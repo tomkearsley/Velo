@@ -4,12 +4,18 @@ import filehandler.Writer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.PieChart.Data;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tab;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.Hotspot;
@@ -23,13 +29,20 @@ import model.UserPOI;
 public class MainAnalystController {
 
   // Window attributes
-  @FXML private StackedBarChart routes;
+  @FXML private PieChart hotspotsChart;
+//  @FXML private ?? retailersChart;
+//  @FXML private ?? publicPOIsChart;
+//  @FXML private ?? stationsChart;
+  @FXML private LineChart routesChart;
 
 
   // Window methods
   /** Initialises the mainAnalyst window */
   public void initialize() {
     GUIManager.getInstanceGUIManager().populateArrayLists();
+
+    // Set chart data
+    setHotspotsChart();
   }
 
   public ArrayList<Retailer> getRetailers() {
@@ -50,6 +63,41 @@ public class MainAnalystController {
 
   public ArrayList<Station> getStations() {
     return GUIManager.getInstanceGUIManager().getStations();
+  }
+
+  /* Chart Methods */
+  /** Generates and populates the data for the hotspots chart */
+  private void setHotspotsChart() {
+
+    ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(
+            new PieChart.Data("Grapefruit", 13),
+            new PieChart.Data("Oranges", 25),
+            new PieChart.Data("Plums", 10),
+            new PieChart.Data("Pears", 22),
+            new PieChart.Data("Apples", 30)
+    );
+
+    hotspotsChart.setData(hotspotsChartData);
+
+  }
+
+  /** Generates and populates the data for the retailers chart */
+  private void setRetailersChart() {
+
+  }
+
+  /** Generates and populates the data for the public POIs chart */
+  private void setPublicPOIsChart() {
+
+  }
+  /** Generates and populates the data for the stations chart */
+  private void setStationsChart() {
+
+  }
+
+  /** Generates and populates the data for the routes chart */
+  private void setRoutesChart() {
+
   }
 
   /**

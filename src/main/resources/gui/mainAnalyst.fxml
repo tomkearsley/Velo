@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
@@ -14,7 +14,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-
 
 <SplitPane dividerPositions="0.1936127744510978" orientation="VERTICAL" prefHeight="503.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainAnalystController">
    <items>
@@ -35,30 +34,13 @@
       </GridPane>
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="429.0" prefWidth="600.0" side="LEFT" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab closable="false" text="Routes">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <StackedBarChart fx:id="routesChart" layoutX="20.0" layoutY="8.0" legendSide="RIGHT" prefHeight="287.0" prefWidth="524.0" title="Routes per Month">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </StackedBarChart>
-                        <Button fx:id="exportRoutes" layoutX="248.0" layoutY="295.0" mnemonicParsing="false" onAction="#exportRoutes" text="Export Routes" />
-                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="72.0" text="Log Out" />
-                     </children>
-                  </AnchorPane>
-            </content>
-          </Tab>
           <Tab closable="false" text="Hotspots">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="245.0" layoutY="326.0" mnemonicParsing="false" onAction="#exportHotspots" text="Export Hotspot" />
-                        <PieChart fx:id="hotspotsChart" layoutX="93.0" layoutY="14.0" prefHeight="297.0" prefWidth="414.0" />
+                        <Button layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportHotspots" prefHeight="27.0" prefWidth="135.0" text="Export Hotspot" />
+                        <PieChart fx:id="hotspotsChart" layoutX="44.0" layoutY="14.0" prefHeight="330.0" prefWidth="480.0" title="Hotspots per City" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
                      </children>
                   </AnchorPane>
             </content>
@@ -67,16 +49,18 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="243.0" layoutY="326.0" mnemonicParsing="false" onAction="#exportRetailers" text="Export Retailers" />
+                        <Button layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRetailers" prefHeight="27.0" prefWidth="135.0" text="Export Retailers" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
                      </children>
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab closable="false" text="PublicPOI">
+            <Tab closable="false" text="Public POIs">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="234.0" layoutY="326.0" mnemonicParsing="false" onAction="#exportPublicPOIs" text="Export Public POIs" />
+                        <Button layoutX="218.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportPublicPOIs" prefHeight="27.0" prefWidth="135.0" text="Export Public POIs" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
                      </children>
                   </AnchorPane>
               </content>
@@ -85,12 +69,30 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="244.0" layoutY="326.0" mnemonicParsing="false" onAction="#exportStations" text="Export Stations" />
+                        <Button layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportStations" prefHeight="27.0" prefWidth="135.0" text="Export Stations" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
                      </children>
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="logOut" text="Log Out" />
+          <Tab closable="false" text="Routes">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="exportRoutes" layoutX="216.0" layoutY="388.0" mnemonicParsing="false" onAction="#exportRoutes" prefHeight="27.0" prefWidth="135.0" text="Export Routes" />
+                        <Button layoutX="14.0" layoutY="388.0" mnemonicParsing="false" onAction="#logOut" prefHeight="27.0" prefWidth="67.0" text="Log Out" />
+                        <LineChart fx:id="routesChart" layoutX="44.0" layoutY="14.0" prefHeight="320.0" prefWidth="480.0" title="Distance Travelled per Month">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis side="LEFT" />
+                          </yAxis>
+                        </LineChart>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
         </tabs>
       </TabPane>
    </items>
