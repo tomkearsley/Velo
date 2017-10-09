@@ -405,7 +405,7 @@
                                     <Label fx:id="username" prefHeight="17.0" prefWidth="113.0" text="newUsername" GridPane.columnIndex="1" />
                                  </children>
                               </GridPane>
-                              <PieChart fx:id="distanceChart" legendVisible="false" prefHeight="426.0" prefWidth="407.0" title="Distance" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <PieChart fx:id="userRoutesChart" legendVisible="false" prefHeight="426.0" prefWidth="407.0" title="Distance" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                            </children>
                         </GridPane>
                         <GridPane GridPane.rowIndex="1">

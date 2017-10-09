@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -16,7 +17,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.Hotspot;
@@ -31,10 +35,10 @@ public class MainAnalystController {
 
   // Window attributes
   @FXML private PieChart hotspotsChart;
-//  @FXML private ?? retailersChart;
+  @FXML private PieChart retailersChart;
 //  @FXML private ?? publicPOIsChart;
-//  @FXML private ?? stationsChart;
-  @FXML private LineChart routesChart;
+  @FXML private PieChart stationsChart;
+  @FXML private PieChart routesChart;
 
 
   // Window methods
@@ -44,6 +48,9 @@ public class MainAnalystController {
 
     // Set chart data
     setHotspotsChart();
+    setRetailersChart();
+    setStationsChart();
+    setRoutesChart();
   }
 
   public ArrayList<Retailer> getRetailers() {
@@ -67,6 +74,23 @@ public class MainAnalystController {
   }
 
   /* Chart Methods */
+  private void setChartLabels(PieChart chart) {
+    final Label caption = new Label("");
+    caption.setTextFill(Color.DARKORANGE);
+    caption.setStyle("-fx-font: 24 arial;");
+
+    for (final PieChart.Data data : chart.getData()) {
+      data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,
+          new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent e) {
+              caption.setTranslateX(e.getSceneX());
+              caption.setTranslateY(e.getSceneY());
+              caption.setText(String.valueOf(data.getPieValue()) + "%");
+            }
+          });
+    }
+  }
+
   /** Generates and populates the data for the hotspots chart */
   private void setHotspotsChart() {
     ArrayList<String> cities = new ArrayList<>();
@@ -76,10 +100,10 @@ public class MainAnalystController {
       city = hotspot.getCity();
       if (cities.contains(city)) {
         Integer count = cityCounts.get(cities.indexOf(city));
-        cityCounts.set(cities.indexOf(city), new Integer(count.intValue() + 1));
+        cityCounts.set(cities.indexOf(city), count + 1);
       } else {
         cities.add(city);
-        cityCounts.add(new Integer(1));
+        cityCounts.add(1);
       }
     }
     ArrayList<Data> dataPoints = new ArrayList<>();
@@ -89,35 +113,128 @@ public class MainAnalystController {
 
     ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(dataPoints);
 
-//    ObservableList<Data> hotspotsChartData = FXCollections.observableArrayList(
-//            new PieChart.Data("Grapefruit", 13),
-//            new PieChart.Data("Oranges", 25),
-//            new PieChart.Data("Plums", 10),
-//            new PieChart.Data("Pears", 22),
-//            new PieChart.Data("Apples", 30)
-//    );
-
     hotspotsChart.setData(hotspotsChartData);
-
+    setChartLabels(hotspotsChart);
   }
 
   /** Generates and populates the data for the retailers chart */
   private void setRetailersChart() {
+    ArrayList<String> storeTypes = new ArrayList<>();
+    ArrayList<Integer> typeCount = new ArrayList<>();
+    String codeStr;
+    for (Retailer retailer : getRetailers()) {
+      char code;
+      try {
+        code = retailer.getSecondaryDescription().charAt(0);
+      } catch(StringIndexOutOfBoundsException e) {
+        code = ' ';
+      }
+      switch(code) {
+        case 'F': codeStr = "Food"; break;
+        case 'P': codeStr = "Service"; break;
+        case 'S': codeStr = "Shop"; break;
+        default: codeStr = "Other"; break;
+      }
+      if (storeTypes.contains(codeStr)) {
+        Integer count = typeCount.get(storeTypes.indexOf(codeStr));
+        typeCount.set(storeTypes.indexOf(codeStr), count + 1);
+      } else {
+        storeTypes.add(codeStr);
+        typeCount.add(1);
+      }
+    }
 
+    ArrayList<Data> dataPoints = new ArrayList<>();
+    for (int i=0; i<storeTypes.size(); i++) {
+      dataPoints.add(new PieChart.Data(storeTypes.get(i), typeCount.get(i)));
+    }
+
+    ObservableList<Data> retailersChartData = FXCollections.observableArrayList(dataPoints);
+
+    retailersChart.setData(retailersChartData);
+    setChartLabels(retailersChart);
   }
 
   /** Generates and populates the data for the public POIs chart */
   private void setPublicPOIsChart() {
-
   }
   /** Generates and populates the data for the stations chart */
   private void setStationsChart() {
+    ArrayList<String> statusTypes = new ArrayList<>();
+    ArrayList<Integer> statusCounts = new ArrayList<>();
+    String status;
+    for (Station station : getStations()) {
+      status = station.getStatusValue();
+      if (statusTypes.contains(status)) {
+        Integer count = statusCounts.get(statusTypes.indexOf(status));
+        statusCounts.set(statusTypes.indexOf(status), count + 1);
+      } else {
+        statusTypes.add(status);
+        statusCounts.add(1);
+      }
+    }
+    ArrayList<Data> dataPoints = new ArrayList<>();
+    for (int i=0; i<statusTypes.size(); i++) {
+      dataPoints.add(new PieChart.Data(statusTypes.get(i), statusCounts.get(i)));
+    }
 
+    ObservableList<Data> stationsChartData = FXCollections.observableArrayList(dataPoints);
+
+    stationsChart.setData(stationsChartData);
+    setChartLabels(stationsChart);
+  }
+
+  private int getMaxRouteDuration() {
+    int max = 0;
+    for (Route route : getRoutes()) {
+      if (route.getDuration() > max) {
+        max = route.getDuration();
+      }
+    }
+    return max;
   }
 
   /** Generates and populates the data for the routes chart */
   private void setRoutesChart() {
+    int maxDuration = getMaxRouteDuration();
+    int maxMins = maxDuration / 60;
+    ArrayList<String> durations = new ArrayList<>();
+    ArrayList<Integer> durationCount = new ArrayList<>();
 
+    int duration;
+    String durationStr;
+    for (Route route : getRoutes()) {
+      duration = route.getDuration();
+      if (duration < 120) {
+        durationStr = "< 2 minutes";
+      } else if (duration < 300) {
+        durationStr = "2-5 minutes";
+      } else if (duration < 900) {
+        durationStr = "5-15 minutes";
+      } else if (duration < 1800) {
+        durationStr = "15-30 minutes";
+      } else {
+        durationStr = "> 30 minutes";
+      }
+
+      if (durations.contains(durationStr)) {
+        Integer count = durationCount.get(durations.indexOf(durationStr));
+        durationCount.set(durations.indexOf(durationStr), count+1);
+      } else {
+        durations.add(durationStr);
+        durationCount.add(1);
+      }
+    }
+
+    ArrayList<Data> dataPoints = new ArrayList<>();
+    for (int i=0; i<durations.size(); i++) {
+      dataPoints.add(new PieChart.Data(durations.get(i), durationCount.get(i)));
+    }
+
+    ObservableList<Data> routesChartData = FXCollections.observableArrayList(dataPoints);
+
+    routesChart.setData(routesChartData);
+    setChartLabels(routesChart);
   }
 
   /**

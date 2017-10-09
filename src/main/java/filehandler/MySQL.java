@@ -1,8 +1,11 @@
 package filehandler;
 
+import com.sun.org.apache.regexp.internal.RE;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
+import javax.jws.soap.SOAPBinding.Use;
 import model.Analyst;
 import model.PublicPOI;
 import model.Retailer;
@@ -27,20 +30,16 @@ public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
   /**
   public static void main(String[] args) throws Exception {
-    Reader rdr = new Reader();
     Connection conn = getConnection();
-    ArrayList<Station> stations = getStations(conn);
+    Reader rdr = new Reader();
+    ArrayList<Station> stations = rdr.readStations("/file/stations.json");
     int size = stations.size();
-    System.out.println(size);
-    System.out.println(stations);
+    for (int i = 0; i < size; i++) {
+      insertStation(conn,stations.get(i));
+    }
+  } **/
 
-     /** EMPTY DATABASE CODE
-    PreparedStatement stmt = conn.prepareStatement("TRUNCATE Stations");
-    stmt.executeUpdate();
-    PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Stations");
-    stmt2.executeUpdate();
 
-  }**/
 
   /**
    * Inserts Retailer into Database. Mainly used for intial load of 700+ Retailers
@@ -84,9 +83,8 @@ public class MySQL {
    * @param publicPOI Public POI Object
    * @throws Exception Exception thrown if insert is unsuccessful.
    */
-  public static void insertPublicPOI(PublicPOI publicPOI) throws Exception {
+  public static void insertPublicPOI(Connection conn,PublicPOI publicPOI) throws Exception {
     try {
-      Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
           "INSERT INTO PublicPOI (Longitude,Latitude,Name,Description) VALUES (?,?,?,?)");
       inserted.setDouble(1,publicPOI.getLongitude());
@@ -101,15 +99,15 @@ public class MySQL {
     }
 
   }
-  public static void insertUserPOI(UserPOI userPOI) throws Exception {
+  public static void insertUserPOI(Connection conn,UserPOI userPOI,String username) throws Exception {
     try {
-      Connection conn = getConnection();
       PreparedStatement inserted = conn.prepareStatement(
-          "INSERT INTO UserPOI (Longitude,Latitude,Name,Description) VALUES (?,?,?,?)");
+          "INSERT INTO UserPOI (Longitude,Latitude,Name,Description,username) VALUES (?,?,?,?,?)");
       inserted.setDouble(1,userPOI.getLongitude());
       inserted.setDouble(2,userPOI.getLatitude());
       inserted.setString(3,userPOI.getName());
       inserted.setString(4,userPOI.getDescription());
+      inserted.setString(5,username);
       inserted.executeUpdate(); //UPDATE = SEND QUERY = Retrieve
     } catch (Exception e) {
       System.out.println(e);
@@ -131,7 +129,7 @@ public class MySQL {
       insert.setInt(3,station.getAvailableDocs());
       insert.setInt(4,station.getTotalDocks());
       insert.setDouble(5,station.getLatitude());
-      insert.setDouble(6,station.getLatitude());
+      insert.setDouble(6,station.getLongitude());
       insert.setString(7,station.getStatusValue());
       insert.setInt(8,station.getStatusKey());
       insert.setInt(9,station.getAvailableBikes());
@@ -167,8 +165,7 @@ public class MySQL {
   public static void insertRoute(Connection conn,Route route,String username){
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO RouteHistory (duration,startDate,"
-          + "stopDate,startID,startName,startLongitude,startLatitude,endID,endName,endLongitude,endLatitude,"
-          + "endStation,bikeID,birthYear,gender,username) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+          + "stopDate,startName,endName,bikeID,birthYear,gender,username) VALUES (?,?,?,?,?,?,?,?,?)");
       insert.setInt(1,route.getDuration());
       Date sDate = route.getStartDate(); // CONVERSION FOR DATABASE.
       String startDate = sDate.toString();
@@ -176,14 +173,6 @@ public class MySQL {
       String endDate = eDate.toString();
       insert.setString(2,startDate);
       insert.setString(3,endDate);
-      /** START STATION **/
-      Station startStation = route.getStartStation();
-      insert.setInt(4,startStation.getID());
-      insert.setString(5,startStation.getName());
-      insert.setDouble(6,startStation.getLongitude());
-      insert.setDouble(7,startStation.getLatitude());
-
-
       insert.setString(4,route.getStartStationName());
       insert.setString(5,route.getStopStationName());
       insert.setInt(6,route.getBikeID());
@@ -293,21 +282,7 @@ public class MySQL {
 
 
   // DATA RETRIEVAL
-  public static Station getStation(String name) {
-    try {
-      Connection conn = getConnection();
-      PreparedStatement statement = conn.prepareStatement(" SELECT stationID,availableDocks,totalDocks,"
-          + "latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,streetAddress2,"
-          + "postalCode,location,testStation,lastCommunicationTime,landMark,altitude");
-      ResultSet result = statement.executeQuery();
-      if (result.getString("name").equals(name)) {
 
-      }
-    } catch(Exception e) {
-      System.out.println(e);
-    }
-    return null;
-  }
 
   /**
    * Retrieves the longitude and latitude of a specific Public POI Location
@@ -342,6 +317,57 @@ public class MySQL {
     return null;
   }
 
+  public static ArrayList<PublicPOI> getPublicPOI(Connection conn) {
+    try {
+      ArrayList<PublicPOI> publicPOIS = new ArrayList<PublicPOI>();
+      PreparedStatement statement = conn.prepareStatement("SELECT Longitude,Latitude,Name,"
+          + "Description FROM PublicPOI");
+      ResultSet result = statement.executeQuery();
+      while(result.next()) {
+        PublicPOI publicPOI = new PublicPOI(result.getDouble("Latitude"),
+            result.getDouble("Longitude"),result.getString("Name"),
+            result.getString("Description"));
+        publicPOIS.add(publicPOI);
+
+      }return publicPOIS;
+
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
+
+  public static Station getStation(Connection conn,String name) {
+    LocalDate lastCommunicationTime = LocalDate.now();
+    try {
+      PreparedStatement statement = conn.prepareStatement(" SELECT stationID,name,availableDocks,totalDocks,"
+          + "latitude,longitude,statusValue,statusKey,availableBikes,streetAddress1,streetAddress2,city,"
+          + "postalCode,location,testStation,lastCommunicationTime,landMark,altitude FROM Stations");
+      ResultSet result = statement.executeQuery();
+      while (result.next())
+        if (result.getString("name").equals(name)) {
+          Boolean testStation = false;
+          if (result.getInt("testStation") == 1) {
+            testStation = true;
+          }
+          //LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
+          Station station = new Station(result.getInt("stationID"), result.getString("name"),
+              result.getInt("availableDocks"), result.getInt("totalDocks"),
+              result.getDouble("latitude"), result.getDouble("longitude"),
+              result.getString("statusValue"), result.getInt("statusKey"),
+              result.getInt("availableBikes"), result.getString("streetAddress1"),
+              result.getString("streetAddress2"), result.getString("city"),
+              result.getString("postalCode"), result.getString("location"),
+              result.getString("altitude"), testStation, lastCommunicationTime,
+              result.getString("landMark"));
+          return station;
+        }
+    } catch(Exception e) {
+      System.out.println(e);
+    }
+    return null;
+  }
+
   public static ArrayList<Station> getStations(Connection conn) throws Exception{
     try {
       ArrayList<Station> stations = new ArrayList<Station>();
@@ -356,20 +382,19 @@ public class MySQL {
       String streetAddress1, String streetAddress2, String city, String postalCode, String location,
           String altitude, boolean testStation, Date lastCommunicationTime, String landMark **/
       while (result.next()) {
-        /*
         Boolean testStation = false;
         if (result.getInt("testStation") == 1) {
           testStation = true;
-        }*/
+        }
         //LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
         Station station = new Station(result.getInt("stationID"),result.getString("name"),
             result.getInt("availableDocks"),result.getInt("totalDocks"),
-            result.getDouble("latitude"),result.getDouble("longitude"),
+            result.getDouble("longitude"),result.getDouble("latitude"),
             result.getString("statusValue"),result.getInt("statusKey"),
             result.getInt("availableBikes"),result.getString("streetAddress1"),
             result.getString("streetAddress2"),result.getString("city"),
             result.getString("postalCode"),result.getString("location"),
-            result.getString("altitude"),false,lastCommunicationTime,
+            result.getString("altitude"),testStation,lastCommunicationTime,
             result.getString("landMark"));
         stations.add(station);
       }
@@ -381,24 +406,99 @@ public class MySQL {
     return null;
   }
 
+  public static ArrayList<Route> getAllRoutes(Connection conn) throws Exception {
+    try {
+      PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
+          + "startName,endName,bikeID,birthYear,gender FROM RouteHistory");
+      ResultSet result = statement.executeQuery();
+      ArrayList<Route> routes = new ArrayList<Route>();
+      while (result.next()) {
+          int duration = result.getInt("duration");
+          SimpleDateFormat format = new SimpleDateFormat("E MMM dd H:mm:ss z yyyy");
+          Date startDate = format.parse(result.getString("startDate"));
+          Date stopDate = format.parse(result.getString("stopDate"));
+          //String strDate = result.getString("startDate");
+          //String stopDate = result.getString("stopDate");
+          /** START STATION **/
+          String startName = result.getString("startName");
+          Station startStation = getStation(conn,startName);
+          /** END STATION **/
+          String stopName = result.getString("endName");
+          Station stopStation = getStation(conn,stopName);
+          int bikeID = result.getInt("bikeID");
+          int birthYear = result.getInt("birthYear");
+          int gender = result.getInt("gender");
+          Route route = new Route(duration,startDate,stopDate,startStation,stopStation,bikeID,"",
+              birthYear,gender);
+          routes.add(route);
+      } return routes;
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    System.out.println("Record was not found.");
+    return null;
+  }
+
   public static ArrayList<Route> getPastRoutes(Connection conn,String username) throws Exception {
     try {
       PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
-          + "startStation,endStation,bikeID,birthYear,gender,username,userType");
+          + "startName,endName,bikeID,birthYear,gender FROM RouteHistory");
       ResultSet result = statement.executeQuery();
       ArrayList<Route> routes = new ArrayList<Route>();
       while (result.next()) {
         //int duration, Date startDate, Date stopDate, Station startStation,Station stopStation, int bikeID, String userType, int birthYear, int gender
         if (result.getString("username").equals(username)) {
           int duration = result.getInt("duration");
+          SimpleDateFormat format = new SimpleDateFormat("E MMM dd H:mm:ss z yyyy");
+          Date startDate = format.parse(result.getString("startDate"));
+          Date stopDate = format.parse(result.getString("stopDate"));
+          //String strDate = result.getString("startDate");
+          //String stopDate = result.getString("stopDate");
+          /** START STATION **/
+          String startName = result.getString("startName");
+          Station startStation = getStation(conn,startName);
+          /** END STATION **/
+          String stopName = result.getString("endName");
+          Station stopStation = getStation(conn,stopName);
+          int bikeID = result.getInt("bikeID");
+          int birthYear = result.getInt("birthYear");
+          int gender = result.getInt("gender");
+          Route route = new Route(duration,startDate,stopDate,startStation,stopStation,bikeID,"",
+              birthYear,gender);
+          routes.add(route);
+
 
         }
-      }
+      } return routes;
     } catch (Exception e) {
     System.out.println(e);
   }
     System.out.println("Record was not found.");
     return null;
+  }
+
+  public static ArrayList<UserPOI> getUserPOI(Connection conn,String username) throws Exception {
+    try{
+      PreparedStatement statement = conn.prepareStatement("SELECT Longitude,Latitude,Name,Description,username FROM UserPOI");
+      ResultSet result = statement.executeQuery();
+
+      ArrayList<UserPOI> userPOIS = new ArrayList<UserPOI>();
+      while(result.next()) {
+        if (result.getString("username").equals(username)) {
+          Double longitude = result.getDouble("Longitude");
+          Double latitude = result.getDouble("Latitude");
+          String name = result.getString("Name");
+          String description = result.getString("Description");
+          UserPOI userPOI = new UserPOI(latitude,longitude,name,description);
+          userPOIS.add(userPOI);
+        }
+
+
+      }return userPOIS;
+
+    } catch (Exception e) {
+      System.out.println(e);
+    } return null;
   }
 
 
