@@ -260,6 +260,7 @@
         infowindow.open(map, marker);
         displayNearby(lat,lng,NEARBY_DISTANCE);
       });
+
       allMarkers.push(marker);
       switch(markerType) {
         case "hotspot":
@@ -503,9 +504,11 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getRetailerTitle(infoArray.get(i));
+        //title = "test string";
         //aBridge.testValue("test3");
         createMarker(lat,lng,title,"retailer");
       }
+      createMarker(10,10,title,"t9-square");
     }
 
     function loadHotspots(infoArray) {
@@ -518,7 +521,8 @@
         lng = aBridge.getLng(infoArray.get(i));
         //aBridge.testValue("test2");
         title = aBridge.getHotspotTitle(infoArray.get(i));
-        //aBridge.testValue("test3");
+        //title = "test string";
+        //aBridge.outputValue(title);
         createMarker(lat,lng,title,"hotspot");
       }
     }
@@ -663,6 +667,14 @@
       nearbyMarkers(lat,lng,distance,"poi");
       nearbyMarkers(lat,lng,distance,"station");
       nearbyMarkers(lat,lng,distance,"ppoi");
+    }
+
+    function addUserPOI(lat,lng,name,description) {
+      aBridge.addUserPOI(lat,lng,name,description);
+    }
+
+    function addPublicPOI(lat,lng,name,description) {
+      aBridge.addPublicPOI(lat,lng,name,description);
     }
 
     //initialize();
