@@ -234,6 +234,10 @@ public class GUIManager extends Application {
    */
   void logOut() throws Exception {
 
+    //Clear user logged data
+    cyclistAccount = null;
+    analystAccount = null;
+
     //Close any other window, begin Login window
     loginWindow.start(primaryStage);
   }

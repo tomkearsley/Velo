@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.fxml.FXML;
+import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Slider;
-import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.Hotspot;
@@ -23,6 +23,7 @@ import model.UserPOI;
 public class MainAnalystController {
 
   // Window attributes
+  @FXML private StackedBarChart routes;
 
 
   // Window methods
@@ -53,6 +54,13 @@ public class MainAnalystController {
 
   public ArrayList<Station> getStations() {
     return GUIManager.getInstanceGUIManager().getStations();
+  }
+
+  /**
+   * Tells GUIManager the user wants to log out
+   */
+  @FXML void logOut() throws Exception {
+    GUIManager.getInstanceGUIManager().logOut();
   }
 
   /**

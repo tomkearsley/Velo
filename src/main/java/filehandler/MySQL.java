@@ -353,7 +353,7 @@ public class MySQL {
           if (p.verifyPassword(password,RealPassword)) {
             successfulLogin = true;
             LoginResult.add(successfulLogin);
-            System.out.println("Successfully Logged in");
+            System.out.println("Successfully logged in via MySQL");
             return LoginResult;
           } else {
             System.out.println("Password is incorrect");
@@ -392,7 +392,7 @@ public class MySQL {
       Class.forName(driver);
 
       Connection conn = DriverManager.getConnection(url, username, password);
-      System.out.println("Connected");
+      System.out.println("Connected to MySQL database");
       return conn;
     } catch (Exception e) {
       System.out.println(e);
