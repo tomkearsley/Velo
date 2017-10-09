@@ -229,8 +229,7 @@ public class Station extends POI {
     String address = streetAddress1 + (streetAddress2.equals("") ? "" : ", " + streetAddress2);
     return "Name:\t\t" + getName() + " (" + ID + ")" + "\nStatus:\t\t" + statusValue +
         "\nTotal docks:\t" + totalDocks
-        + "\nAvailable bikes: " + availableBikes + "\nAddress:\t\t" + address +
-        (city.equals("") ? "" : ("\nCity:\t" + city)) + "\nTest station:\t" + (testStation ? "True"
+        + "\nAvailable bikes: " + availableBikes + "\nAddress:\t\t" + address +"\nTest station:\t" + (testStation ? "True"
         : "False");
   }
 

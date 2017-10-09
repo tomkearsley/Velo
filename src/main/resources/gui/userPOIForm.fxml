@@ -32,36 +32,22 @@
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="72.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="102.0" minHeight="10.0" prefHeight="63.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="103.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="65.0" minHeight="3.0" prefHeight="65.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="110.0" minHeight="10.0" prefHeight="92.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="128.0" minHeight="10.0" prefHeight="93.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="65.0" minHeight="3.0" prefHeight="29.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="name" promptText="Name" GridPane.halignment="CENTER">
+            <TextField fx:id="name" onKeyTyped="#clearNameStyle" onMouseClicked="#clearNameStyle" promptText="Name" GridPane.halignment="CENTER">
                <tooltip>
                   <Tooltip text="Name the new location" />
                </tooltip>
             </TextField>
-            <TextArea fx:id="description" prefHeight="200.0" prefWidth="200.0" promptText="Description" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <TextArea fx:id="description" onKeyTyped="#clearDescriptionStyle" onMouseClicked="#clearDescriptionStyle" prefHeight="200.0" prefWidth="200.0" promptText="Description" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <tooltip>
                   <Tooltip text="Provide additional details" />
                </tooltip>
             </TextArea>
-            <GridPane GridPane.rowIndex="3">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <TextField fx:id="latitude" editable="false" prefHeight="27.0" prefWidth="144.0" promptText="Latitude DISABLED" GridPane.halignment="CENTER" />
-                  <TextField fx:id="longitude" editable="false" promptText="Logitude DISABLED" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-               </children>
-            </GridPane>
             <GridPane GridPane.rowIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -72,13 +58,13 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="buildingNumber" promptText="Building number" />
-                  <TextField fx:id="streetName" promptText="Street name" GridPane.columnIndex="1" />
-                  <TextField fx:id="city" promptText="City" GridPane.rowIndex="1" />
-                  <TextField fx:id="state" promptText="State" text="New York" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="buildingNumber" onKeyTyped="#clearBuildingNumberStyle" onMouseClicked="#clearBuildingNumberStyle" promptText="Building number" />
+                  <TextField fx:id="streetName" onKeyTyped="#clearStreetNameStyle" onMouseClicked="#clearStreetNameStyle" promptText="Street name" GridPane.columnIndex="1" />
+                  <TextField fx:id="city" onKeyTyped="#clearCityStyle" onMouseClicked="#clearCityStyle" promptText="City" GridPane.rowIndex="1" />
+                  <TextField fx:id="state" onKeyTyped="#clearStateStyle" onMouseClicked="#clearStateStyle" promptText="State" text="New York" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <Label fx:id="loading" text="Loading..." textFill="#1ca42e" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <Label fx:id="loading" text="Loading..." textFill="#1ca42e" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
