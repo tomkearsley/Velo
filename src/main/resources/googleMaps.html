@@ -265,6 +265,24 @@
         });
       });
 
+      google.maps.event.addListener(map,'zoom_changed',function(event) {
+        aBridge.outputValue("Zoom changed");
+        refreshCluster(retailerCluster);
+        refreshCluster(hotspotCluster);
+        refreshCluster(POICluster);
+        refreshCluster(stationCluster);
+        refreshCluster(PPOICluster);
+      });
+
+      google.maps.event.addListener(map,'dragend',function(event) {
+        aBridge.outputValue("Map moved");
+        refreshCluster(retailerCluster);
+        refreshCluster(hotspotCluster);
+        refreshCluster(POICluster);
+        refreshCluster(stationCluster);
+        refreshCluster(PPOICluster);
+      });
+
       //var bikeLayer = new google.maps.BicyclingLayer();
       //bikeLayer.setMap(map);
       //alert("Test");
@@ -779,6 +797,11 @@
         toReturn.push([wayPointsArray[i].location.lat(),wayPointsArray[i].lng()]);
       }
       return toReturn;
+    }
+
+    function refreshCluster(markerCluster) {
+      markerCluster.resetViewport();
+      markerCluster.redraw();
     }
 
     //initialize();
