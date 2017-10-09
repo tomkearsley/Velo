@@ -189,10 +189,10 @@ public class MainController {
     dataViewTab.setText("");
     historyViewTab.setText("");
     userViewTab.setText("");
-    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap.jpeg")));
-    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace.jpeg")));
-    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory.jpeg")));
-    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount.jpeg")));
+    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap 2.png")));
+    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace 2.png")));
+    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory 2.png")));
+    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount 2.png")));
 
     // MAPS TAB INITIALIZATION
     URL url = getClass().getResource("/googleMaps.html");
