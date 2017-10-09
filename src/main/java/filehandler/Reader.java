@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import model.Hotspot;
@@ -637,10 +641,16 @@ public class Reader {
         return null;
       }
       landMark = bufferObject.getString("landMark");
+
+      //Converting date from simpledateformat to localdate
+      Instant instant = lastCommunicationTime.toInstant();
+      ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+      LocalDate date = zdt.toLocalDate();
+
       bufferStation = new Station(id, stationName, availableDocks, totalDocks, latitude,
           longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, city,
           postalCode,
-          location, altitude, testStation, lastCommunicationTime, landMark);
+          location, altitude, testStation, date, landMark);
 
       returnArray.add(bufferStation);
     }
