@@ -384,6 +384,39 @@ public class MySQL {
     return null;
   }
 
+  public static ArrayList<Route> getAllRoutes(Connection conn) throws Exception {
+    try {
+      PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
+          + "startName,endName,bikeID,birthYear,gender FROM RouteHistory");
+      ResultSet result = statement.executeQuery();
+      ArrayList<Route> routes = new ArrayList<Route>();
+      while (result.next()) {
+          int duration = result.getInt("duration");
+          SimpleDateFormat format = new SimpleDateFormat("E MMM dd H:mm:ss z yyyy");
+          Date startDate = format.parse(result.getString("startDate"));
+          Date stopDate = format.parse(result.getString("stopDate"));
+          //String strDate = result.getString("startDate");
+          //String stopDate = result.getString("stopDate");
+          /** START STATION **/
+          String startName = result.getString("startName");
+          Station startStation = getStation(conn,startName);
+          /** END STATION **/
+          String stopName = result.getString("endName");
+          Station stopStation = getStation(conn,stopName);
+          int bikeID = result.getInt("bikeID");
+          int birthYear = result.getInt("birthYear");
+          int gender = result.getInt("gender");
+          Route route = new Route(duration,startDate,stopDate,startStation,stopStation,bikeID,"",
+              birthYear,gender);
+          routes.add(route);
+      } return routes;
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    System.out.println("Record was not found.");
+    return null;
+  }
+
   public static ArrayList<Route> getPastRoutes(Connection conn,String username) throws Exception {
     try {
       PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
