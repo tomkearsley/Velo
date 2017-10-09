@@ -52,7 +52,7 @@ public class Route implements Mappable {
   /**
    * Users that have travelled this route will have their usernames added to this field
    */
-  private ArrayList<String> travelledBy;
+  private ArrayList<String> travelledBy = new ArrayList<>();
 
   //Methods
   public int getDuration() {
@@ -181,8 +181,9 @@ public class Route implements Mappable {
   public boolean travelledByContains(String user) {
     if(travelledBy.contains(user)) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
   //Extra getters for tableview usability
 
