@@ -1274,6 +1274,19 @@ public class MainController {
       try {
         ArrayList<UserPOI> userPOIsToAdd = reader
             .readUserPOIS(importFilePath, true);
+        MySQL mysql = new MySQL();
+
+        int size = userPOIsToAdd.size();
+        String username = GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername();
+        try {
+          Connection conn = mysql.getConnection();
+          for (int i = 0; i < size; i++) {
+            mysql.insertUserPOI(conn,userPOIsToAdd.get(i),username);
+          }
+
+        } catch (Exception e) {
+          System.out.println(e);
+        }
         prevSize = getUserPOIs().size();
         GUIManager.getInstanceGUIManager().addUserPOIs(userPOIsToAdd);
         alert = new Alert(AlertType.NONE,
