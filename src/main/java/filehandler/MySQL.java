@@ -389,7 +389,7 @@ public class MySQL {
         //LocalDate lastCommunicationTime = LocalDate.parse(result.getString("lastCommunicationTime"));
         Station station = new Station(result.getInt("stationID"),result.getString("name"),
             result.getInt("availableDocks"),result.getInt("totalDocks"),
-            result.getDouble("longitude"),result.getDouble("latitude"),
+            result.getDouble("latitude"),result.getDouble("longitude"),
             result.getString("statusValue"),result.getInt("statusKey"),
             result.getInt("availableBikes"),result.getString("streetAddress1"),
             result.getString("streetAddress2"),result.getString("city"),
