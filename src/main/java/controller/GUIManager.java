@@ -257,6 +257,7 @@ public class GUIManager extends Application {
       Connection conn = mysql.getConnection();
       hotspots = mysql.getHotspots(conn);
       retailers = mysql.getRetailers(conn);
+      //stations = mysql.getStations(conn);
 
       //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
 
