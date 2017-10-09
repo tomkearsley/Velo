@@ -332,7 +332,11 @@ public class MainAnalystController {
           alert = new Alert(AlertType.ERROR, "Error exporting " + poiString.toLowerCase(),
               ButtonType.OK);
         } finally {
-          alert.showAndWait();
+          try {
+            alert.showAndWait();
+          } catch (NullPointerException e) {
+            System.out.print("Error");
+          }
         }
       }
     } else {
