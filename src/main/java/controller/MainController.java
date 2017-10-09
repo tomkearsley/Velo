@@ -575,9 +575,9 @@ public class MainController {
   }
 */
 
-  private void prettyMarker(double lat, double lng, String info, String markerType) {
+  private void prettyMarker(double lat, double lng, String info, String markerType,String infoText) {
     window.setMember("aBridge", aBridge);
-    window.call("prettyMarker", lat, lng, info, markerType);
+    window.call("prettyMarker", lat, lng, info, markerType,infoText);
   }
 
   private void displayRoute(double startLat, double startLng, double endLat, double endLng) {
@@ -750,7 +750,7 @@ public class MainController {
               prettyMarker(selected_item.getLatitude(),
                   selected_item.getLongitude(),
                   selected_item.getAddress(),
-                  "retailer");
+                  "retailer",aBridge.getRetailerHTML(selected_item));
               viewMap();
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");
@@ -825,7 +825,7 @@ public class MainController {
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
-                  selected_item.getLocationAddress(), "hotspot");
+                  selected_item.getLocationAddress(), "hotspot",aBridge.getHotspotHTML(selected_item));
               viewMap();
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");
@@ -887,7 +887,7 @@ public class MainController {
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
-                  selected_item.getName(), "public-poi");
+                  selected_item.getName(), "public-poi",aBridge.getPPOIHTML(selected_item));
               viewMap();
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");
@@ -951,7 +951,7 @@ public class MainController {
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
-                  selected_item.getName(), "user-poi");
+                  selected_item.getName(), "user-poi",aBridge.getPOIHTML(selected_item));
               viewMap();
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");
@@ -1012,7 +1012,7 @@ public class MainController {
           if (tableOnClickPopup.return_value == 1) {
             try {
               prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
-                  selected_item.getName(), "station");
+                  selected_item.getName(), "station",aBridge.getStationHTML(selected_item));
               viewMap();
             } catch (NullPointerException e) {
               System.out.println("Map not yet loaded");

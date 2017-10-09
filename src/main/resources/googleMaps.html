@@ -428,7 +428,7 @@
       });
     }
 
-    function prettyMarker(lat,lng,info,markerType) {
+    function prettyMarker(lat,lng,info,markerType,infoText) {
       map.setZoom(17); // 15 = Streets, 20 = Buildings. 17 seems middle-ground enough
       var myLatLng = new google.maps.LatLng(lat, lng);
       //alert("lat: " + lat + "\nlng: " + lng + "\nLocation: " + myLatLng);
@@ -442,7 +442,7 @@
       map.setCenter(myLatLng); //Sets focus to marker
 
       marker.addListener('click', function() {
-        infowindow.setContent(info);
+        infowindow.setContent(infoText);
         infowindow.open(map, marker);
         displayNearby(lat,lng,NEARBY_DISTANCE);
       });
@@ -499,26 +499,6 @@
       aBridge.outputValue("Showing cluster");
     }
 
-    function displayRoute(startLat,startLng,endLat,endLng) {
-      route
-      //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-      var startLocation = startLat + "," + startLng;
-      var endLocation = endLat + "," + endLng;
-      directionsService.route({
-        origin: startLocation,
-        destination: endLocation,
-        travelMode: 'BICYCLING'
-      }, function(response, status) {
-        //alert("as");
-        if (status === 'OK') {
-          directionsDisplay.setDirections(response);
-        } else {
-          window.alert('Directions request failed due to ' + status);
-        }
-      });
-      //alert("Test");
-    }
-
     function displayRouteString(startLocation,endLocation) {
       directionsService.route({
         origin: startLocation,
@@ -537,8 +517,8 @@
       var startLocation = startLat + "," + startLng;
       var endLocation = endLat + "," + endLng;
       directionsService.route({
-        origin: startLocation,
-        destination: endLocation,
+        origin: startLocation + ",New York",
+        destination: endLocation + ",New York",
         waypoints: wayPoints,
         travelMode: 'BICYCLING'
       }, function(response, status) {
@@ -547,12 +527,47 @@
           var route = response.routes[0];
           aBridge.outputValue("Displaying route");
 
-          displayNearby(startLat,startLng,NEARBY_DISTANCE);
+          var location = route.legs[0].start_location;
+
+          wayPointMarkers.push(createMarker(location.lat(),location.lng(),"Marker 1","default"));
+          displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
+
           for (var i = 0; i < route.legs.length; i++) {
-            var location = route.legs[i].end_location;
+            location = route.legs[i].end_location;
+            wayPointIntermediateMarkers.push(createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default"));
+            displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
           }
         } else {
           window.alert('Directions request failed due to ' + status);
+        }
+      });
+      clearWaypoints();
+    }
+
+    function displayRoute(startLat,startLng,endLat,endLng) {
+      //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      var startLocation = aBridge.locationToStringBridge(startLat,startLng);
+      var endLocation = aBridge.locationToStringBridge(endLat,endLng);
+
+      directionsService.route({
+        origin: startLocation,
+        destination: endLocation,
+        travelMode: 'BICYCLING'
+      }, function(response, status) {
+        aBridge.outputValue("displaying route");
+        //alert("as");
+        if (status === 'OK') {
+          directionsDisplay.setDirections(response);
+          aBridge.outputValue("Displaying route");
+
+          wayPointMarkers.push(createMarker(startLat,startLng,"Start","default"));
+          displayNearby(startLat(),startLng(),NEARBY_DISTANCE);
+
+          wayPointMarkers.push(createMarker(endLat,endLng,"End","default"));
+          displayNearby(endLat(),endLng(),NEARBY_DISTANCE);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+          aBridge.outputValue(status);
         }
       });
       clearWaypoints();
