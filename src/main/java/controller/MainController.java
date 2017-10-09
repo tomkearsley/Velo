@@ -1052,6 +1052,7 @@ public class MainController {
           } else if (tableOnClickPopup.return_value == 2) {
             selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
+            //TODO update selected_item in the database
             initUserRouteTable();
           }
         }
@@ -1126,9 +1127,9 @@ public class MainController {
               System.out.println("Map not yet loaded");
             }
           } else if (tableOnClickPopup.return_value == 2) {
-            //TODO make this not throw null pointers
             selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
             GUIManager.getInstanceGUIManager().removeUserRouteHistory(selected_item);
+            //TODO update selected_item in the database
             initUserRouteTable();
           }
         }

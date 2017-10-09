@@ -3,7 +3,12 @@ package modeltest;
 import static org.junit.Assert.*;
 
 import filehandler.Reader;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import model.Hotspot;
 import model.POI;
 import model.PublicPOI;
@@ -30,13 +35,18 @@ public class RouteTest {
   @Before
   public void setUp() throws Exception {
     Reader rdr = new Reader();
+
+    Date date = rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm");
+    Instant instant = date.toInstant();
+    ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+    LocalDate localDate = zdt.toLocalDate();
     /*
     test points:
      */
     //station1 uses full constructor, other two use shortened but are actual points
     station1 = new Station(123, "First Station", 30, 31, 40, -70, "q", 2, 2, "Here", "There",
         "New York", "10004", "NY", "123", true,
-        rdr.StringToDate("01/25/2017 12:34", "MM/dd/yyyy HH:mm"), "Thing");
+        localDate, "Thing");
     station2 = new Station(164, "E 47 St & 2 Ave", 40.75323098, -73.97032517);
     station3 = new Station(504, "1 Ave & E 15 St", 40.73221853, -73.98165557);
     hotspot1 = new Hotspot(998, 40.745968, -73.994039,
