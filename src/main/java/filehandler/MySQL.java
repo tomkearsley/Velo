@@ -1,6 +1,7 @@
 package filehandler;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import model.Analyst;
 import model.PublicPOI;
@@ -16,6 +17,8 @@ import model.Cyclist;
 import model.Hotspot;
 import helper.PasswordStorage;
 import model.Route;
+import model.Station;
+import model.UserPOI;
 
 /**
  * The class MySQL defines the type which queries the MySQL Database
@@ -84,11 +87,71 @@ public class MySQL {
     }
 
   }
+  public static void insertUserPOI(UserPOI userPOI) throws Exception {
+    try {
+      Connection conn = getConnection();
+      PreparedStatement inserted = conn.prepareStatement(
+          "INSERT INTO UserPOI (Longitude,Latitude,Name,Description) VALUES (?,?,?,?)");
+      inserted.setDouble(1,userPOI.getLongitude());
+      inserted.setDouble(2,userPOI.getLatitude());
+      inserted.setString(3,userPOI.getName());
+      inserted.setString(4,userPOI.getDescription());
+      inserted.executeUpdate(); //UPDATE = SEND QUERY = Retrieve
+    } catch (Exception e) {
+      System.out.println(e);
+    } finally {
+      System.out.println("Insert Completed");
+    }
+
+  }
+
+  public static void insertStation(Connection conn,Station station) {
+    try {
+      PreparedStatement insert = conn.prepareStatement("INSERT INTO Stations(stationID,availableDocks,"
+          + "totalDocks,latitude,longitude,statusValue,statusKey,availableBikes,"
+          + "streetAddress1,streetAddress2,postalCode,location,testStation,lastCommunicationTime,"
+          + "landMark,altitude) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+      insert.setInt(1,station.getID());
+      insert.setInt(2,station.getAvailableDocs());
+      insert.setInt(3,station.getTotalDocks());
+      insert.setDouble(4,station.getLatitude());
+      insert.setDouble(5,station.getLatitude());
+      insert.setString(6,station.getStatusValue());
+      insert.setInt(7,station.getStatusKey());
+      insert.setInt(8,station.getAvailableBikes());
+      insert.setString(9,station.getStreetAddress1());
+      insert.setString(10,station.getStreetAddress2());
+      insert.setString(11,station.getPostalCode());
+      insert.setString(12,station.getLocation());
+      int isTestStation = 0; /** 0 = Not Test Station, 1 = is Test Station **/
+      if (station.isTestStation()) {
+        isTestStation = 1; /** IS Test Station set to true. **/
+      }
+      insert.setInt(13,isTestStation);
+      Date dateForm = station.getLastCommunicationTime();
+      String LastCommunicationTime = dateForm.toString();
+      insert.setString(14,LastCommunicationTime);
+      insert.setString(15,station.getLandMark());
+      insert.setString(16,station.getAltitude());
+      insert.executeUpdate();
+
+
+    } catch(Exception e) {
+      System.out.println(e);
+    } finally {
+      System.out.println("Insert Completed.");
+    }
+
+
+
+  }
 
   public static void insertRoute(Connection conn,Route route,String username){
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO RouteHistory (duration,startDate,"
-          + "stopDate,startStation,endStation,bikeID,birthYear,gender,username) VALUES (?,?,?,?,?,?,?,?,?)");
+          + "stopDate,startID,startName,startLongitude,startLatitude,endID,endName,endLongitude,endLatitude,"
+          + "endStation,bikeID,birthYear,gender,username) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       insert.setInt(1,route.getDuration());
       Date sDate = route.getStartDate(); // CONVERSION FOR DATABASE.
       String startDate = sDate.toString();
@@ -96,6 +159,14 @@ public class MySQL {
       String endDate = eDate.toString();
       insert.setString(2,startDate);
       insert.setString(3,endDate);
+      /** START STATION **/
+      Station startStation = route.getStartStation();
+      insert.setInt(4,startStation.getID());
+      insert.setString(5,startStation.getName());
+      insert.setDouble(6,startStation.getLongitude());
+      insert.setDouble(7,startStation.getLatitude());
+
+
       insert.setString(4,route.getStartStationName());
       insert.setString(5,route.getStopStationName());
       insert.setInt(6,route.getBikeID());
@@ -242,6 +313,27 @@ public class MySQL {
     return null;
   }
 
+  public static ArrayList<Route> getPastRoutes(String username) throws Exception {
+    try {
+      Connection conn = getConnection();
+      PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
+          + "startStation,endStation,bikeID,birthYear,gender,username,userType");
+      ResultSet result = statement.executeQuery();
+      ArrayList<Route> routes = new ArrayList<Route>();
+      while (result.next()) {
+        //int duration, Date startDate, Date stopDate, Station startStation,Station stopStation, int bikeID, String userType, int birthYear, int gender
+        if (result.getString("username").equals(username)) {
+          int duration = result.getInt("duration");
+
+        }
+      }
+    } catch (Exception e) {
+    System.out.println(e);
+  }
+    System.out.println("Record was not found.");
+    return null;
+  }
+
 
   public static ArrayList<Retailer> getRetailers() throws Exception {
     try {
@@ -314,6 +406,8 @@ public class MySQL {
     return null;
 
   }
+
+
 
 
   /**
