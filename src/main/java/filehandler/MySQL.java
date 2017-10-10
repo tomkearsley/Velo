@@ -28,17 +28,36 @@ import model.UserPOI;
  */
 public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
-  /**
-  public static void main(String[] args) throws Exception {
-    Connection conn = getConnection();
-    Reader rdr = new Reader();
-    ArrayList<Station> stations = rdr.readStations("/file/stations.json");
-    int size = stations.size();
-    for (int i = 0; i < size; i++) {
-      insertStation(conn,stations.get(i));
-    }
-  } **/
 
+  public static void main(String[] args) throws Exception {
+
+    Cyclist c = getCyclist("cyclist");
+    c.setFirstName("Jack");
+    updateUser(c);
+  }
+
+
+
+  public static void updateUser(Cyclist cyclist) {
+      try {
+        Connection conn = getConnection();
+        PreparedStatement update = conn.prepareStatement("UPDATE Users SET gender = ?, height = ?, "
+            + "weight = ?, firstName = ?, lastName = ?, password = ? WHERE username = ?");
+        update.setInt(1,cyclist.getGender());
+        update.setInt(2,cyclist.getHeight());
+        update.setDouble(3,cyclist.getWeight());
+        update.setString(4,cyclist.getFirstName());
+        update.setString(5,cyclist.getLastName());
+        update.setString(6,cyclist.getUsername());
+        update.setString(7,cyclist.getPassword());
+        update.executeUpdate();
+        update.close();
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+
+
+      }
 
 
   /**

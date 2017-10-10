@@ -86,6 +86,11 @@ public class Cyclist {
     return birthDate;
   }
 
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+
   public Double getBMI() {
     double heightM = height * 0.0254;
     double weightKG = weight * 0.45359237;
