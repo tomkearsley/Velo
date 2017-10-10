@@ -503,7 +503,6 @@ public class MySQL {
           String stopName = result.getString("endName");
           Station startStation = null;
           Station stopStation = null;
-          Boolean stationsFound = false;
           for (int i = 0; i < size; i++) {
             if (stations.get(i).getName().equals(startName)) {
               startStation = stations.get(i);
@@ -511,6 +510,9 @@ public class MySQL {
 
             else if (stations.get(i).getName().equals(stopName)){
               stopStation = stations.get(i);
+            }
+            else if (stopStation != null && startStation != null) {
+                break;
             }
           }
 
