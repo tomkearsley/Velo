@@ -192,8 +192,6 @@ public class UpdateAccountController {
 
       if (validData) {
 
-        // TODO update user cyclist account details with the values taken from the form @tom
-
         // If user created successfully, tell GUIManager
         try {
           System.out.println("User account updated");
@@ -217,10 +215,10 @@ public class UpdateAccountController {
           int height = Integer.valueOf(heightFeet.getValue().toString()) + Integer.valueOf(heightInches.getValue().toString());
 
           LocalDate birth = LocalDate.parse(birthDate.getValue().toString());
-          Cyclist c = new Cyclist(firstName.getText().toString(),lastName.getText().toString(),username.getText().toString(),
-              password.getText().toString(),birth,newGender, Double.valueOf(weight.getText()),height);
+          Cyclist newCyclist = new Cyclist(firstName.getText(),lastName.getText(),username.getText(),
+              password.getText(),birth,newGender, Double.valueOf(weight.getText()),height);
           MySQL mysql = new MySQL();
-          mysql.updateUser(c);
+          mysql.updateUser(newCyclist);
           GUIManager.getInstanceGUIManager().accountUpdated();
         } catch (Exception e) {
           e.printStackTrace();
