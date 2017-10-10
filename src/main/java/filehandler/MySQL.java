@@ -27,42 +27,14 @@ import model.UserPOI;
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
-  // TODO: Optimisation by initialising one connection at beginning.
+
+
+
   /**
-  public static void main(String[] args) throws Exception {
-
-    Cyclist c = getCyclist("sasdadsa");
-    c.setFirstName("Jack");
-    updateUser(c);
-  } **/
-
-//  public static void main(String[] args) {
-//
-//    Reader rdr = new Reader();
-//    try {
-//      Connection conn = getConnection();
-//      // Execute deletion
-////      PreparedStatement stmt = conn.prepareStatement("TRUNCATE Hotspots");
-////      stmt.executeUpdate();
-////      PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Hotspots");
-////      // Use DELETE
-////      // Execute deletion
-////      stmt2.executeUpdate();
-//
-//      ArrayList<Hotspot> hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
-//
-//      for (Hotspot hotspot : hotspots) {
-//        insertHotspot(conn, hotspot);
-//      }
-//
-//    } catch (Exception e) {
-//      System.out.println("UH OH");
-//    }
-//
-//  }
-
-
-
+   * Updates a user's details. Can change every value except username.
+   * Password is re-hashed.
+   * @param cyclist Cyclist object given.
+   */
   public static void updateUser(Cyclist cyclist) {
       try {
         Connection conn = getConnection();
@@ -146,6 +118,14 @@ public class MySQL {
     }
 
   }
+
+  /**
+   * Inserts a UserPOI into the database for a given user.
+   * @param conn Connection to Database
+   * @param userPOI userPOI object.
+   * @param username given username for which the POI will be inserted.
+   * @throws Exception Exception thrown if connection/insertion is unsuccessful.
+   */
   public static void insertUserPOI(Connection conn,UserPOI userPOI,String username) throws Exception {
     try {
       PreparedStatement inserted = conn.prepareStatement(
@@ -164,6 +144,11 @@ public class MySQL {
 
   }
 
+  /**
+   * Insert Station into Dtabase
+   * @param conn Connection to server
+   * @param station Station object to be inserted.
+   */
   public static void insertStation(Connection conn,Station station) {
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO Stations(stationID,name,availableDocks,"
@@ -208,7 +193,12 @@ public class MySQL {
   }
 
 
-
+  /**
+   * Inserts Route into database for a specific user
+   * @param conn Connection to database
+   * @param route Route to be inserted
+   * @param username username on whose account the route will be inserted
+   */
   public static void insertRoute(Connection conn,Route route,String username){
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO RouteHistory (duration,startDate,"
@@ -364,6 +354,12 @@ public class MySQL {
     return null;
   }
 
+
+  /**
+   * Returns an array list of all PublicPOIs
+   * @param conn Connection to server
+   * @return Array List of all Public POIs
+   */
   public static ArrayList<PublicPOI> getPublicPOI(Connection conn) {
     try {
       ArrayList<PublicPOI> publicPOIS = new ArrayList<PublicPOI>();
@@ -384,6 +380,12 @@ public class MySQL {
     return null;
   }
 
+  /**
+   * Gets a specific station.
+   * @param conn Connection to database
+   * @param name Name of station
+   * @return Returns specific Station object.
+   */
   public static Station getStation(Connection conn,String name) {
     LocalDate lastCommunicationTime = LocalDate.now();
     try {
@@ -415,6 +417,12 @@ public class MySQL {
     return null;
   }
 
+  /**
+   * Gets all Stations from database
+   * @param conn Connection to database
+   * @return ArrayList of all Stations
+   * @throws Exception Thrown if connection fails.
+   */
   public static ArrayList<Station> getStations(Connection conn) throws Exception{
     try {
       ArrayList<Station> stations = new ArrayList<Station>();
@@ -453,7 +461,14 @@ public class MySQL {
     return null;
   }
 
-  public static ArrayList<Route> getAllRoutes(Connection conn) throws Exception {
+  /**
+   * Gets all route data from all users
+   * @param conn Connection to server
+   * @param stations Array List of stations . Reduces load time significantly.
+   * @return ArrayList of all routes
+   * @throws Exception Thrown if Connection is bad or there is a unsuccessful pull from database.
+   */
+  public static ArrayList<Route> getAllRoutes(Connection conn,ArrayList<Station> stations) throws Exception {
     try {
       PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
           + "startName,endName,bikeID,birthYear,gender FROM RouteHistory");
@@ -466,12 +481,31 @@ public class MySQL {
           Date stopDate = format.parse(result.getString("stopDate"));
           //String strDate = result.getString("startDate");
           //String stopDate = result.getString("stopDate");
-          /** START STATION **/
+          //ArrayList<Station> stations = getStations(conn);
+          int size = stations.size();
           String startName = result.getString("startName");
-          Station startStation = getStation(conn,startName);
-          /** END STATION **/
           String stopName = result.getString("endName");
-          Station stopStation = getStation(conn,stopName);
+          Station startStation = null;
+          Station stopStation = null;
+          for (int i = 0; i < size; i++) {
+            if (stations.get(i).getName().equals(startName)) {
+              startStation = stations.get(i);
+            }
+
+            else if (stations.get(i).getName().equals(stopName)){
+              stopStation = stations.get(i);
+            }
+            else if (stopStation != null && startStation != null) {
+                break;
+            }
+          }
+
+          /** START STATION
+          Station startStation = getStation(conn,startName);
+          /** END STATION
+
+          Station stopStation = getStation(conn,stopName); **/
+
           int bikeID = result.getInt("bikeID");
           int birthYear = result.getInt("birthYear");
           int gender = result.getInt("gender");

@@ -250,30 +250,51 @@ public class MainController {
 
   }
 
+  /**
+   * @return ArrayList Returns an arraylist of retailers
+   */
   public ArrayList<Retailer> getRetailers() {
     return GUIManager.getInstanceGUIManager().getRetailers();
   }
 
+  /**
+   * @return ArrayList Returns an arraylist of hotspots
+   */
   public ArrayList<Hotspot> getHotspots() {
     return GUIManager.getInstanceGUIManager().getHotspots();
   }
 
+  /**
+   * @return ArrayList Returns an arraylist of PublicPOIS
+   */
   public ArrayList<PublicPOI> getPublicPOIs() {
     return GUIManager.getInstanceGUIManager().getPublicPOIs();
   }
 
+  /**
+   * @return ArrayList Returns an arraylist of userPOIS
+   */
   public ArrayList<UserPOI> getUserPOIs() {
     return GUIManager.getInstanceGUIManager().getUserPOIs();
   }
 
+  /**
+   * @return ArrayList Returns an arraylist of Stations
+   */
   public ArrayList<Station> getStations() {
     return GUIManager.getInstanceGUIManager().getStations();
   }
 
+  /**
+   * @return ArrayList Returns an arraylist of Routes
+   */
   public ArrayList<Route> getRoutes() {
     return GUIManager.getInstanceGUIManager().getRoutes();
   }
 
+  /**
+   * @return ArrayList Returns an arraylist of the User's Route History
+   */
   public ArrayList<Route> getUserRouteHistory() {
     return GUIManager.getInstanceGUIManager().getUserRouteHistory();
   }
@@ -298,12 +319,18 @@ public class MainController {
     mainPane.getSelectionModel().select(historyViewTab);
   }
 
+  /**
+   * Loads retailers through window
+   */
   private void loadRetailers(){
     window.setMember("aBridge", aBridge);
     window.call("loadRetailers", getRetailers());
     retailersLoaded = true;
   }
 
+  /**
+   * Loads hotspots through window
+   */
   private void loadHotspots(){
     //System.out.println(getDistance(40.758896,-73.985130,40.7678,-73.9718));
     //Run both lines of code
@@ -313,24 +340,37 @@ public class MainController {
     //testPretty();
   }
 
+  /**
+   * Loads stations through window
+   */
   private void loadStations(){
     window.setMember("aBridge", aBridge);
     window.call("loadStations", getStations());
     stationsLoaded = true;
   }
 
+  /**
+   * Loads POIS through window
+   */
   public void loadPOIS(){
     window.setMember("aBridge", aBridge);
     window.call("loadPOIS", getUserPOIs());
     POISLoaded = true;
   } // TODO implement Imas
 
+  /**
+   * Loads Public POIS through window
+   */
   public void loadPPOIS(){
     window.setMember("aBridge",aBridge);
     window.call("loadPPOIS",getPublicPOIs());
     PPOISLoaded = true;
   }
 
+  /**
+   * Sets the images for the different types of markers
+   * @throws URISyntaxException In case image location is invalid
+   */
   private void setImages() throws URISyntaxException{
     hotspot_icon_primary.setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
     retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
@@ -370,6 +410,10 @@ public class MainController {
     ppoi_icon_secondary.setVisible(false);
   }
 
+  /**
+   * Turns off the button passed in and turns on the button that corresponds to its counterpart
+   * @param buttonNo The number of the button toggle - This number is its position in the ArrayList buttons
+   */
   private void toggleButton(int buttonNo) {
     System.out.println("Toggling button" + (buttonNo + 1));
     buttons.get(buttonNo).setVisible(false);
@@ -382,6 +426,9 @@ public class MainController {
     }
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns on the retailer button and loads/shows Retailers
+   */
   public void toggleRetailersOn() {
     try {
       if (retailersLoaded) {
@@ -396,6 +443,9 @@ public class MainController {
     toggleButton(0);
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns on the hotspot button and loads/shows Hotspots
+   */
   public void toggleHotspotsOn() {
     try {
       if (hotspotsLoaded) {
@@ -410,6 +460,9 @@ public class MainController {
     toggleButton(1);
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns on the POI button and loads/shows POI
+   */
   public void togglePOISOn() {
     try {
       if (POISLoaded) {
@@ -424,6 +477,9 @@ public class MainController {
     toggleButton(2);
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns on the stations button and loads/shows Stations
+   */
   public void toggleStationsOn() {
     try {
       if (stationsLoaded) {
@@ -438,6 +494,9 @@ public class MainController {
     toggleButton(3);
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns on the Public POI button and loads/shows POIS
+   */
   public void togglePPOISOn() {
     try {
       if (PPOISLoaded) {
@@ -451,6 +510,9 @@ public class MainController {
     toggleButton(4);
   }
 
+  /**
+   * Turns off the retailer button and hides retailers
+   */
   public void toggleRetailersOff() {
     try {
       hideRetailers();
@@ -462,6 +524,9 @@ public class MainController {
 
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns off the hotspot button and hides hotspots
+   */
   public void toggleHotspotsOff() {
     try {
       hideHotspots();
@@ -472,6 +537,9 @@ public class MainController {
     toggleButton(6);
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns off the POI button and hides POIS
+   */
   public void togglePOISOff() {
     try {
       hidePOIS();
@@ -481,6 +549,9 @@ public class MainController {
     toggleButton(7);
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns off the station button and hides stations
+   */
   public void toggleStationsOff() {
     try {
       hideStations();
@@ -492,6 +563,9 @@ public class MainController {
     toggleButton(8);
   } // TODO IMAS RENAME AND JAVADOC
 
+  /**
+   * Turns off the Public POI button and hides Public POIS
+   */
   public void togglePPOISOff() {
     try {
       hidePPOIS();
@@ -502,56 +576,89 @@ public class MainController {
     toggleButton(9);
   }
 
+  /**
+   * Shows hotspots through the window
+   */
   private void showHotspots() {
     window.setMember("aBridge", aBridge);
     window.call("showHotspots");
   }
 
+  /**
+   * Hides hotspots through the window
+   */
   private void hideHotspots() {
     window.setMember("aBridge", aBridge);
     window.call("hideHotspots");
   }
 
+  /**
+   * Shows stations through the window
+   */
   private void showStations() {
     window.setMember("aBridge", aBridge);
     window.call("showStations");
   }
 
+  /**
+   * Hides stations through the window
+   */
   private void hideStations() {
     window.setMember("aBridge", aBridge);
     window.call("hideStations");
   }
 
+  /**
+   * Shows retailers through the window
+   */
   private void showRetailers() {
     window.setMember("aBridge", aBridge);
     window.call("showRetailers");
   }
 
+  /**
+   * Hides retailers through the window
+   */
   private void hideRetailers() {
     window.setMember("aBridge", aBridge);
     window.call("hideRetailers");
   }
 
+  /**
+   * Shows POIS through the window
+   */
   private void showPOIS() {
     window.setMember("aBridge", aBridge);
     window.call("showPOIS");
   } // TODO implement Imas
 
+  /**
+   * Hides POIS through the window
+   */
   private void hidePOIS() {
     window.setMember("aBridge", aBridge);
     window.call("hidePOIS");
   } // TODO implement Imas
 
+  /**
+   * Shows Public POIS through the window
+   */
   public void showPPOIS() {
     window.setMember("aBridge", aBridge);
     window.call("showPPOIS");
   }
 
+  /**
+   * Hides Public POIS through the window
+   */
   public void hidePPOIS() {
     window.setMember("aBridge", aBridge);
     window.call("hidePPOIS");
   }
 
+  /**
+   * Initalizes the map by calling the initialize function through the window, then loading all the data then hiding them. This is done so that the points are already loaded beforehand and the user doesn't have to query theem
+   */
   public void initializeMap() {
     try {
       window.setMember("aBridge", aBridge);
@@ -580,21 +687,46 @@ public class MainController {
   }
 */
 
+  /**
+   * Creates a prettyMarker at the specified locaiton with the specified information, type and infoText
+   * @param lat The latitude of the marker
+   * @param lng The longitude of the marker
+   * @param info The hoverText of the marker
+   * @param markerType The image of the marker
+   * @param infoText The onClickText of the marker
+   */
   private void prettyMarker(double lat, double lng, String info, String markerType,String infoText) {
     window.setMember("aBridge", aBridge);
     window.call("prettyMarker", lat, lng, info, markerType,infoText);
   }
 
+  /**
+   * Displays a route given the start and end locations
+   * @param startLat Start latitude
+   * @param startLng Start longitude
+   * @param endLat End latitude
+   * @param endLng End longitude
+   */
   private void displayRoute(double startLat, double startLng, double endLat, double endLng) {
     window.setMember("aBridge", aBridge);
     window.call("displayRoute", startLat, startLng, endLat, endLng);
   }
 
+  /**
+   * Calls the displayRouteClick method through the window -> Displays a route based on the locations entered in the From: and To: text boxes
+   */
   public void displayRouteClick() {
     window.setMember("aBridge", aBridge);
     window.call("displayRouteClick", locationFrom.getText(), locationTo.getText());
   }
 
+  /**
+   * Finds all nearby markerType markers to point and what distance from them
+   * @param lat Latitude of point
+   * @param lng Longitude of point
+   * @param distance Max distance from point to be in range
+   * @param markerType Type of marker to show (eg: POI, Hotspot, Retailer, etc.)
+   */
   public void nearbyMarkers(double lat,double lng,double distance,String markerType) {
     window.setMember("aBridge", aBridge);
     window.call("nearbyMarkers", lat, lng, distance, markerType);
@@ -672,6 +804,10 @@ public class MainController {
     routeIsDetailed = !routeIsDetailed;
   }
 
+  /**
+   * Method to create and remove columns containing additional details within the User Route History table Uses a
+   * global boolean routeHistoryIsDetailed to determine state
+   */
   public void toggleDetailsRouteHistory() {
     if (routeHistoryIsDetailed) {
       dataTableRouteHistory.getColumns().remove(5, 7);

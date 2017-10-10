@@ -7,7 +7,7 @@ Vélo is the best way for New York City rental bicyclists to explore the city.
 1. Internet-enabled computer
 2. JRE v1.8.0
 
-##Import Project
+##Importing the Project
 
 This application was created using IntelliJ Ultimate 2017.2.5. Please use File -\> Open... to import the project into IntelliJ. 
 To execute the application, please run the GUIManager main(). 
