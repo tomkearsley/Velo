@@ -219,7 +219,7 @@ public class UpdateAccountController {
               password.getText(),birth,newGender, Double.valueOf(weight.getText()),height);
           MySQL mysql = new MySQL();
           mysql.updateUser(newCyclist);
-          GUIManager.getInstanceGUIManager().accountUpdated();
+          GUIManager.getInstanceGUIManager().accountUpdated(newCyclist);
         } catch (Exception e) {
           e.printStackTrace();
         }
