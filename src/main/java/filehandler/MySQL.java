@@ -164,6 +164,7 @@ public class MySQL {
 
   }
 
+
   public static void insertStation(Connection conn,Station station) {
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO Stations(stationID,name,availableDocks,"
@@ -208,7 +209,12 @@ public class MySQL {
   }
 
 
-
+  /**
+   * Inserts Route into database for a specific user
+   * @param conn Connection to database
+   * @param route Route to be inserted
+   * @param username username on whose account the route will be inserted
+   */
   public static void insertRoute(Connection conn,Route route,String username){
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO RouteHistory (duration,startDate,"
@@ -364,6 +370,12 @@ public class MySQL {
     return null;
   }
 
+
+  /**
+   * Returns an array list of all PublicPOIs
+   * @param conn Connection to server
+   * @return Array List of all Public POIs
+   */
   public static ArrayList<PublicPOI> getPublicPOI(Connection conn) {
     try {
       ArrayList<PublicPOI> publicPOIS = new ArrayList<PublicPOI>();
@@ -384,6 +396,12 @@ public class MySQL {
     return null;
   }
 
+  /**
+   * Gets a specific station.
+   * @param conn Connection to database
+   * @param name Name of station
+   * @return Returns specific Station object.
+   */
   public static Station getStation(Connection conn,String name) {
     LocalDate lastCommunicationTime = LocalDate.now();
     try {
@@ -415,6 +433,12 @@ public class MySQL {
     return null;
   }
 
+  /**
+   * Gets all Stations from database
+   * @param conn Connection to database
+   * @return ArrayList of all Stations
+   * @throws Exception Thrown if connection fails.
+   */
   public static ArrayList<Station> getStations(Connection conn) throws Exception{
     try {
       ArrayList<Station> stations = new ArrayList<Station>();
@@ -453,6 +477,13 @@ public class MySQL {
     return null;
   }
 
+  /**
+   * Gets all route data from all users
+   * @param conn Connection to server
+   * @param stations Array List of stations . Reduces load time significantly.
+   * @return ArrayList of all routes
+   * @throws Exception Thrown if Connection is bad or there is a unsuccessful pull from database.
+   */
   public static ArrayList<Route> getAllRoutes(Connection conn,ArrayList<Station> stations) throws Exception {
     try {
       PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
