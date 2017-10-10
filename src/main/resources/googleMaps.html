@@ -44,6 +44,9 @@
     var PPOICluster;
 
     //alert(directionsService.toString());
+    /**
+     * Initializes the map
+     */
     function initialize() {
       var mapOptions = {
         center: new google.maps.LatLng(40.785091, -73.968285),
@@ -234,7 +237,7 @@
 
       map = new google.maps.Map(document.getElementById("map-canvas"),
           mapOptions);
-      map.setZoom(12);
+      map.setZoom(12); //Zoom levels can be found online
 
 
       directionsService = new google.maps.DirectionsService;
@@ -302,6 +305,7 @@
       //displayRoute(location1[0],location1[1],location2[0],location2[1]);
     }
 
+    //Unused - adds a location to the waypoints array in a certain position
     function addToWaypoints(location,stopover) {
       wayPoints.push({
         location: location,
@@ -309,6 +313,7 @@
       });
     }
 
+    //Clears the wayPoint and wayPointMarkers arrays for further uses
     function clearWaypoints() {
       for(var i = 0; i < wayPoints.length; i++) {
         wayPoints[i] = null
@@ -320,6 +325,7 @@
       wayPointMarkers = [];
     }
 
+    //Gets rid of intermediate markers put on map during processing
     function clearWaypointIntermediate() {
       for (var i = 0; i < wayPointIntermediateMarkers.length; i++) {
         wayPointIntermediateMarkers[i].setMap(null);
@@ -327,10 +333,12 @@
       wayPointIntermediateMarkers = [];
     }
 
+    //Inserts a waypoint to the array - Unused
     function insertWaypoint(location,stopover,position) {
       wayPoints.splice(position,0,{location: location,stopover: stopover});
     }
 
+    //Creates a marker with infoText
     function createMarkerWithText(lat,lng,title,markerType,infoText) {
       //Images should be ~ 23 * 23.
       var myLatLng = new google.maps.LatLng(lat, lng);
@@ -374,6 +382,7 @@
       return marker;
     }
 
+    //Creates a marker
     function createMarker(lat,lng,title,markerType) {
       //Images should be ~ 23 * 23.
       var myLatLng = new google.maps.LatLng(lat, lng);
@@ -418,6 +427,7 @@
       return marker;
     }
 
+    //Converts a location to string - Formatting error -> Implemented in Google instead
     function locationToString(location) {
       var geocoder = new google.maps.Geocoder();
       geocoder.geocode({
@@ -431,6 +441,7 @@
       });
     }
 
+    //Creates a pretty marker that just sets zoom and has infotext aswell
     function prettyMarker(lat,lng,info,markerType,infoText) {
       map.setZoom(17); // 15 = Streets, 20 = Buildings. 17 seems middle-ground enough
       var myLatLng = new google.maps.LatLng(lat, lng);
@@ -474,6 +485,7 @@
       }
     }
 
+    //Hides the markerArray passed in
     function hideMarkers(markerArray) {
       aBridge.outputValue("Hiding markers");
       for(var i = 0;i<markerArray.length;i++) {
@@ -481,6 +493,7 @@
       }
     }
 
+    //Shows the markerArray passed in
     function showMarkers(markerArray) {
       aBridge.outputValue("Showing markers");
       for (var i = 0; i < markerArray.length; i++) {
@@ -488,6 +501,7 @@
       }
     }
 
+    //Hides the cluster passed in
     function hideCluster(markerCluster) {
       markerCluster.set("map", null); // remove the clusterer
       markerCluster.resetViewport();
@@ -495,6 +509,7 @@
       aBridge.outputValue("Hiding cluster");
     }
 
+    //Shows the cluster passed in
     function showCluster(markerCluster) {
       markerCluster.set("map",map);
       markerCluster.resetViewport();
@@ -502,6 +517,7 @@
       aBridge.outputValue("Showing cluster");
     }
 
+    //Displays a route based on a start and end location
     function displayRouteString(startLocation,endLocation) {
       directionsService.route({
         origin: startLocation,
@@ -516,6 +532,7 @@
       });
     }
 
+    //Shows a route based on start and end coordinated with waypoints
     function displayRouteWaypoints(startLat,startLng,endLat,endLng) {
       var startLocation = startLat + "," + startLng;
       var endLocation = endLat + "," + endLng;
@@ -548,6 +565,7 @@
       clearWaypointIntermediate();
     }
 
+    //Displays a route based on start and end coordinates
     function displayRoute(startLat,startLng,endLat,endLng) {
       //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
       var startLocation = aBridge.locationToStringBridge(startLat,startLng);
@@ -577,6 +595,7 @@
       clearWaypoints();
     }
 
+    //Displays a route based on start and end location with waypoints -> Primary method
     function displayRouteWaypointsString(startLocation,endLocation) {
       directionsService.route({
         origin: startLocation + ",New York",
@@ -611,6 +630,7 @@
       clearWaypoints();
     }
 
+    //Test function to test clusters
     function testCluster() {
       markerCluster.addMarker(createMarker(40.758896,-73.985130,"Test","hotspot"));
       markerCluster.addMarker(createMarker(40.8,-73.985130,"Test","hotspot"));
@@ -619,10 +639,12 @@
       markerCluster.addMarker(createMarker(40.79,-73.985130,"Test","hotspot"));
     }
 
+    //Function called on button press in map window
     function displayRouteClick(startLocation,endLocation) {
       displayRouteWaypointsString(startLocation,endLocation);
     }
 
+    //Codes the infowindow for a marker to calculate the street address on click -> Can't return value as result is returned after the function has already terminated
     function geocodeLatLng(latlng,infowindow) {
       geocoder.geocode({'location': latlng}, function(results, status) {
         if (status === 'OK') {
@@ -638,6 +660,7 @@
       });
     }
 
+    //Loads retailers onto map from infoArray
     function loadRetailers(infoArray) {
       var lat,lng,title,infoText;
       aBridge.outputValue("Displaying retailers");
@@ -655,6 +678,7 @@
       }
     }
 
+    //Loads hotspots onto map from infoArray
     function loadHotspots(infoArray) {
       var lat,lng,title,infoText;
       aBridge.outputValue("Displaying hotspots");
@@ -672,6 +696,7 @@
       }
     }
 
+    //Load POIS onto map from infoArray
     function loadPOIS(infoArray) {
       var lat,lng,title,infoText;
       aBridge.outputValue("Displaying POIS");
@@ -688,6 +713,7 @@
       }
     }
 
+    //Load stations onto map from infoArray
     function loadStations(infoArray) {
       var lat,lng,title,infoText;
       aBridge.outputValue("Displaying stations");
@@ -704,6 +730,7 @@
       }
     }
 
+    //Load Public POIS onto map from infoArray
     function loadPPOIS(infoArray) {
       var lat,lng,title,infoText;
       aBridge.outputValue("Displaying public POIS");
@@ -720,66 +747,78 @@
       }
     }
 
+    //Hides all markers - Unused
     function hideAllMarkers() {
       hideMarkers(allMarkers);
     }
 
+    //Shows all markers - Unused
     function showAllMarkers() {
       showMarkers(allMarkers);
     }
 
+    //Hides all retailers
     function hideRetailers() {
       hideMarkers(retailerMarkers);
       hideCluster(retailerCluster);
     }
 
+    //Shows all retailers
     function showRetailers() {
       showMarkers(retailerMarkers);
       showCluster(retailerCluster);
     }
 
+    //Hides all hotspots
     function hideHotspots() {
       hideMarkers(hotspotMarkers);
       hideCluster(hotspotCluster);
     }
 
+    //Shows all hotspots
     function showHotspots() {
       showMarkers(hotspotMarkers);
       showCluster(hotspotCluster)
     }
 
+    //Hides all POIS
     function hidePOIS() {
       hideMarkers(POIMarkers);
       hideCluster(POICluster);
     }
 
+    //Shows all POIS
     function showPOIS() {
       showMarkers(POIMarkers);
       showCluster(POICluster)
     }
 
+    //Hides all stations
     function hideStations() {
       hideMarkers(stationMarkers);
       hideCluster(stationCluster);
     }
 
+    //Shows all stations
     function showStations() {
       showMarkers(stationMarkers);
       showCluster(stationCluster);
     }
 
+    //Hides all Public POIS
     function hidePPOIS() {
       hideMarkers(PPOIMarkers);
       hideCluster(PPOICluster);
     }
 
+    //Shows all Public POIS
     function showPPOIS() {
       showMarkers(PPOIMarkers);
       showCluster(PPOICluster);
     }
 
+    //Shows all nearbyMarkers based on coordinate of point, what marker type to show and the maximum distance away from the point
     function nearbyMarkers(lat,lng,distance,markerType) {
-      var location = new google.maps.LatLng(lat,lng);
       var markerArray;
       switch(markerType) {
         case "hotspot":
@@ -799,17 +838,22 @@
           break;
       }
       for(var i = 0;i<markerArray.length; i++) {
-        var d = aBridge.getDistance(markerArray[i].position.lat(),markerArray[i].position.lng(),location.lat(),location.lng());
-        if(d <= distance) {
+        var d = aBridge.getDistance(markerArray[i].position.lat(),markerArray[i].position.lng(),lat,lng);
+        aBridge.outputValue(d);
+        aBridge.outputValue(distance);
+        aBridge.outputValue("----------");
+        if(d < distance) {
           markerArray[i].setMap(map);
         }
         else {
-          //markerArray[i].setMap(map);
+          aBridge.outputValue("Hiding marker");
+          markerArray[i].setMap(null);
         }
       }
-      refreshMarkers();
+      //refreshMarkers();
     }
 
+    //Displays all nearby markers for a point with lat,lng and a maxDistance of distance away from the marker location
     function displayNearby(lat,lng,distance) {
       nearbyMarkers(lat,lng,distance,"retailer");
       nearbyMarkers(lat,lng,distance,"hotspot");
@@ -818,14 +862,17 @@
       nearbyMarkers(lat,lng,distance,"ppoi");
     }
 
+    //Adds a userPOI through the bridge to the data table - Unused
     function addUserPOI(lat,lng,name,description) {
       aBridge.addUserPOI(lat,lng,name,description);
     }
 
+    //Adds a route through the bridge to the data table - Unused
     function addRoute(startLat,startLng,endLat,endLng) {
       aBridge.addRoute(startLat,startLng,endLat,engLng,toOutput(wayPoints));
     }
 
+    //Converts the wayPointsArray to an output format for addRoute
     function toOutput(wayPointsArray) {
       var toReturn = []
       for(var i = 0;i < wayPointsArray.length; i++) {
@@ -834,32 +881,37 @@
       return toReturn;
     }
 
+    //Refreshes all the clusters
     function refreshCluster(markerCluster) {
       markerCluster.resetViewport();
       markerCluster.redraw();
     }
 
+    //Refreshes the markers in the markerArray passed in
     function refreshMarker(markerArray) {
       for (var i = 0; i < markerArray.length; i++) {
         if (markerArray[i].getMap()) {
         }
-        markerArray[i].setMap(map);
+        else {
+          markerArray[i].setMap(map);
+        }
       }
+    }
 
-      function refreshMarkers() {
-        refreshMarker(retailerMarkers);
-        refreshMarker(hotspotMarkers);
-        refreshMarker(POIMarkers);
-        refreshMarker(stationMarkers);
-        refreshMarker(PPOIMarkers)
-      }
+    //Refreshes all markers
+    function refreshMarkers() {
+      refreshMarker(retailerMarkers);
+      refreshMarker(hotspotMarkers);
+      refreshMarker(POIMarkers);
+      refreshMarker(stationMarkers);
+      refreshMarker(PPOIMarkers);
+    }
 
       //initialize();
       //google.maps.event.addDomListener(window, 'load', initialize);
       //google.maps.event.addListener(window, 'click', function(event) {
       //  alert(event.latLng);  // in event.latLng  you have the coordinates of click
       //});
-    }
   </script>
 </head>
 <body>
