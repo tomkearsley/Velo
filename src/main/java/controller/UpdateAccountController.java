@@ -212,7 +212,7 @@ public class UpdateAccountController {
               break;
           }
           SimpleDateFormat format = new SimpleDateFormat("E MMM dd H:mm:ss z yyyy");
-          int height = Integer.valueOf(heightFeet.getValue().toString()) + Integer.valueOf(heightInches.getValue().toString());
+          int height = (12*Integer.valueOf(heightFeet.getValue().toString())) + Integer.valueOf(heightInches.getValue().toString());
 
           LocalDate birth = LocalDate.parse(birthDate.getValue().toString());
           Cyclist newCyclist = new Cyclist(firstName.getText(),lastName.getText(),username.getText(),
