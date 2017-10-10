@@ -36,6 +36,31 @@ public class MySQL {
     updateUser(c);
   } **/
 
+//  public static void main(String[] args) {
+//
+//    Reader rdr = new Reader();
+//    try {
+//      Connection conn = getConnection();
+//      // Execute deletion
+////      PreparedStatement stmt = conn.prepareStatement("TRUNCATE Hotspots");
+////      stmt.executeUpdate();
+////      PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Hotspots");
+////      // Use DELETE
+////      // Execute deletion
+////      stmt2.executeUpdate();
+//
+//      ArrayList<Hotspot> hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
+//
+//      for (Hotspot hotspot : hotspots) {
+//        insertHotspot(conn, hotspot);
+//      }
+//
+//    } catch (Exception e) {
+//      System.out.println("UH OH");
+//    }
+//
+//  }
+
 
 
   public static void updateUser(Cyclist cyclist) {
@@ -230,7 +255,7 @@ public class MySQL {
       insert.setString(6,hotspot.getType());
       insert.setString(7,hotspot.getSSID());
       insert.setString(8,hotspot.getBorough());
-      insert.setString(9,hotspot.getRemarks());
+      insert.setString(9,hotspot.getDescription());
       insert.setString(10,hotspot.getProvider());
       insert.setString(11,hotspot.getName());
       insert.executeUpdate();
@@ -545,7 +570,7 @@ public class MySQL {
         String block = result.getString("block");
         String secondaryDescription = result.getString("secondaryDescription");
         Retailer retailer = new Retailer(name,address,floor,city,state,zipCode,
-        block,secondaryDescription,"",latitude,longitude);
+        block,"",secondaryDescription,latitude,longitude);
         retailers.add(retailer);
 
 

@@ -151,32 +151,4 @@ public class Writer {
 
     writer.close();
   }
-
-  public static void main(String[] args) {
-    Writer testW = new Writer();
-    Reader testR = new Reader();
-
-    ArrayList<Retailer> retailers;
-    ArrayList<Hotspot> hotspots;
-    ArrayList<Station> stations;
-    ArrayList<UserPOI> userPOIS;
-    ArrayList<PublicPOI> publicPOIS;
-
-    try {
-      retailers = testR.readRetailers("/file/InitialRetailers.csv", false);
-      hotspots = testR.readHotspots("/file/InitialHotspots.csv", false);
-      stations = testR.readStations("/file/stations.json");
-      userPOIS = testR.readUserPOIS("/file/UserPOIdata_smallsample.csv", false);
-      publicPOIS = testR.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
-
-      testW.writePOIsToFile(retailers, "src/main/java/filehandler/aRet.csv");
-      testW.writePOIsToFile(hotspots, "src/main/java/filehandler/aHot.csv");
-      testW.writePOIsToFile(userPOIS, "src/main/java/filehandler/aUser.csv");
-      testW.writePOIsToFile(publicPOIS, "src/main/java/filehandler/aPub.csv");
-
-    } catch (IOException e) {
-      System.out.println("oops");
-    }
-  }
-
 }
