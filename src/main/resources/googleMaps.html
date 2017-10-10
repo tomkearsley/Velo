@@ -839,14 +839,16 @@
       }
       for(var i = 0;i<markerArray.length; i++) {
         var d = aBridge.getDistance(markerArray[i].position.lat(),markerArray[i].position.lng(),lat,lng);
+        /*
         aBridge.outputValue(d);
         aBridge.outputValue(distance);
         aBridge.outputValue("----------");
+        */
         if(d < distance) {
           markerArray[i].setMap(map);
         }
         else {
-          aBridge.outputValue("Hiding marker");
+          //aBridge.outputValue("Hiding marker");
           markerArray[i].setMap(null);
         }
       }
