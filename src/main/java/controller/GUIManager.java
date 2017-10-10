@@ -253,20 +253,19 @@ public class GUIManager extends Application {
     Reader rdr = new Reader();
     Alert alert = null;
     try {
-      /* OLD FILE READING
-      //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", 0);
-      //retailers = rdr.readRetailers("/file/InitialRetailers.csv");
+      //hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
+      //retailers = rdr.readRetailers("/file/InitialRetailers.csv",false);
       //stations = rdr.readStations("/file/stations.json");
       //publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv", false);
       //routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations, false);
-      */
       MySQL mysql = new MySQL();
       Connection conn = mysql.getConnection();
       hotspots = mysql.getHotspots(conn);
       retailers = mysql.getRetailers(conn);
       stations = mysql.getStations(conn);
       publicPOIs = mysql.getPublicPOI(conn);
-      routes = mysql.getAllRoutes(conn);
+
+      routes = mysql.getAllRoutes(conn,stations);
       String username = GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername();
       userPOIs = mysql.getUserPOI(conn,username);
 

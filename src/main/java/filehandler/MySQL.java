@@ -453,7 +453,7 @@ public class MySQL {
     return null;
   }
 
-  public static ArrayList<Route> getAllRoutes(Connection conn) throws Exception {
+  public static ArrayList<Route> getAllRoutes(Connection conn,ArrayList<Station> stations) throws Exception {
     try {
       PreparedStatement statement = conn.prepareStatement("SELECT username,duration,startDate,stopDate,"
           + "startName,endName,bikeID,birthYear,gender FROM RouteHistory");
@@ -466,12 +466,29 @@ public class MySQL {
           Date stopDate = format.parse(result.getString("stopDate"));
           //String strDate = result.getString("startDate");
           //String stopDate = result.getString("stopDate");
-          /** START STATION **/
+          //ArrayList<Station> stations = getStations(conn);
+          int size = stations.size();
           String startName = result.getString("startName");
-          Station startStation = getStation(conn,startName);
-          /** END STATION **/
           String stopName = result.getString("endName");
-          Station stopStation = getStation(conn,stopName);
+          Station startStation = null;
+          Station stopStation = null;
+          Boolean stationsFound = false;
+          for (int i = 0; i < size; i++) {
+            if (stations.get(i).getName().equals(startName)) {
+              startStation = stations.get(i);
+            }
+
+            else if (stations.get(i).getName().equals(stopName)){
+              stopStation = stations.get(i);
+            }
+          }
+
+          /** START STATION
+          Station startStation = getStation(conn,startName);
+          /** END STATION
+
+          Station stopStation = getStation(conn,stopName); **/
+
           int bikeID = result.getInt("bikeID");
           int birthYear = result.getInt("birthYear");
           int gender = result.getInt("gender");
