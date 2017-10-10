@@ -1,52 +1,45 @@
 package filehandler;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import java.security.spec.ECField;
-import java.text.DateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
-import model.UserPOI;
 import model.Route;
 import model.Station;
-
-import java.util.Date;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import java.io.IOException;
-import java.io.FileNotFoundException;
+import model.UserPOI;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
  * The class Reader defines the object type Reader It is used to read data from text files
- *
- * TODO remove OpenCSV once all reader tests verified working with comma issues
  */
 public class Reader {
 
   /**
    * Converts from a String to a Date type
+   *
+   * @param newDate inputDate
+   * @param pattern Date pattern that we want to read
+   * @return The Date representation of the string passed in as a parameter
    */
   public Date StringToDate(String newDate, String pattern) {
     Date date;
     try {
       date = new SimpleDateFormat(pattern).parse(newDate);
       return date;
-    } catch (Exception e) {
-      System.out.println(e);
+    } catch (ParseException e) {
       return null;
     }
   }
@@ -59,13 +52,13 @@ public class Reader {
    */
   private ArrayList<Integer> findQuotedCommas(String string) {
     boolean quoteReached = false;
-    ArrayList<Integer> locs = new ArrayList<Integer>();
+    ArrayList<Integer> locs = new ArrayList<>();
     for (int i = 0; i < string.length(); i++) {
       if (string.charAt(i) == '"') {
         quoteReached = !quoteReached;
       }
       if (quoteReached && string.charAt(i) == ',') {
-        locs.add(new Integer(i));
+        locs.add(i);
       }
     }
     return locs;
@@ -155,84 +148,86 @@ public class Reader {
     return null;
   }
 
-
   /**
    * Reads WiFi hotspots from a csv file Uses BufferedReader
-   *
-   * TODO Needs to be tested to ensure it works.
-   *
    * @param filename the name of file to open
-   * @return ArrayList<Hotspot> Hotspots
-   * @throws FileNotFoundException if the file cannot be found
+   * @param isExternalFile To determine format of file and how to read it
+   * @return ArrayList Hotspots
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
-    public ArrayList<Hotspot> readHotspots(String filename) throws FileNotFoundException {
+  public ArrayList<Hotspot> readHotspots(String filename, boolean isExternalFile)
+      throws IOException, ArrayIndexOutOfBoundsException {
 
     // Column indexes for the appropriate value per row
     int idIndex = 0;
-    int typeIndex = 3;
-    int providerIndex = 4;
-    int nameIndex = 5;
-    int locationAddressIndex = 6;
-    int latitudeIndex = 7;
-    int longitudeIndex = 8;
-    int remarksIndex = 12;
-    int cityIndex = 13;
-    int ssidIndex = 14;
-    int boroughIndex = 19;
-    int postcodeIndex = 22;
+    int typeIndex = isExternalFile ? 1 : 3;
+    int providerIndex = isExternalFile ? 2 : 4;
+    int nameIndex = isExternalFile ? 3 : 5;
+    int locationAddressIndex = isExternalFile ? 4 : 6;
+    int latitudeIndex = isExternalFile ? 5 : 7;
+    int longitudeIndex = isExternalFile ? 6 : 8;
+    int remarksIndex = isExternalFile ? 7 : 12;
+    int cityIndex = isExternalFile ? 8 : 13;
+    int ssidIndex = isExternalFile ? 9 : 14;
+    int boroughIndex = isExternalFile ? 10 : 19;
+    int postcodeIndex = isExternalFile ? 11 : 22;
 
     // Initialize scanner and Hotspots array
-    BufferedReader br = null;
+    BufferedReader br;
     String line;
-    ArrayList<Hotspot> Hotspots = new ArrayList<Hotspot>();
+    ArrayList<Hotspot> Hotspots = new ArrayList<>();
 
-    try {
-
+    if (isExternalFile) {
+      br = new BufferedReader(new FileReader(new File(filename)));
+    } else {
       br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
-      while ((line = br.readLine()) != null) {
+    }
+    while ((line = br.readLine()) != null) {
 
-        // Separate by comma
-        ArrayList<Integer> locs = findQuotedCommas(line);
-        line = changeQuotedCommas(line, locs);
-        String[] csvHotspot = line.split(",", -1);
-        csvHotspot = replaceQuotedCommas(csvHotspot, locs);
-        csvHotspot = removeBorderQuotes(csvHotspot);
+      // Separate by comma
+      ArrayList<Integer> locs = findQuotedCommas(line);
+      line = changeQuotedCommas(line, locs);
+      String[] csvHotspot = line.split(",", -1);
+      csvHotspot = replaceQuotedCommas(csvHotspot, locs);
+      csvHotspot = removeBorderQuotes(csvHotspot);
 
-        // Get Hotspot attributes from the buffered row
-        int id = Integer.parseInt(csvHotspot[idIndex]);
-        Double latitude = Double.parseDouble(csvHotspot[latitudeIndex]);
-        Double longitude = Double.parseDouble(csvHotspot[longitudeIndex]);
-        String location = csvHotspot[locationAddressIndex];
-        String borough = csvHotspot[boroughIndex];
-        String city = csvHotspot[cityIndex];
-        int postcode = Integer.parseInt(csvHotspot[postcodeIndex]);
-        String type = csvHotspot[typeIndex];
-        String ssid = csvHotspot[ssidIndex];
-        String name = csvHotspot[nameIndex];
-        String provider = csvHotspot[providerIndex];
-        String remarks = csvHotspot[remarksIndex];
-
-        // Create Hotspot with the attributes
-        Hotspot newHotspot = new Hotspot(id, latitude, longitude, location, borough,
-            city, postcode, type, ssid, name, provider, remarks);
-
-        //add newHotspot to Hotspots array
-        Hotspots.add(newHotspot);
-
+      // Get Hotspot attributes from the buffered row
+      int id;
+      try {
+        id = Integer.parseInt(csvHotspot[idIndex]);
+      } catch (NumberFormatException e) {
+        continue;
       }
-
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+      Double latitude, longitude;
+      try {
+        latitude = Double.parseDouble(csvHotspot[latitudeIndex]);
+        longitude = Double.parseDouble(csvHotspot[longitudeIndex]);
+      } catch (NumberFormatException e) {
+        continue;
       }
+      String location = csvHotspot[locationAddressIndex];
+      String borough = csvHotspot[boroughIndex];
+      String city = csvHotspot[cityIndex];
+      int postcode;
+      try {
+        postcode = Integer.parseInt(csvHotspot[postcodeIndex]);
+      } catch (NumberFormatException e) {
+        postcode = -1;
+      }
+      String type = csvHotspot[typeIndex];
+      String ssid = csvHotspot[ssidIndex];
+      String name = csvHotspot[nameIndex];
+      String provider = csvHotspot[providerIndex];
+      String remarks = csvHotspot[remarksIndex];
+
+      // Create Hotspot with the attributes
+      Hotspot newHotspot = new Hotspot(id, latitude, longitude, location, borough,
+          city, postcode, type, ssid, name, provider, remarks);
+
+      //add newHotspot to Hotspots array
+      Hotspots.add(newHotspot);
+
     }
 
     return Hotspots;
@@ -243,10 +238,13 @@ public class Reader {
    * attributes
    *
    * @param filename the name of file to open
-   * @return ArrayList<Retailer> Retailers
-   * @throws FileNotFoundException if the file cannot be found
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
+   * @return ArrayList Retailers
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
-  public ArrayList<Retailer> readRetailers(String filename) throws FileNotFoundException {
+  public ArrayList<Retailer> readRetailers(String filename, boolean isExternalFile)
+      throws IOException, ArrayIndexOutOfBoundsException {
 
     // Column indexes for the appropriate value per row
     int titleIndex = 0;
@@ -258,57 +256,66 @@ public class Reader {
     int blockIndex = 6;
     int descriptionIndex = 7;
     int description2Index = 8;
+    int latitudeIndex = 9;
+    int longitudeIndex = 10;
 
     // Initialize scanner and Retailers array
-    BufferedReader br = null;
+    BufferedReader br;
     String line;
-    ArrayList<Retailer> Retailers = new ArrayList<Retailer>();
+    ArrayList<Retailer> Retailers = new ArrayList<>();
 
-    try {
-
+    if (isExternalFile) {
+      br = new BufferedReader(new FileReader(new File(filename)));
+    } else {
       br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
-      while ((line = br.readLine()) != null) {
-        // Separate by comma
-        ArrayList<Integer> locs = findQuotedCommas(line);
-        line = changeQuotedCommas(line, locs);
-        String[] csvRetailer = line.split(",", -1);
-        csvRetailer = replaceQuotedCommas(csvRetailer, locs);
-        csvRetailer = removeBorderQuotes(csvRetailer);
+    }
 
-        // Set Retailer attributes from the buffered row
-        String title = csvRetailer[titleIndex];
-        String address = csvRetailer[addressIndex];
-        String floor = csvRetailer[floorIndex];
-        String city = csvRetailer[cityIndex];
-        String state = csvRetailer[stateIndex];
-        int zipcode;
+    while ((line = br.readLine()) != null) {
+      // Separate by comma
+      ArrayList<Integer> locs = findQuotedCommas(line);
+      line = changeQuotedCommas(line, locs);
+      String[] csvRetailer = line.split(",", -1);
+      csvRetailer = replaceQuotedCommas(csvRetailer, locs);
+      csvRetailer = removeBorderQuotes(csvRetailer);
+
+      // Set Retailer attributes from the buffered row
+      String title = csvRetailer[titleIndex];
+      String address = csvRetailer[addressIndex];
+      String floor = csvRetailer[floorIndex];
+      String city = csvRetailer[cityIndex];
+      String state = csvRetailer[stateIndex];
+
+      int zipcode;
+      try {
+        zipcode = Integer.parseInt(csvRetailer[zipcodeIndex]);
+      } catch (NumberFormatException e) {
+        zipcode = -1;
+      }
+      String block = csvRetailer[blockIndex];
+      String description = csvRetailer[descriptionIndex];
+      String secondaryDescription = csvRetailer[description2Index];
+
+      if (!isExternalFile) {
+        Double latitude;
+        Double longitude;
         try {
-          zipcode = Integer.parseInt(csvRetailer[zipcodeIndex]);
+           latitude = Double.parseDouble(csvRetailer[latitudeIndex]);
+           longitude = Double.parseDouble(csvRetailer[longitudeIndex]);
         } catch (NumberFormatException e) {
-          zipcode = -1;
+          continue;
         }
-        String block = csvRetailer[blockIndex];
-        String description = csvRetailer[descriptionIndex];
-        String secondaryDescription = csvRetailer[description2Index];
 
         //add newRetailer to Retailers array
-        Retailers.add(new Retailer(title, address, floor, city, state, zipcode, block, description,
-            secondaryDescription));
-
+        Retailers
+            .add(new Retailer(title, address, floor, city, state, zipcode, block, description,
+                secondaryDescription, latitude, longitude));
+      } else {
+        //add newRetailer to Retailers array
+        Retailers
+            .add(new Retailer(title, address, floor, city, state, zipcode, block, description,
+                secondaryDescription));
       }
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
 
     return Retailers;
@@ -319,58 +326,55 @@ public class Reader {
    * extracted attributes
    *
    * @param filename the name of file to open
-   * @return ArrayList<UserPOI> User Points of Interest
-   * @throws FileNotFoundException if the file cannot be found
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
+   * @return ArrayList User Points of Interest
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
-  public ArrayList<UserPOI> readUserPOIS(String filename) throws FileNotFoundException {
-    int nameIndex = 0;
+  public ArrayList<UserPOI> readUserPOIS(String filename, boolean isExternalFile)
+      throws IOException, ArrayIndexOutOfBoundsException {
 
-    //Google uses latitude, longitude pairings.
+    int nameIndex = 0;
     int latitudeIndex = 1;
     int longitudeIndex = 2;
-
     int descriptionIndex = 3;
 
-    BufferedReader br = null;
+    BufferedReader br;
     String line;
-    ArrayList<UserPOI> UserPOIs = new ArrayList<UserPOI>();
+    ArrayList<UserPOI> UserPOIs = new ArrayList<>();
 
-    try {
-
+    if (isExternalFile) {
+      br = new BufferedReader(new FileReader(new File(filename)));
+    } else {
       br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
-      while ((line = br.readLine()) != null) {
-        // Separate by comma
-        ArrayList<Integer> locs = findQuotedCommas(line);
-        line = changeQuotedCommas(line, locs);
-        String[] csvPOI = line.split(",", -1);
-        csvPOI = replaceQuotedCommas(csvPOI, locs);
-        csvPOI = removeBorderQuotes(csvPOI);
-
-        //Get name of POI
-        String name = csvPOI[nameIndex];
-
-        //Get location values
-        double latitude = Double.parseDouble(csvPOI[latitudeIndex]);
-        double longitude = Double.parseDouble(csvPOI[longitudeIndex]);
-
-        String description = csvPOI[descriptionIndex];
-
-        UserPOIs.add(new UserPOI(latitude, longitude, name, description));
-      }
-
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
+
+    while ((line = br.readLine()) != null) {
+      // Separate by comma
+      ArrayList<Integer> locs = findQuotedCommas(line);
+      line = changeQuotedCommas(line, locs);
+      String[] csvPOI = line.split(",", -1);
+      csvPOI = replaceQuotedCommas(csvPOI, locs);
+      csvPOI = removeBorderQuotes(csvPOI);
+
+      //Get name & description of POI
+      String name = csvPOI[nameIndex];
+      String description = csvPOI[descriptionIndex];
+
+      //Get coordinates
+      double latitude;
+      double longitude;
+
+      try {
+        latitude = Double.parseDouble(csvPOI[latitudeIndex]);
+        longitude = Double.parseDouble(csvPOI[longitudeIndex]);
+      } catch (NumberFormatException e) {
+        continue;
+      }
+
+      UserPOIs.add(new UserPOI(latitude, longitude, name, description));
+    }
+
     return UserPOIs;
   }
 
@@ -379,64 +383,53 @@ public class Reader {
    * the extracted attributes
    *
    * @param filename the name of file to open
-   * @return ArrayList<PublicPOI> Public Points of Interest
-   * @throws FileNotFoundException if the file cannot be found
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
+   * @return ArrayList Public Points of Interest
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
-  public ArrayList<PublicPOI> readPublicPOIS(String filename) throws FileNotFoundException {
-    int nameIndex = 0;
+  public ArrayList<PublicPOI> readPublicPOIS(String filename, boolean isExternalFile)
+      throws IOException, ArrayIndexOutOfBoundsException {
 
-    //Google uses latitude, longitude pairings.
+    int nameIndex = 0;
     int latitudeIndex = 1;
     int longitudeIndex = 2;
-
     int descriptionIndex = 3;
 
-    BufferedReader br = null;
+    BufferedReader br;
     String line;
-    ArrayList<PublicPOI> PublicPOIs = new ArrayList<PublicPOI>();
+    ArrayList<PublicPOI> PublicPOIs = new ArrayList<>();
 
-    try {
-
+    if (isExternalFile) {
+      br = new BufferedReader(new FileReader(new File(filename)));
+    } else {
       br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
-      while ((line = br.readLine()) != null) {
-        // Separate by comma
-        ArrayList<Integer> locs = findQuotedCommas(line);
-        line = changeQuotedCommas(line, locs);
-        String[] csvPOI = line.split(",", -1);
-        csvPOI = replaceQuotedCommas(csvPOI, locs);
-        csvPOI = removeBorderQuotes(csvPOI);
-
-        //Get name of POI
-        String name = csvPOI[nameIndex];
-
-        //Get location values
-        double latitude, longitude;
-        try {
-          latitude = Double.parseDouble(csvPOI[latitudeIndex]);
-          longitude = Double.parseDouble(csvPOI[longitudeIndex]);
-        } catch (NumberFormatException e) {
-          latitude = 2.0;
-          longitude = 0;
-        }
-
-        String description = csvPOI[descriptionIndex];
-
-        PublicPOIs.add(new PublicPOI(latitude, longitude, name, description));
-      }
-
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
+
+    while ((line = br.readLine()) != null) {
+      // Separate by comma
+      ArrayList<Integer> locs = findQuotedCommas(line);
+      line = changeQuotedCommas(line, locs);
+      String[] csvPOI = line.split(",", -1);
+      csvPOI = replaceQuotedCommas(csvPOI, locs);
+      csvPOI = removeBorderQuotes(csvPOI);
+
+      //Get name & description
+      String name = csvPOI[nameIndex];
+      String description = csvPOI[descriptionIndex];
+
+      //Get Coordinates
+      double latitude, longitude;
+      try {
+        latitude = Double.parseDouble(csvPOI[latitudeIndex]);
+        longitude = Double.parseDouble(csvPOI[longitudeIndex]);
+      } catch (NumberFormatException e) {
+        continue;
+      }
+
+      PublicPOIs.add(new PublicPOI(latitude, longitude, name, description));
+    }
+    br.close();
     return PublicPOIs;
   }
 
@@ -446,11 +439,15 @@ public class Reader {
    * <p> Needs to be tested to ensure it works. </p>
    *
    * @param filename the name of file to open
-   * @return ArrayList<Route> Routes
-   * @throws FileNotFoundException if the file cannot be found
+   * @param stations The stations to read the routes from
+   * @param isExternalFile Whether the file is external to the program (for Import/Exports)
+   * @return ArrayList Routes
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
-  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations)
-      throws FileNotFoundException {
+  public ArrayList<Route> readRoutes(String filename, ArrayList<Station> stations,
+      boolean isExternalFile)
+      throws IOException, ArrayIndexOutOfBoundsException{
 
     // Column indexes for the appropriate value per row
     int durationIndex = 0;
@@ -475,23 +472,32 @@ public class Reader {
     int genderIndex = 14;
 
     // Initialize scanner and Retailers array
-    BufferedReader br = null;
+    BufferedReader br;
     String line;
-    ArrayList<Route> Routes = new ArrayList<Route>();
+    ArrayList<Route> Routes = new ArrayList<>();
 
-    try {
-
+    if (isExternalFile) {
+      br = new BufferedReader(new FileReader(new File(filename)));
+    } else {
       br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
-      while ((line = br.readLine()) != null) {
-        // Separate by comma
-        String[] csvRoute = line.split(",");
+    }
+    while ((line = br.readLine()) != null) {
+      // Separate by comma
+      String[] csvRoute = line.split(",");
 
-        // Set Route attributes from the buffered row
-        int duration = Integer.valueOf(csvRoute[durationIndex]);
+      // Set Route attributes from the buffered row
+      int duration = 0;
+      try {
+        duration = Integer.parseInt(csvRoute[durationIndex]);
+      } catch (NumberFormatException e) {
+        //TODO ALERT WINDOWS
+      }
 
+      Station startStation, stopStation;
+      try {
         // startStation
         int startStationID = Integer.parseInt(csvRoute[startStationIDIndex]);
-        Station startStation = getStationFromList(stations, startStationID);
+        startStation = getStationFromList(stations, startStationID);
         if (startStation == null) {
           startStation = new Station(startStationID,
               String.valueOf(csvRoute[startStationNameIndex]),
@@ -501,55 +507,53 @@ public class Reader {
 
         // stopStation
         int stopStationID = Integer.parseInt(csvRoute[stopStationIDIndex]);
-        Station stopStation = getStationFromList(stations, stopStationID);
+        stopStation = getStationFromList(stations, stopStationID);
         if (stopStation == null) {
           stopStation = new Station(stopStationID,
               String.valueOf(csvRoute[stopStationNameIndex]),
               Double.valueOf(csvRoute[stopStationLatitudeIndex]),
               Double.valueOf(csvRoute[stopStationLongitudeIndex]));
         }
+      }catch (NumberFormatException e) {
+          continue;
+      }
 
-        // Other values
-        int bikeID = Integer.valueOf(csvRoute[bikeIDIndex]);
-        String userType = csvRoute[userTypeIndex];
+      // Other values
+      int bikeID;
+      try {
+        bikeID = Integer.valueOf(csvRoute[bikeIDIndex]);
+      } catch (NumberFormatException e) {
+        bikeID = -1;
+      }
+      String userType = csvRoute[userTypeIndex];
 
-        // Birth year
-        int birthYear;
-        if (csvRoute[birthYearIndex].equals("\\N") || csvRoute[birthYearIndex].equals("NULL")) {
+      // Birth year
+      int birthYear;
+      if (csvRoute[birthYearIndex].equals("\\N") || csvRoute[birthYearIndex].equals("NULL")) {
+        birthYear = -1;
+      } else {
+        try {
+          birthYear = Integer.parseInt(csvRoute[birthYearIndex]);
+        } catch (NumberFormatException e) {
           birthYear = -1;
-        } else {
-          birthYear = Integer.valueOf(csvRoute[birthYearIndex]);
-        }
-        int gender = Integer.valueOf(csvRoute[genderIndex]);
-
-        // Convert to Dates
-        try {
-          Date startDateTime = StringToDate(csvRoute[startDateTimeIndex], "MM/dd/yyyy HH:mm");
-          Date stopDateTime = StringToDate(csvRoute[stopDateTimeIndex], "MM/dd/yyyy HH:mm");
-
-          //add newRetailer to Retailers array
-          Routes.add(
-              new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID,
-                  userType, birthYear, gender));
-        } catch (Exception e) {
-          System.out.println(e);
         }
       }
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+      int gender;
+      try {
+        gender = Integer.parseInt(csvRoute[genderIndex]);
+      } catch(NumberFormatException e) {
+        gender = 2;
       }
+
+      // Convert to Dates
+      Date startDateTime = StringToDate(csvRoute[startDateTimeIndex], "MM/dd/yyyy HH:mm");
+      Date stopDateTime = StringToDate(csvRoute[stopDateTimeIndex], "MM/dd/yyyy HH:mm");
+
+      //add newRetailer to Retailers array
+      Routes.add(new Route(duration, startDateTime, stopDateTime, startStation, stopStation, bikeID,
+          userType, birthYear, gender));
     }
-
     return Routes;
   }
 
@@ -559,97 +563,97 @@ public class Reader {
    * <p> Needs to be tested to ensure it works. </p>
    *
    * @param filename the name of file to open
-   * @return ArrayList<Station> Stations
-   * @throws FileNotFoundException if the file cannot be found
+   * @return ArrayList Stations
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
-  public ArrayList<Station> readStations(String filename) throws FileNotFoundException {
+  public ArrayList<Station> readStations(String filename) throws IOException, ArrayIndexOutOfBoundsException {
 
-    ArrayList<Station> returnArray = new ArrayList<Station>();
+    ArrayList<Station> returnArray = new ArrayList<>();
 
-    try {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(filename)));
-      StringBuilder sb = new StringBuilder();
-      String inputLine;
+    BufferedReader reader = new BufferedReader(
+        new InputStreamReader(getClass().getResourceAsStream(filename)));
+    StringBuilder sb = new StringBuilder();
+    String inputLine;
 
-      while ((inputLine = reader.readLine()) != null) {
-        sb.append(inputLine);
-      }
-      reader.close();
-
-      JSONObject jsonObj = new JSONObject(sb.toString());
-
-      JSONArray stationList = jsonObj.getJSONArray("stationBeanList");
-
-      int listLength = stationList.length();
-
-      Station bufferStation;
-
-      JSONObject bufferObject;
-
-      int id;
-      String stationName;
-      int availableDocks;
-      int totalDocks;
-      double latitude;
-      double longitude;
-      String statusValue;
-      int statusKey;
-      int availableBikes;
-      String stAddress1;
-      String stAddress2;
-      String city;
-      String postalCode;
-      String location;
-      String altitude;
-      boolean testStation;
-      Date lastCommunicationTime;
-      String landMark;
-
-      /**
-       id, stationName, availableDocs, totalDocks, latitude, longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode,
-       location, altitude, testStation, lastCommunicationTime, landMark
-       */
-
-      for (int i = 0; i < listLength; i++) {
-        bufferObject = stationList.getJSONObject(i);
-        id = bufferObject.getInt("id");
-        stationName = bufferObject.getString("stationName");
-        availableDocks = bufferObject.getInt("availableDocks");
-        totalDocks = bufferObject.getInt("totalDocks");
-        latitude = bufferObject.getDouble("latitude");
-        longitude = bufferObject.getDouble("longitude");
-        statusValue = bufferObject.getString("statusValue");
-        statusKey = bufferObject.getInt("statusKey");
-        availableBikes = bufferObject.getInt("availableBikes");
-        stAddress1 = bufferObject.getString("stAddress1");
-        stAddress2 = bufferObject.getString("stAddress2");
-        city = bufferObject.getString("city");
-        postalCode = bufferObject.getString("postalCode");
-        location = bufferObject.getString("location");
-        altitude = bufferObject.getString("altitude");
-        testStation = bufferObject.getBoolean("testStation");
-        try {
-          lastCommunicationTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a")
-              .parse(bufferObject.getString("lastCommunicationTime"));
-        } catch (ParseException e) {
-          System.out.println("Unexpected date");
-          return null;
-        }
-        landMark = bufferObject.getString("landMark");
-        bufferStation = new Station(id, stationName, availableDocks, totalDocks, latitude,
-            longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, city, postalCode,
-            location, altitude, testStation, lastCommunicationTime, landMark);
-
-        returnArray.add(bufferStation);
-        //bufferStation = new Station();
-      }
-      return returnArray;
-    } catch (FileNotFoundException e) {
-      System.out.println("Invalid file");
-      return null;
-    } catch (IOException e) {
-      System.out.println("Error occurred while reading file");
-      return null;
+    while ((inputLine = reader.readLine()) != null) {
+      sb.append(inputLine);
     }
+    reader.close();
+
+    JSONObject jsonObj = new JSONObject(sb.toString());
+
+    JSONArray stationList = jsonObj.getJSONArray("stationBeanList");
+
+    int listLength = stationList.length();
+
+    Station bufferStation;
+
+    JSONObject bufferObject;
+
+    int id;
+    String stationName;
+    int availableDocks;
+    int totalDocks;
+    double latitude;
+    double longitude;
+    String statusValue;
+    int statusKey;
+    int availableBikes;
+    String stAddress1;
+    String stAddress2;
+    String city;
+    String postalCode;
+    String location;
+    String altitude;
+    boolean testStation;
+    Date lastCommunicationTime;
+    String landMark;
+
+    /*
+     id, stationName, availableDocs, totalDocks, latitude, longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, postalCode,
+     location, altitude, testStation, lastCommunicationTime, landMark
+     */
+
+    for (int i = 0; i < listLength; i++) {
+      bufferObject = stationList.getJSONObject(i);
+      id = bufferObject.getInt("id");
+      stationName = bufferObject.getString("stationName");
+      availableDocks = bufferObject.getInt("availableDocks");
+      totalDocks = bufferObject.getInt("totalDocks");
+      latitude = bufferObject.getDouble("latitude");
+      longitude = bufferObject.getDouble("longitude");
+      statusValue = bufferObject.getString("statusValue");
+      statusKey = bufferObject.getInt("statusKey");
+      availableBikes = bufferObject.getInt("availableBikes");
+      stAddress1 = bufferObject.getString("stAddress1");
+      stAddress2 = bufferObject.getString("stAddress2");
+      city = bufferObject.getString("city");
+      postalCode = bufferObject.getString("postalCode");
+      location = bufferObject.getString("location");
+      altitude = bufferObject.getString("altitude");
+      testStation = bufferObject.getBoolean("testStation");
+      try {
+        lastCommunicationTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a")
+            .parse(bufferObject.getString("lastCommunicationTime"));
+      } catch (ParseException e) {
+        System.out.println("Unexpected date");
+        return null;
+      }
+      landMark = bufferObject.getString("landMark");
+
+      //Converting date from simpledateformat to localdate
+      Instant instant = lastCommunicationTime.toInstant();
+      ZonedDateTime zdt = instant.atZone(ZoneId.systemDefault());
+      LocalDate date = zdt.toLocalDate();
+
+      bufferStation = new Station(id, stationName, availableDocks, totalDocks, latitude,
+          longitude, statusValue, statusKey, availableBikes, stAddress1, stAddress2, city,
+          postalCode,
+          location, altitude, testStation, date, landMark);
+
+      returnArray.add(bufferStation);
+    }
+    return returnArray;
   }
 }

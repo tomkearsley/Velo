@@ -1,7 +1,5 @@
 package model;
 
-import filehandler.Google;
-
 /**
  * The class Retailer defines the object type of retailer locations
  */
@@ -9,7 +7,7 @@ public class Retailer extends POI {
   /** The street no + Road name */
   private String address;
 
-  /** The floor (Concourse, Third floor) */
+  /** The floor (i.e. Concourse, Third floor) */
   private String floor;
 
   /** The city in which the retailer is located */
@@ -32,7 +30,7 @@ public class Retailer extends POI {
 
   public Retailer(String title, String address, String floor, String city, String state, int zipcode,
       String block, String description, String secondaryDescription) {
-    super(title, description);
+    super(title, description, null, null);
     this.address = address;
     this.floor = floor;
     this.city = city;
@@ -42,12 +40,35 @@ public class Retailer extends POI {
     this.secondaryDescription = secondaryDescription;
   }
 
+  public Retailer(String title, String address, String floor, String city, String state, int zipcode,
+      String block, String description, String secondaryDescription, Double latitude, Double longitude) {
+    super(title, description, latitude, longitude);
+    this.address = address;
+    this.floor = floor;
+    this.city = city;
+    this.state = state;
+    this.zipcode = zipcode;
+    this.block = block;
+    this.secondaryDescription = secondaryDescription;
+    this.setLatitude(latitude);
+    this.setLongitude(longitude);
+  }
+
   @Override
   public String toString(){
-    return "Retailer: " + getName() + " Address: " + address + ", " + floor + ", " + block
-        + ", " + city + ", " + state + ", " + Integer.toString(zipcode) + " Description(s): "
-        + getDescription() + ", " + secondaryDescription;
+    String coords = getLatitude() == null ? "Not stored" : String.format("(%.3f, %.3f)", getLatitude(), getLongitude());
+    String address = getAddress() + (floor.equals("") ? "" : (", " + floor)) +  (block.equals("") ? "" : ", " + block)
+        + ", " + Integer.toString(zipcode);
+    return "Name:\t\t" + getName() + "\nAddress:\t\t" + address + "\nCity:\t\t\t" + city + "\nState:\t\t" + state +
+        "\nDescription:\t" + getDescription() + ", " + secondaryDescription + "\nCoordinates:\t" + coords;
   }
+
+//  @Override
+//  public String toString() {
+//    return "\nName: " + getName() + "\nDescription: " + getDescription() + "\nCoordinates: ("
+//        + getLatitude() + "," + getLongitude() + ")";
+//  }
+
 //  //TODO add lat and long fields derived from street address using google api
 //  public boolean equals(Retailer r){
 //    return this.toString().equals(r.toString());

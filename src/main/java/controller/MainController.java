@@ -1,12 +1,23 @@
 package controller;
 
-import com.google.api.client.util.StringUtils;
+import filehandler.MySQL;
 import filehandler.Reader;
+import filehandler.Writer;
+import helper.Bridge;
+import helper.filters;
+import helper.tableOnClickPopup;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoPeriod;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import javafx.beans.value.ChangeListener;
@@ -16,24 +27,34 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Worker.State;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.PieChart.Data;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import model.Cyclist;
 import model.Hotspot;
 import model.PublicPOI;
 import model.Retailer;
@@ -44,486 +65,1463 @@ import netscape.javascript.JSObject;
 
 
 /**
- * Initialises all of the ArrayLists used for temporary storage and @FXML items
+ * The controller class for the main.fxml file
  */
 public class MainController {
 
+  /* Main tabs */
+  @FXML private TabPane mainPane;
+  @FXML private Tab mapViewTab;
+  @FXML private Tab dataViewTab;
+  @FXML private Tab historyViewTab;
+  @FXML private Tab userViewTab;
+
+  @FXML private AnchorPane mapViewPane;
+  @FXML private Pane userPane;
+  @FXML private TabPane dataTabPane;
+  @FXML private WebView mapWebView;
 
 
-  private ArrayList<Hotspot> hotspots = new ArrayList<Hotspot>();
-  private ArrayList<Retailer> retailers = new ArrayList<Retailer>();
-  private ArrayList<UserPOI> userPOIs = new ArrayList<UserPOI>();
-  private ArrayList<PublicPOI> publicPOIs = new ArrayList<PublicPOI>();
-  private ArrayList<Route> routes = new ArrayList<Route>();
-  private ArrayList<Station> stations = new ArrayList<Station>();
-  //TODO use reader to populate these ArrayLists
+  // ArrayLists of all data types
 
-  //Data table
-  @FXML
-  private TableView rawDataTable;
-  @FXML
-  private SplitPane dataSplitPane;
-  @FXML
-  private AnchorPane mapViewPane;
-  @FXML
-  private ChoiceBox<DataType> dataTypeChoiceBox;
-  @FXML
-  private TextField rawDataFilterField;
-  @FXML
-  private WebView mapWebView;
-  @FXML
-  private Button testButton;
-  @FXML
-  private Pane userPane;
-  @FXML
-  private Pane fileHandlerPane;
+//  private ArrayList<Hotspot> hotspots = new ArrayList<>();
+//  private ArrayList<Retailer> retailers = new ArrayList<>();
+//  private ArrayList<UserPOI> userPOIs = new ArrayList<>();
+//  private ArrayList<PublicPOI> publicPOIs = new ArrayList<>();
+//  private ArrayList<Route> routes = new ArrayList<>();
+//  private ArrayList<Station> stations = new ArrayList<>();
+//
+//  private ArrayList<Route> userRouteHistory = new ArrayList<>(); //EXISTING route history
 
+//  private ArrayList<Route> userRouteNew = new ArrayList<>(); //NEW routes. have been created in this session
+  // and are to be added to history //TODO implement saving of this arrayList to database
+  private ArrayList<ImageView> buttons = new ArrayList<>();
+
+  /* Data tab attributes */
+  // Toggling detailed view in table view
+  private boolean hotspotIsDetailed = false;
+  private boolean retailerIsDetailed = false;
+  //private boolean userPOIIsDetailed = false;
+  //private boolean publicPOIIsDetailed = false;
+  private boolean routeIsDetailed = false;
+  private boolean routeHistoryIsDetailed = false;
+  //private boolean stationIsDetailed = false;
+
+  //Data tables
+  @FXML private TableView<Hotspot> dataTableHotspot;
+  @FXML private TableView<Retailer> dataTableRetailer;
+  @FXML private TableView<PublicPOI> dataTablePublicPOI;
+  @FXML private TableView<UserPOI> dataTableUserPOI;
+  @FXML private TableView<Station> dataTableStation;
+  @FXML private TableView<Route> dataTableRoute;
+
+  @FXML private TableView<Route> dataTableRouteHistory;
+
+  // Table filter fields. one for each table view
+  @FXML private TextField HotspotFilterField;
+  @FXML private ChoiceBox<String> HotspotFilterSelector;
+  @FXML private TextField RetailerFilterField;
+  @FXML private ChoiceBox<String> RetailerFilterSelector;
+  @FXML private TextField PublicPOIFilterField;
+  @FXML private ChoiceBox<String> PublicPOIFilterSelector;
+  @FXML private TextField UserPOIFilterField;
+  @FXML private ChoiceBox<String> UserPOIFilterSelector;
+  @FXML private TextField StationFilterField;
+  @FXML private ChoiceBox<String> StationFilterSelector;
+  @FXML private TextField RouteFilterField;
+  @FXML private ChoiceBox<String> RouteFilterSelector;
+  @FXML private TextField RouteHistoryFilterField;
+  @FXML private ChoiceBox<String> RouteHistoryFilterSelector;
+
+
+  /* Map tab attributes */
   private JSObject window;
-
   private Bridge aBridge = new Bridge();
+  @FXML private ImageView hotspot_icon_primary;
+  @FXML private ImageView retailer_icon_primary;
+  @FXML private ImageView poi_icon_primary;
+  @FXML private ImageView hotspot_icon_secondary;
+  @FXML private ImageView retailer_icon_secondary;
+  @FXML private ImageView poi_icon_secondary;
+  @FXML private ImageView station_icon_primary;
+  @FXML private ImageView station_icon_secondary;
+  @FXML private ImageView ppoi_icon_primary;
+  @FXML private ImageView ppoi_icon_secondary;
 
-  public boolean populateArrayLists() {
-    Reader rdr = new Reader();
-    try {
-      hotspots = rdr.readHotspots("/file/InitialHotspots.csv");
-      retailers = rdr.readRetailers("/file/InitialRetailers.csv");
-      stations = rdr.readStations("/file/stations.json");
-      userPOIs = rdr.readUserPOIS("/file/UserPOIdata_smallsample.csv");
-      publicPOIs = rdr.readPublicPOIS("/file/PublicPOIdata_smallsample.csv");
-      routes = rdr.readRoutes("/file/tripdata_smallsample.csv", stations);
-    } catch (FileNotFoundException e) {
-      System.out.println("File not found");
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
+  @FXML private TextField locationFrom;
+  @FXML private TextField locationTo;
 
+  private boolean hotspotsLoaded = false;
+  private boolean stationsLoaded = false;
+  private boolean POISLoaded = false;
+  private boolean retailersLoaded = false;
+  private boolean PPOISLoaded = false;
+
+  private boolean mapLoaded = false;
+
+  /* Account tab attributes */
+  @FXML private ChoiceBox importType; // ChoiceBox for the Account import button
+  @FXML private Label accountTitle;
+  @FXML private Label username;
+  @FXML private Label birthDate;
+  @FXML private Label height;
+  @FXML private Label weight;
+  @FXML private Label BMI;
+  @FXML private PieChart userRoutesChart;
+
+
+  /* METHODS */
 
   /**
-   * Runs at startup Populates the model structure with data from .csv files using
-   * populateArrayLists() TODO adapt to using database primarily with csv as fallback
+   * Initializes the window Populates the model structure with data from .csv files Sets GUI element
+   * features (i.e. images for the tabs) populateArrayLists()
    */
-  public void initialize() {
-    boolean arraylists_populated = populateArrayLists();
-    if (!arraylists_populated) {
-      //TODO bring up warning window when that is implemented
+  public void initialize() throws URISyntaxException {
+
+    boolean ArrayListsIsPopulated = GUIManager.getInstanceGUIManager().populateArrayLists();
+    if (!ArrayListsIsPopulated) {
+      Alert loadingError = new Alert(AlertType.ERROR, "Couldn't load initial data", ButtonType.OK);
+      loadingError.showAndWait();
     }
-    dataViewHotspots(); /* some initial data so the table isn't empty on startup */
-    dataTypeChoiceBox.getItems().setAll(DataType.values());
-    dataTypeChoiceBox.setValue(DataType.HOTSPOT);
-    dataTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<DataType>() {
-          @Override
-          public void changed(ObservableValue<? extends DataType> observable, DataType oldValue,
-              DataType newValue) {
-            dataViewSelected();
-          }
-        });
 
+    EventHandler<KeyEvent> mapCalculateListener = (keyEvent) -> {
+      if (keyEvent.getCode() == KeyCode.ENTER)  {
+        displayRouteClick();
+      }
+    };
+    locationFrom.setOnKeyPressed(mapCalculateListener);
+    locationTo.setOnKeyPressed(mapCalculateListener);
+
+    // TABS INITIALIZATION / SET IMAGES
+    // TODO set tabs to images from resources/images @Andrew
+    mapViewTab.setText("");
+    dataViewTab.setText("");
+    historyViewTab.setText("");
+    userViewTab.setText("");
+
+    //mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap 2.png")));
+    mapViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainMap 2.png").toURI().toString())));
+    //dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace 2.png")));
+    dataViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainPlace 2.png").toURI().toString())));
+    //historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory 2.png")));
+    historyViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainHistory 2.png").toURI().toString())));
+    //userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount 2.png")));
+    userViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainAccount 2.png").toURI().toString())));
+
+    // MAPS TAB INITIALIZATION
     URL url = getClass().getResource("/googleMaps.html");
-
     WebEngine mapEngine = mapWebView.getEngine();
     mapEngine.setJavaScriptEnabled(true);
-
-      mapEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-        if (newState == State.SUCCEEDED) {
-          window = (JSObject) mapEngine.executeScript("window");
-          window.setMember("aBridge", aBridge);
-          System.out.println("Initialisation complete");
-        }
-      });
-
-    //double latitude = 40.785091;double longitude = -73.968285;String title = "Test Marker";String markerType = "default";
-
+    String[] dataTypeStrings = new String[]{"User POI", "Route"};
+    ObservableList<String> dataTypes = FXCollections.observableArrayList(dataTypeStrings);
+    importType.setItems(dataTypes);
+    importType.setValue("User POI");
+    setImages(); // Set map images
+    mapEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+      if (newState == State.SUCCEEDED) {
+        window = (JSObject) mapEngine.executeScript("window");
+        window.setMember("aBridge", aBridge);
+        System.out.println(
+            "Initialisation complete"); // Maybe don't let them switch to map view until this is initialised or just default to table view to give time for this to load.
+      }
+      initializeMap();
+    });
     mapEngine.load(url.toExternalForm());
     mapEngine.setJavaScriptEnabled(true);
 
-    //testABC();
-    //mapEngine.executeScript("test()");
-  }
-  private boolean isInteger(String s) {
-    try {
-      Integer i = Integer.parseInt(s);
-    }
-    catch(NumberFormatException nfe) {
-      return false;
-    }
-    return true;
-  }
+    // DATA TAB INITIALIZATION
+    initRetailerTable(); // Create tables
+    initHotspotTable();
+    initPublicPOITable();
+    initUserPOITable();
+    initStationTable();
+    initRouteTable();
+    initUserRouteTable();
 
-  public void displayHotspots() throws IOException{
-    Reader rdr = new Reader();
-    //Run both lines of code
-    window.setMember("aBridge",aBridge);
-    window.call("loadHotspots",rdr.readHotspots("/file/InitialHotspots.csv"));
-  }
+    /* ACCOUNT TAB INITIALIZATION */
+    Cyclist cyclist = GUIManager.getInstanceGUIManager().getCyclistAccount();
+    accountTitle.setText(cyclist.getFirstName() + "'s Account");
+    username.setText(cyclist.getUsername());
+    birthDate.setText(cyclist.getDOB().format(DateTimeFormatter.ofPattern("MM/d/uuuu")));
+    height.setText(Integer.toString(cyclist.getHeight()) + "\"");
+    weight.setText(String.format("%.1f", cyclist.getWeight()) + "lbs");
+    BMI.setText(String.format("%.2f", cyclist.getBMI()));
+    setDistanceChart();
 
-  public void hideMarkers() {
-    window.setMember("aBridge",aBridge);
-    window.call("hideMarkers");
-  }
-
-  public void showMarkers() {
-    window.setMember("aBridge",aBridge);
-    window.call("showMarkers");
-  }
-
-  public void deleteMarkers() {
-    window.setMember("aBridge",aBridge);
-    window.call("deleteMarkers");
-  }
-
-  /*
-  Action handlers
-   */
-  public void viewData() {
-    dataSplitPane.toFront();
-  }
-
-  public void viewMap() {
-    mapViewPane.toFront();
-  }
-
-  public void viewUser() {
-    userPane.toFront();
-  }
-  public void viewFileHandler() {
-    fileHandlerPane.toFront();
   }
 
   /**
-   * converts the arrayList of retailers to an observableList creates columns and sets these columns
-   * and values to be displayed in rawDataTable
+   * @return ArrayList Returns an arraylist of retailers
    */
-  public void dataViewRetailers() {
+  public ArrayList<Retailer> getRetailers() {
+    return GUIManager.getInstanceGUIManager().getRetailers();
+  }
+
+  /**
+   * @return ArrayList Returns an arraylist of hotspots
+   */
+  public ArrayList<Hotspot> getHotspots() {
+    return GUIManager.getInstanceGUIManager().getHotspots();
+  }
+
+  /**
+   * @return ArrayList Returns an arraylist of PublicPOIS
+   */
+  public ArrayList<PublicPOI> getPublicPOIs() {
+    return GUIManager.getInstanceGUIManager().getPublicPOIs();
+  }
+
+  /**
+   * @return ArrayList Returns an arraylist of userPOIS
+   */
+  public ArrayList<UserPOI> getUserPOIs() {
+    return GUIManager.getInstanceGUIManager().getUserPOIs();
+  }
+
+  /**
+   * @return ArrayList Returns an arraylist of Stations
+   */
+  public ArrayList<Station> getStations() {
+    return GUIManager.getInstanceGUIManager().getStations();
+  }
+
+  /**
+   * @return ArrayList Returns an arraylist of Routes
+   */
+  public ArrayList<Route> getRoutes() {
+    return GUIManager.getInstanceGUIManager().getRoutes();
+  }
+
+  /**
+   * @return ArrayList Returns an arraylist of the User's Route History
+   */
+  public ArrayList<Route> getUserRouteHistory() {
+    return GUIManager.getInstanceGUIManager().getUserRouteHistory();
+  }
+
+  /* Tab action handlers */
+  public void viewData() {
+    mainPane.getSelectionModel().select(dataViewTab);
+    //dataTabPane.toFront();
+  }
+
+  public void viewMap() {
+    // mapViewPane.();
+    mainPane.getSelectionModel().select(mapViewTab);
+  }
+
+  public void viewUser() {
+    mainPane.getSelectionModel().select(userViewTab);
+    // userPane.toFront();
+  }
+
+  public void viewHistory() {
+    mainPane.getSelectionModel().select(historyViewTab);
+  }
+
+  /**
+   * Loads retailers through window
+   */
+  private void loadRetailers(){
+    window.setMember("aBridge", aBridge);
+    window.call("loadRetailers", getRetailers());
+    retailersLoaded = true;
+  }
+
+  /**
+   * Loads hotspots through window
+   */
+  private void loadHotspots(){
+    //System.out.println(getDistance(40.758896,-73.985130,40.7678,-73.9718));
+    //Run both lines of code
+    window.setMember("aBridge", aBridge);
+    window.call("loadHotspots", getHotspots());
+    hotspotsLoaded = true;
+    //testPretty();
+  }
+
+  /**
+   * Loads stations through window
+   */
+  private void loadStations(){
+    window.setMember("aBridge", aBridge);
+    window.call("loadStations", getStations());
+    stationsLoaded = true;
+  }
+
+  /**
+   * Loads POIS through window
+   */
+  public void loadPOIS(){
+    window.setMember("aBridge", aBridge);
+    window.call("loadPOIS", getUserPOIs());
+    POISLoaded = true;
+  } // TODO implement Imas
+
+  /**
+   * Loads Public POIS through window
+   */
+  public void loadPPOIS(){
+    window.setMember("aBridge",aBridge);
+    window.call("loadPPOIS",getPublicPOIs());
+    PPOISLoaded = true;
+  }
+
+  /**
+   * Sets the images for the different types of markers
+   * @throws URISyntaxException In case image location is invalid
+   */
+  private void setImages() throws URISyntaxException{
+    hotspot_icon_primary.setImage(new Image(getClass().getResource("/image/hotspot-icon.png").toURI().toString()));
+    retailer_icon_primary.setImage(new Image(getClass().getResource("/image/retailer-icon.png").toURI().toString()));
+    poi_icon_primary.setImage(new Image(getClass().getResource("/image/marker-icon.png").toURI().toString()));
+    station_icon_primary.setImage(new Image(getClass().getResource("/image/station-icon.png").toURI().toString()));
+    ppoi_icon_primary.setImage(new Image(getClass().getResource("/image/ppoi-icon.png").toURI().toString()));
+
+    hotspot_icon_secondary.setImage(new Image(getClass().getResource("/image/hotspot-pressed-icon.png").toURI().toString()));
+    retailer_icon_secondary.setImage(new Image(getClass().getResource("/image/retailer-pressed-icon.png").toURI().toString()));
+    poi_icon_secondary.setImage(new Image(getClass().getResource("/image/marker-pressed-icon.png").toURI().toString()));
+    station_icon_secondary.setImage(new Image(getClass().getResource("/image/station-pressed-icon.png").toURI().toString()));
+    ppoi_icon_secondary.setImage(new Image(getClass().getResource("/image/ppoi-pressed-icon.png").toURI().toString()));
+
+    buttons.add(retailer_icon_primary);
+    buttons.add(hotspot_icon_primary);
+    buttons.add(poi_icon_primary);
+    buttons.add(station_icon_primary);
+    buttons.add(ppoi_icon_primary);
+
+    buttons.add(retailer_icon_secondary);
+    buttons.add(hotspot_icon_secondary);
+    buttons.add(poi_icon_secondary);
+    buttons.add(station_icon_secondary);
+    buttons.add(ppoi_icon_secondary);
+
+    /*
+    wifi_icon_primary.setVisible(false);
+    retailer_icon_primary.setVisible(false);
+    poi_icon_primary.setVisible(false);
+    station_icon_primary.setVisible(false);
+    */
+
+    hotspot_icon_secondary.setVisible(false);
+    retailer_icon_secondary.setVisible(false);
+    poi_icon_secondary.setVisible(false);
+    station_icon_secondary.setVisible(false);
+    ppoi_icon_secondary.setVisible(false);
+  }
+
+  /**
+   * Turns off the button passed in and turns on the button that corresponds to its counterpart
+   * @param buttonNo The number of the button toggle - This number is its position in the ArrayList buttons
+   */
+  private void toggleButton(int buttonNo) {
+    System.out.println("Toggling button" + (buttonNo + 1));
+    buttons.get(buttonNo).setVisible(false);
+    int halfButtonSize = buttons.size() / 2;
+    //Check if button is primary or on-click
+    if (buttonNo >= halfButtonSize) {
+      buttons.get(buttonNo - halfButtonSize).setVisible(true);
+    } else {
+      buttons.get(buttonNo + halfButtonSize).setVisible(true);
+    }
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns on the retailer button and loads/shows Retailers
+   */
+  public void toggleRetailersOn() {
+    try {
+      if (retailersLoaded) {
+        showRetailers();
+      } else {
+        loadRetailers();
+      }
+    } catch (Exception e) {
+      System.out.println("Error occurred while reading retailers");
+      System.out.println(e);
+    }
+    toggleButton(0);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns on the hotspot button and loads/shows Hotspots
+   */
+  public void toggleHotspotsOn() {
+    try {
+      if (hotspotsLoaded) {
+        showHotspots();
+      } else {
+        loadHotspots();
+      }
+    } catch (Exception e) {
+      System.out.println("Error occurred while reading hotspots");
+      System.out.println(e);
+    }
+    toggleButton(1);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns on the POI button and loads/shows POI
+   */
+  public void togglePOISOn() {
+    try {
+      if (POISLoaded) {
+        showPOIS();
+      } else {
+        loadPOIS();
+      }
+    } catch (Exception e) {
+      System.out.println("Error occurred while reading POIs");
+      System.out.println(e);
+    }
+    toggleButton(2);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns on the stations button and loads/shows Stations
+   */
+  public void toggleStationsOn() {
+    try {
+      if (stationsLoaded) {
+        showStations();
+      } else {
+        loadStations();
+      }
+    } catch (Exception e) {
+      System.out.println("Error occurred while reading stations");
+      System.out.println(e);
+    }
+    toggleButton(3);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns on the Public POI button and loads/shows POIS
+   */
+  public void togglePPOISOn() {
+    try {
+      if (PPOISLoaded) {
+        showPPOIS();
+      } else {
+        loadPPOIS();
+      }
+    } catch(Exception e) {
+      System.out.println(e);
+    }
+    toggleButton(4);
+  }
+
+  /**
+   * Turns off the retailer button and hides retailers
+   */
+  public void toggleRetailersOff() {
+    try {
+      hideRetailers();
+    } catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+      System.out.println(e);
+    }
+    toggleButton(5);
+
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns off the hotspot button and hides hotspots
+   */
+  public void toggleHotspotsOff() {
+    try {
+      hideHotspots();
+    } catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+      //System.out.println("Internal error, please report to app devs");
+    }
+    toggleButton(6);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns off the POI button and hides POIS
+   */
+  public void togglePOISOff() {
+    try {
+      hidePOIS();
+    } catch (netscape.javascript.JSException e) {
+      //null reference error. Should occur
+    }
+    toggleButton(7);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns off the station button and hides stations
+   */
+  public void toggleStationsOff() {
+    try {
+      hideStations();
+    } catch (netscape.javascript.JSException e) {
+      //null error. should be occuring
+      //System.out.println("Internal error, please report to app devs");
+      //System.out.println(e);
+    }
+    toggleButton(8);
+  } // TODO IMAS RENAME AND JAVADOC
+
+  /**
+   * Turns off the Public POI button and hides Public POIS
+   */
+  public void togglePPOISOff() {
+    try {
+      hidePPOIS();
+    } catch(netscape.javascript.JSException e) {
+      //null error. should be occuring
+      //System.out.println(e);
+    }
+    toggleButton(9);
+  }
+
+  /**
+   * Shows hotspots through the window
+   */
+  private void showHotspots() {
+    window.setMember("aBridge", aBridge);
+    window.call("showHotspots");
+  }
+
+  /**
+   * Hides hotspots through the window
+   */
+  private void hideHotspots() {
+    window.setMember("aBridge", aBridge);
+    window.call("hideHotspots");
+  }
+
+  /**
+   * Shows stations through the window
+   */
+  private void showStations() {
+    window.setMember("aBridge", aBridge);
+    window.call("showStations");
+  }
+
+  /**
+   * Hides stations through the window
+   */
+  private void hideStations() {
+    window.setMember("aBridge", aBridge);
+    window.call("hideStations");
+  }
+
+  /**
+   * Shows retailers through the window
+   */
+  private void showRetailers() {
+    window.setMember("aBridge", aBridge);
+    window.call("showRetailers");
+  }
+
+  /**
+   * Hides retailers through the window
+   */
+  private void hideRetailers() {
+    window.setMember("aBridge", aBridge);
+    window.call("hideRetailers");
+  }
+
+  /**
+   * Shows POIS through the window
+   */
+  private void showPOIS() {
+    window.setMember("aBridge", aBridge);
+    window.call("showPOIS");
+  } // TODO implement Imas
+
+  /**
+   * Hides POIS through the window
+   */
+  private void hidePOIS() {
+    window.setMember("aBridge", aBridge);
+    window.call("hidePOIS");
+  } // TODO implement Imas
+
+  /**
+   * Shows Public POIS through the window
+   */
+  public void showPPOIS() {
+    window.setMember("aBridge", aBridge);
+    window.call("showPPOIS");
+  }
+
+  /**
+   * Hides Public POIS through the window
+   */
+  public void hidePPOIS() {
+    window.setMember("aBridge", aBridge);
+    window.call("hidePPOIS");
+  }
+
+  /**
+   * Initalizes the map by calling the initialize function through the window, then loading all the data then hiding them. This is done so that the points are already loaded beforehand and the user doesn't have to query theem
+   */
+  public void initializeMap() {
+    try {
+      window.setMember("aBridge", aBridge);
+      window.call("initialize");
+      loadHotspots();
+      loadRetailers();
+      loadPPOIS();
+      loadPOIS();
+      loadStations();
+      hideHotspots();
+      hideRetailers();
+      hidePPOIS();
+      hidePOIS();
+      hideStations();
+    }
+    catch (NullPointerException e) {
+      //Happens as bridge isn't loaded, not allowing the hotspots to be created
+      System.out.println("Map initialized confirmation");
+    }
+  }
+
+  /*
+  public void hideAllMarkers() {
+    window.setMember("aBridge", aBridge);
+    window.call("hideAllMarkers");
+  }
+*/
+
+  /**
+   * Creates a prettyMarker at the specified locaiton with the specified information, type and infoText
+   * @param lat The latitude of the marker
+   * @param lng The longitude of the marker
+   * @param info The hoverText of the marker
+   * @param markerType The image of the marker
+   * @param infoText The onClickText of the marker
+   */
+  private void prettyMarker(double lat, double lng, String info, String markerType,String infoText) {
+    window.setMember("aBridge", aBridge);
+    window.call("prettyMarker", lat, lng, info, markerType,infoText);
+  }
+
+  /**
+   * Displays a route given the start and end locations
+   * @param startLat Start latitude
+   * @param startLng Start longitude
+   * @param endLat End latitude
+   * @param endLng End longitude
+   */
+  private void displayRoute(double startLat, double startLng, double endLat, double endLng) {
+    window.setMember("aBridge", aBridge);
+    window.call("displayRoute", startLat, startLng, endLat, endLng);
+  }
+
+  /**
+   * Calls the displayRouteClick method through the window -> Displays a route based on the locations entered in the From: and To: text boxes
+   */
+  public void displayRouteClick() {
+    window.setMember("aBridge", aBridge);
+    window.call("displayRouteClick", locationFrom.getText(), locationTo.getText());
+  }
+
+  /**
+   * Finds all nearby markerType markers to point and what distance from them
+   * @param lat Latitude of point
+   * @param lng Longitude of point
+   * @param distance Max distance from point to be in range
+   * @param markerType Type of marker to show (eg: POI, Hotspot, Retailer, etc.)
+   */
+  public void nearbyMarkers(double lat,double lng,double distance,String markerType) {
+    window.setMember("aBridge", aBridge);
+    window.call("nearbyMarkers", lat, lng, distance, markerType);
+  }
+
+  /* DATA TAB METHODS */
+
+  /**
+   * Method to create and remove columns containing additional details within the Hotspot table Uses
+   * a global boolean hotspotIsDetailed to determine state
+   */
+  public void toggleDetailsHotspot() {
+    //simple view: id, locAddress, borough, city, type, provider, remarks
+    //advanced view: include above and lat, long, postcode, SSID
+    if (hotspotIsDetailed) {
+      //it is detailed, so remove columns
+      dataTableHotspot.getColumns().remove(7, 11);
+    } else {
+      TableColumn<Hotspot, Double> latCol = new TableColumn<>("Latitude");
+      latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+      TableColumn<Hotspot, Double> longCol = new TableColumn<>("Longitude");
+      longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+      TableColumn<Hotspot, String> postCodeCol = new TableColumn<>("postcode");
+      postCodeCol.setCellValueFactory(new PropertyValueFactory<>("postcode"));
+      TableColumn<Hotspot, String> SSIDCol = new TableColumn<>("SSID");
+      SSIDCol.setCellValueFactory(new PropertyValueFactory<>("SSID"));
+      dataTableHotspot.getColumns().addAll(latCol, longCol, postCodeCol, SSIDCol);
+    }
+    hotspotIsDetailed = !hotspotIsDetailed;
+  }
+
+
+  /**
+   * Method to create and remove columns containing additional details within the Retailer table
+   * Uses a global boolean retailerIsDetailed to determine state
+   */
+  public void toggleDetailsRetailer() {
+    if (retailerIsDetailed) {
+      dataTableRetailer.getColumns().remove(3, 8);
+    } else {
+      TableColumn<Retailer, String> floorCol = new TableColumn<>("Floor");
+      floorCol.setCellValueFactory(new PropertyValueFactory<>("floor"));
+      TableColumn<Retailer, String> cityCol = new TableColumn<>("City");
+      cityCol.setCellValueFactory(new PropertyValueFactory<>("city"));
+      TableColumn<Retailer, String> zipcodeCol = new TableColumn<>("Zipcode");
+      zipcodeCol.setCellValueFactory(new PropertyValueFactory<>("zipcode"));
+      TableColumn<Retailer, String> stateCol = new TableColumn<>("State");
+      stateCol.setCellValueFactory(new PropertyValueFactory<>("state"));
+      TableColumn<Retailer, String> blockCol = new TableColumn<>("Block");
+      blockCol.setCellValueFactory(new PropertyValueFactory<>("block"));
+      dataTableRetailer.getColumns().addAll(floorCol, cityCol, zipcodeCol, stateCol, blockCol);
+    }
+
+    retailerIsDetailed = !retailerIsDetailed;
+  }
+
+  /**
+   * Method to create and remove columns containing additional details within the Route table Uses a
+   * global boolean routeIsDetailed to determine state
+   */
+  public void toggleDetailsRoute() {
+    if (routeIsDetailed) {
+      dataTableRoute.getColumns().remove(5, 9);
+    } else {
+      TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
+      bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
+      TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
+      userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
+      TableColumn<Route, Integer> birthYearCol = new TableColumn<Route, Integer>("Birth Year");
+      birthYearCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("birthYear"));
+      TableColumn<Route, Integer> genderCol = new TableColumn<Route, Integer>("Gender");
+      genderCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("gender"));
+      dataTableRoute.getColumns().addAll(bikeIDCol, userTypeCol, birthYearCol, genderCol);
+    }
+    routeIsDetailed = !routeIsDetailed;
+  }
+
+  /**
+   * Method to create and remove columns containing additional details within the User Route History table Uses a
+   * global boolean routeHistoryIsDetailed to determine state
+   */
+  public void toggleDetailsRouteHistory() {
+    if (routeHistoryIsDetailed) {
+      dataTableRouteHistory.getColumns().remove(5, 7);
+    } else {
+      TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
+      bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
+      TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
+      userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
+
+      dataTableRouteHistory.getColumns().addAll(bikeIDCol, userTypeCol);
+    }
+    routeHistoryIsDetailed = !routeHistoryIsDetailed;
+  }
+
+
+  /**
+   * takes the arrayList retailers, creates table columns and sets these columns along with details
+   * from retailers to be shown in the table. also enables filtering and sorting
+   */
+  private void initRetailerTable() {
     //converting the arraylist to an observable list
-    ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(retailers);
+    ObservableList<Retailer> oListRetailers = FXCollections.observableArrayList(getRetailers());
     //each 2 line section creates one table heading and set of values
-    //TODO lat and long from address?
-    TableColumn<Retailer, String> nameCol = new TableColumn<Retailer, String>(
+    TableColumn<Retailer, String> nameCol = new TableColumn<>(
         "Name");//title to be written above column
     nameCol.setCellValueFactory(
-        new PropertyValueFactory<Retailer, String>("name"));//looks for retailer.getName()
-    TableColumn<Retailer, String> addressCol = new TableColumn<Retailer, String>("Address");
-    addressCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("address"));
-    TableColumn<Retailer, String> floorCol = new TableColumn<Retailer, String>("Floor");
-    floorCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("floor"));
-    TableColumn<Retailer, String> cityCol = new TableColumn<Retailer, String>("City");
-    cityCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("city"));
-    TableColumn<Retailer, String> zipcodeCol = new TableColumn<Retailer, String>("Zipcode");
-    zipcodeCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("zipcode"));
-    TableColumn<Retailer, String> stateCol = new TableColumn<Retailer, String>("State");
-    stateCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("state"));
-    TableColumn<Retailer, String> blockCol = new TableColumn<Retailer, String>("Block");
-    blockCol.setCellValueFactory(new PropertyValueFactory<Retailer, String>("block"));
-    TableColumn<Retailer, String> secondaryDescCol = new TableColumn<Retailer, String>(
+        new PropertyValueFactory<>("name"));//looks for retailer.getName()
+    TableColumn<Retailer, String> addressCol = new TableColumn<>("Address");
+    addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+
+    TableColumn<Retailer, String> secondaryDescCol = new TableColumn<>(
         "Secondary Description");
     secondaryDescCol
-        .setCellValueFactory(new PropertyValueFactory<Retailer, String>("secondaryDescription"));
+        .setCellValueFactory(new PropertyValueFactory<>("secondaryDescription"));
 
     FilteredList<Retailer> fListRetailers = new FilteredList<Retailer>(oListRetailers);
-    /**
+    /*
      * Filtering:
      * if this returns true, the object is shown. If the filter field is empty,
      * or the attributes below match, then the object is shown
      */
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListRetailers.setPredicate(Retailer -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
+    fListRetailers = filters.retailerFilter(RetailerFilterField, fListRetailers);
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        /**
-         * Add more Retailer.get__'s below to include more things in the search
-         */
-        if (Retailer.getAddress().toLowerCase().contains(lowerCaseFilter) || Retailer.getName()
-            .toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        //checking for zipcode. entire zipcode must be entered before a match is found
-        if (isInteger(lowerCaseFilter)) {
-          Integer input = Integer.parseInt(lowerCaseFilter);
-          if (input == Retailer.getZipcode()) {
-            return true;
+    RetailerFilterSelector.getItems().clear();
+    RetailerFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name", "Address", "Zipcode"));
+    RetailerFilterSelector.getSelectionModel().selectFirst();
+    RetailerFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RetailerSelectedIndex = newValue.intValue();
           }
-        }
-        return false;
-      });
-    });
-    /**
+        });
+    fListRetailers = filters.retailerFilter(RetailerFilterField, fListRetailers);
+    /*
      * Sorting:
      * wrapping the filtered list in a sorted list allows the user to click on the title
      * of a column and sort the entries in alphanumeric order
      */
-    SortedList<Retailer> sListRetailers = new SortedList<Retailer>(fListRetailers);
-    sListRetailers.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    SortedList<Retailer> sListRetailers = new SortedList<>(fListRetailers);
+    sListRetailers.comparatorProperty().bind(dataTableRetailer.comparatorProperty());
+//simple: name, address, description
+    //detailed: above and floor, city, zipcode, state, block
+    //sets up simple view
+    dataTableRetailer.getColumns()
+        .setAll(nameCol, addressCol, secondaryDescCol);
+    dataTableRetailer.setItems(sListRetailers);
 
-    rawDataTable.getColumns()
-        .setAll(nameCol, addressCol, floorCol, cityCol, zipcodeCol, stateCol, blockCol,
-            secondaryDescCol);
-    rawDataTable.setItems(sListRetailers);
+    /*
+     * on click behaviour
+     */
+    dataTableRetailer.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Retailer selected_item = dataTableRetailer.getSelectionModel().getSelectedItem();
+          helper.tableOnClickPopup.create("Retailer", selected_item, false);
+          if (tableOnClickPopup.return_value == 1) {
+            try {
+              prettyMarker(selected_item.getLatitude(),
+                  selected_item.getLongitude(),
+                  selected_item.getAddress(),
+                  "retailer",aBridge.getRetailerHTML(selected_item));
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
   }
 
   /**
-   * converts the arrayList of hotspots to an ObservableList and creates TableColumns sets these as
-   * viewable in rawDataTable
+   * takes the arrayList hotspots, creates table columns and sets these columns along with details
+   * from hotspots to be shown in the table. also enables filtering and sorting
    */
-  public void dataViewHotspots() {
-    ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(hotspots);
+  private void initHotspotTable() {
+    ObservableList<Hotspot> oListHotspots = FXCollections.observableArrayList(getHotspots());
 
-    TableColumn<Hotspot, String> idCol = new TableColumn<Hotspot, String>("Name");
-    idCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("name"));
+    TableColumn<Hotspot, String> idCol = new TableColumn<>("Name");
+    idCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-    TableColumn<Hotspot, Double> latCol = new TableColumn<Hotspot, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("latitude"));
-    TableColumn<Hotspot, Double> longCol = new TableColumn<Hotspot, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<Hotspot, Double>("longitude"));
     TableColumn<Hotspot, String> locAddressCol = new TableColumn<Hotspot, String>("Address");
     locAddressCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("locationAddress"));
     TableColumn<Hotspot, String> boroughCol = new TableColumn<Hotspot, String>("Borough");
     boroughCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("borough"));
     TableColumn<Hotspot, String> cityCol = new TableColumn<Hotspot, String>("City");
     cityCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("city"));
-    TableColumn<Hotspot, String> postCodeCol = new TableColumn<Hotspot, String>("postcode");
-    postCodeCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("postcode"));
-    TableColumn<Hotspot, String> typeCol = new TableColumn<Hotspot, String>("Type");
-    typeCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("type"));
-    TableColumn<Hotspot, String> SSIDCol = new TableColumn<Hotspot, String>("SSID");
-    SSIDCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("SSID"));
-    TableColumn<Hotspot, String> nameCol = new TableColumn<Hotspot, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("name"));
-    TableColumn<Hotspot, String> providerCol = new TableColumn<Hotspot, String>("Provider");
-    providerCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("provider"));
-    TableColumn<Hotspot, String> remarksCol = new TableColumn<Hotspot, String>("Remarks");
-    remarksCol.setCellValueFactory(new PropertyValueFactory<Hotspot, String>("description"));
 
-    FilteredList<Hotspot> fListHotspots = new FilteredList<Hotspot>(oListHotspots);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListHotspots.setPredicate(Hotspot -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
+    TableColumn<Hotspot, String> typeCol = new TableColumn<>("Type");
+    typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        // Add more Hotspot.get__'s below to include more things in the search
+    TableColumn<Hotspot, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<Hotspot, String> providerCol = new TableColumn<>("Provider");
+    providerCol.setCellValueFactory(new PropertyValueFactory<>("provider"));
+    TableColumn<Hotspot, String> remarksCol = new TableColumn<>("Remarks");
+    remarksCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        if (Hotspot.getBorough().toLowerCase().contains(lowerCaseFilter) || Hotspot.getType()
-            .toLowerCase().contains(lowerCaseFilter)|| Hotspot.getProvider()
-            .toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
+    FilteredList<Hotspot> fListHotspots = new FilteredList<>(oListHotspots);
 
-    SortedList<Hotspot> sListHotspots = new SortedList<Hotspot>(fListHotspots);
-    sListHotspots.comparatorProperty().bind(rawDataTable.comparatorProperty());
-    rawDataTable.getColumns()
-        .setAll(idCol, latCol, longCol, locAddressCol, boroughCol, cityCol, postCodeCol, typeCol,
-            SSIDCol, providerCol, remarksCol); //something something
-    rawDataTable.setItems(sListHotspots);
-  }
+    HotspotFilterSelector.getItems().clear();
+    HotspotFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name", "Borough", "Type", "Provider"));
+    HotspotFilterSelector.getSelectionModel().selectFirst();
+    HotspotFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.HotspotSelectedIndex = newValue.intValue();
 
-  public void dataViewPublicPOIs() {
-    //lat, long, name, description
-    ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(publicPOIs);
-    TableColumn<PublicPOI, Double> latCol = new TableColumn<PublicPOI, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("latitude"));
-    TableColumn<PublicPOI, Double> longCol = new TableColumn<PublicPOI, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, Double>("longitude"));
-    TableColumn<PublicPOI, String> nameCol = new TableColumn<PublicPOI, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("name"));
-    TableColumn<PublicPOI, String> descriptionCol = new TableColumn<PublicPOI, String>(
-        "Description");
-    descriptionCol.setCellValueFactory(new PropertyValueFactory<PublicPOI, String>("description"));
+          }
+        });
+    fListHotspots = filters.hotspotFilter(HotspotFilterField, fListHotspots);
 
-    FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<PublicPOI>(oListPublicPOIs);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListPublicPOIs.setPredicate(PublicPOI -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
+    SortedList<Hotspot> sListHotspots = new SortedList<>(fListHotspots);
+    sListHotspots.comparatorProperty().bind(dataTableHotspot.comparatorProperty());
 
-        String lowerCaseFilter = newValue.toLowerCase();
-        // Add more Hotspot.get__'s below to include more things in the search
+    //sets up simple view.
+    dataTableHotspot.getColumns()
+        .setAll(idCol, locAddressCol, boroughCol, cityCol, typeCol, providerCol, remarksCol);
 
-        if (PublicPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
+    dataTableHotspot.setItems(sListHotspots);
 
-    SortedList<PublicPOI> sListPublicPOIs = new SortedList<PublicPOI>(fListPublicPOIs);
-    sListPublicPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
-
-    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(sListPublicPOIs);
-  }
-
-  public void dataViewUserPOIs() {
-    //lat, long, name, description
-    ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(userPOIs);
-
-    TableColumn<UserPOI, Double> latCol = new TableColumn<UserPOI, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("latitude"));
-    TableColumn<UserPOI, Double> longCol = new TableColumn<UserPOI, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<UserPOI, Double>("longitude"));
-    TableColumn<UserPOI, String> nameCol = new TableColumn<UserPOI, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("name"));
-    TableColumn<UserPOI, String> descriptionCol = new TableColumn<UserPOI, String>("Description");
-    descriptionCol.setCellValueFactory(new PropertyValueFactory<UserPOI, String>("description"));
-
-    FilteredList<UserPOI> fListUserPOIs = new FilteredList<UserPOI>(oListUserPOIs);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListUserPOIs.setPredicate(UserPOI -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
-
-        String lowerCaseFilter = newValue.toLowerCase();
-        /**
-         * Add more UserPOI.get__'s below to include more things in the search
-         */
-        if (UserPOI.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
-
-    SortedList<UserPOI> sListUserPOIs = new SortedList<UserPOI>(fListUserPOIs);
-    sListUserPOIs.comparatorProperty().bind(rawDataTable.comparatorProperty());
-
-    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
-    rawDataTable.setItems(sListUserPOIs);
-  }
-
-  public void dataViewStations() {
-    //latitude, longitude, name, ID
-    ObservableList<Station> oListStations = FXCollections.observableArrayList(stations);
-
-    TableColumn<Station, Double> latCol = new TableColumn<Station, Double>("Latitude");
-    latCol.setCellValueFactory(new PropertyValueFactory<Station, Double>("latitude"));
-    TableColumn<Station, Double> longCol = new TableColumn<Station, Double>("Longitude");
-    longCol.setCellValueFactory(new PropertyValueFactory<Station, Double>("longitude"));
-    TableColumn<Station, String> nameCol = new TableColumn<Station, String>("Name");
-    nameCol.setCellValueFactory(new PropertyValueFactory<Station, String>("name"));
-    TableColumn<Station, Integer> idCol = new TableColumn<Station, Integer>("ID");
-    idCol.setCellValueFactory(new PropertyValueFactory<Station, Integer>("ID"));
-
-    FilteredList<Station> fListStations = new FilteredList<Station>(oListStations);
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListStations.setPredicate(Station -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
-
-        String lowerCaseFilter = newValue.toLowerCase();
-        /**
-         * Add more Station.get__'s below to include more things in the search
-         */
-        if (Station.getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        return false;
-      });
-    });
-
-    SortedList<Station> sListStations = new SortedList<Station>(fListStations);
-    sListStations.comparatorProperty().bind(rawDataTable.comparatorProperty());
-
-    rawDataTable.getColumns().setAll(nameCol, latCol, longCol, idCol);
-    rawDataTable.setItems(sListStations);
-  }
-
-  public void dataViewRoutes() {
-    //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
-    ObservableList<Route> oListRoutes = FXCollections.observableArrayList(routes);
-
-    TableColumn<Route, Station> startStationCol = new TableColumn<Route, Station>("Start Station");
-    startStationCol
-        .setCellValueFactory(new PropertyValueFactory<Route, Station>("startStationName"));
-    TableColumn<Route, Station> stopStationCol = new TableColumn<Route, Station>("Stop Station");
-    stopStationCol.setCellValueFactory(new PropertyValueFactory<Route, Station>("stopStationName"));
-    TableColumn<Route, Date> startDateTimeCol = new TableColumn<Route, Date>("Start Time");
-    startDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("startDate"));
-    TableColumn<Route, Date> endDateTimeCol = new TableColumn<Route, Date>("Stop Time");
-    endDateTimeCol.setCellValueFactory(new PropertyValueFactory<Route, Date>("stopDate"));
-    TableColumn<Route, Integer> bikeIDCol = new TableColumn<Route, Integer>("Bike ID");
-    bikeIDCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("bikeID"));
-    TableColumn<Route, String> userTypeCol = new TableColumn<Route, String>("User Type");
-    userTypeCol.setCellValueFactory(new PropertyValueFactory<Route, String>("userType"));
-    TableColumn<Route, Integer> birthYearCol = new TableColumn<Route, Integer>("Birth Year");
-    birthYearCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("birthYear"));
-    TableColumn<Route, Integer> genderCol = new TableColumn<Route, Integer>("Gender");
-    genderCol.setCellValueFactory(new PropertyValueFactory<Route, Integer>("gender"));
-
-    FilteredList<Route> fListRoutes = new FilteredList<Route>(oListRoutes);
-
-    rawDataFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-      fListRoutes.setPredicate(Route -> {
-        //if filter is empty, show all
-        if (newValue == null || newValue.isEmpty()) {
-          return true;
-        }
-
-        String lowerCaseFilter = newValue.toLowerCase();
-        /**
-         * Add more Route.get__'s below to include more things in the search
-         */
-        if (Route.getStartStation().getName().toLowerCase().contains(lowerCaseFilter) ||
-            Route.getStopStation().getName().toLowerCase().contains(lowerCaseFilter)) {
-          return true;
-        }
-        //filtering by gender of rider or bike ID. needs to be an exact match before anything is shown
-        if (isInteger(lowerCaseFilter)) {
-          Integer input = Integer.parseInt(lowerCaseFilter);
-          if (Route.getBikeID() == input || Route.getGender() == input) {
-            return true;
+    /*
+     * on click behaviour
+     */
+    dataTableHotspot.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Hotspot selected_item = dataTableHotspot.getSelectionModel().getSelectedItem();
+          helper.tableOnClickPopup.create("Hotspot",  selected_item, false);
+          if (tableOnClickPopup.return_value == 1) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
+                  selected_item.getLocationAddress(), "hotspot",aBridge.getHotspotHTML(selected_item));
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
           }
         }
-        return false;
-      });
+      }
+    });
+  }
+
+  /**
+   * takes the arrayList publicPOIs, creates table columns and sets these columns along with details
+   * from publicPOIs to be shown in the table. also enables filtering and sorting
+   */
+  private void initPublicPOITable() {
+
+    //lat, long, name, description
+    ObservableList<PublicPOI> oListPublicPOIs = FXCollections.observableArrayList(getPublicPOIs());
+    TableColumn<PublicPOI, Double> latCol = new TableColumn<>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+    TableColumn<PublicPOI, Double> longCol = new TableColumn<>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+    TableColumn<PublicPOI, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<PublicPOI, String> descriptionCol = new TableColumn<>(
+        "Description");
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+    FilteredList<PublicPOI> fListPublicPOIs = new FilteredList<>(oListPublicPOIs);
+    PublicPOIFilterSelector.getItems().clear();
+    PublicPOIFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    PublicPOIFilterSelector.getSelectionModel().selectFirst();
+    PublicPOIFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.PublicPOISelectedIndex = newValue.intValue();
+          }
+        });
+    fListPublicPOIs = filters.publicPOIFilter(PublicPOIFilterField, fListPublicPOIs);
+
+
+    SortedList<PublicPOI> sListPublicPOIs = new SortedList<>(fListPublicPOIs);
+    sListPublicPOIs.comparatorProperty().bind(dataTablePublicPOI.comparatorProperty());
+
+    dataTablePublicPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
+    dataTablePublicPOI.setItems(sListPublicPOIs);
+
+    /*
+     * on click behaviour
+     */
+    dataTablePublicPOI.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          PublicPOI selected_item = dataTablePublicPOI.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("Public POI",  selected_item, false);
+          if (tableOnClickPopup.return_value == 1) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
+                  selected_item.getName(), "public-poi",aBridge.getPPOIHTML(selected_item));
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * takes the arrayList userPOIs, creates table columns and sets these columns along with details
+   * from userPOIs to be shown in the table. also enables filtering and sorting
+   */
+  public void initUserPOITable() {
+    //lat, long, name, description
+    ObservableList<UserPOI> oListUserPOIs = FXCollections.observableArrayList(getUserPOIs());
+
+    TableColumn<UserPOI, Double> latCol = new TableColumn<>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+    TableColumn<UserPOI, Double> longCol = new TableColumn<>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+    TableColumn<UserPOI, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<UserPOI, String> descriptionCol = new TableColumn<>("Description");
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+    FilteredList<UserPOI> fListUserPOIs = new FilteredList<>(oListUserPOIs);
+
+    UserPOIFilterSelector.getItems().clear();
+    UserPOIFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    UserPOIFilterSelector.getSelectionModel().selectFirst();
+    UserPOIFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.UserPOISelectedIndex = newValue.intValue();
+          }
+        });
+
+    fListUserPOIs = filters.userPOIFilter(UserPOIFilterField, fListUserPOIs);
+
+
+
+    SortedList<UserPOI> sListUserPOIs = new SortedList<>(fListUserPOIs);
+    sListUserPOIs.comparatorProperty().bind(dataTableUserPOI.comparatorProperty());
+
+    dataTableUserPOI.getColumns().setAll(nameCol, latCol, longCol, descriptionCol);
+    dataTableUserPOI.setItems(sListUserPOIs);
+
+    /*
+     * on-click behaviour
+     */
+    dataTableUserPOI.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          UserPOI selected_item = dataTableUserPOI.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("User POI",  selected_item, false);
+          if (tableOnClickPopup.return_value == 1) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
+                  selected_item.getName(), "user-poi",aBridge.getPOIHTML(selected_item));
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * takes the arrayList stations, creates table columns and sets these columns along with details
+   * from stations to be shown in the table. also enables filtering and sorting
+   */
+  public void initStationTable() {
+    //latitude, longitude, name, ID
+    ObservableList<Station> oListStations = FXCollections.observableArrayList(getStations());
+
+    TableColumn<Station, Double> latCol = new TableColumn<>("Latitude");
+    latCol.setCellValueFactory(new PropertyValueFactory<>("latitude"));
+    TableColumn<Station, Double> longCol = new TableColumn<>("Longitude");
+    longCol.setCellValueFactory(new PropertyValueFactory<>("longitude"));
+    TableColumn<Station, String> nameCol = new TableColumn<>("Name");
+    nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+    TableColumn<Station, Integer> idCol = new TableColumn<>("ID");
+    idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
+
+    FilteredList<Station> fListStations = new FilteredList<>(oListStations);
+
+    StationFilterSelector.getItems().clear();
+    StationFilterSelector.getItems().addAll(FXCollections.observableArrayList("Name"));
+    StationFilterSelector.getSelectionModel().selectFirst();
+    StationFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.StationSelectedIndex = newValue.intValue();
+          }
+        });
+    fListStations = filters.stationFilter(StationFilterField, fListStations);
+
+    SortedList<Station> sListStations = new SortedList<>(fListStations);
+    sListStations.comparatorProperty().bind(dataTableStation.comparatorProperty());
+
+    dataTableStation.getColumns().setAll(nameCol, latCol, longCol, idCol);
+    dataTableStation.setItems(sListStations);
+
+    /*
+     * on-click behaviour
+     */
+    dataTableStation.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Station selected_item = dataTableStation.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("Public POI",  selected_item, false);
+          if (tableOnClickPopup.return_value == 1) {
+            try {
+              prettyMarker(selected_item.getLatitude(), selected_item.getLongitude(),
+                  selected_item.getName(), "station",aBridge.getStationHTML(selected_item));
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * takes the arrayList routes, creates table columns and sets these columns along with details
+   * from routes to be shown in the table. also enables filtering and sorting
+   */
+  public void initRouteTable() {
+    //startStation, stopStation, startDateTime, endDateTime, bikeID, userType, birthYear, gender
+    ObservableList<Route> oListRoutes = FXCollections.observableArrayList(getRoutes());
+
+    TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
+    startStationCol
+        .setCellValueFactory(new PropertyValueFactory<>("startStationName"));
+    TableColumn<Route, Station> stopStationCol = new TableColumn<>("Stop Station");
+    stopStationCol.setCellValueFactory(new PropertyValueFactory<>("stopStationName"));
+    TableColumn<Route, Date> startDateTimeCol = new TableColumn<>("Start Time");
+    startDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+    TableColumn<Route, Date> endDateTimeCol = new TableColumn<>("Stop Time");
+    endDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("stopDate"));
+    TableColumn<Route, Integer> durationCol = new TableColumn<>("Duration");
+    durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+
+    FilteredList<Route> fListRoutes = new FilteredList<>(oListRoutes);
+
+    RouteFilterSelector.getItems().clear();
+    RouteFilterSelector.getItems().addAll(FXCollections.observableArrayList("Starts at:", "Ends at:", "Bike ID", "Gender"));
+    RouteFilterSelector.getSelectionModel().selectFirst();
+    RouteFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RouteSelectedIndex = newValue.intValue();
+          }
+        });
+    fListRoutes = filters.routeFilter(RouteFilterField, fListRoutes);
+
+
+    SortedList<Route> sListRoutes = new SortedList<>(fListRoutes);
+    sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
+    //simple: start and end stations, start and end times
+    //sets up simple view
+    dataTableRoute.getColumns()
+        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
+    dataTableRoute.setItems(sListRoutes);
+
+    dataTableRoute.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Route selected_item = dataTableRoute.getSelectionModel().getSelectedItem();
+          tableOnClickPopup.create("Route",  selected_item, true);
+          if (tableOnClickPopup.return_value == 1) {
+            try {
+
+              displayRoute(selected_item.getStartStation().getLatitude(),
+                  selected_item.getStartStation().getLongitude(),
+                  selected_item.getStopStation().getLatitude(),
+                  selected_item.getStopStation().getLongitude());
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          } else if (tableOnClickPopup.return_value == 2) {
+            selected_item.addTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
+            GUIManager.getInstanceGUIManager().addUserRouteHistory(selected_item);
+            setDistanceChart();
+            //TODO update selected_item in the database
+            initUserRouteTable();
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * Initialiser for the route history table in the user tab
+   */
+  public void initUserRouteTable() {
+    //ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getUserRouteHistory());
+    ObservableList<Route> oListUserRoutes = FXCollections.observableArrayList(getRoutes());
+    TableColumn<Route, Station> startStationCol = new TableColumn<>("Start Station");
+    startStationCol
+        .setCellValueFactory(new PropertyValueFactory<>("startStationName"));
+    TableColumn<Route, Station> stopStationCol = new TableColumn<>("Stop Station");
+    stopStationCol.setCellValueFactory(new PropertyValueFactory<>("stopStationName"));
+    TableColumn<Route, Date> startDateTimeCol = new TableColumn<>("Start Time");
+    startDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+    TableColumn<Route, Date> endDateTimeCol = new TableColumn<>("Stop Time");
+    endDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("stopDate"));
+    TableColumn<Route, Integer> durationCol = new TableColumn<>("Duration");
+    durationCol.setCellValueFactory(new PropertyValueFactory<>("duration"));
+
+    FilteredList<Route> fListUserRoutes = new FilteredList<>(oListUserRoutes);
+        fListUserRoutes.setPredicate(Route -> {
+      if(Route.travelledByContains(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername())) {
+        return true;
+      }
+      return false;
     });
 
-    SortedList<Route> sListRoutes = new SortedList<Route>(fListRoutes);
-    sListRoutes.comparatorProperty().bind(rawDataTable.comparatorProperty());
+    RouteHistoryFilterSelector.getItems().clear();
+    RouteHistoryFilterSelector.getItems().addAll(FXCollections.observableArrayList("Starts at:", "Ends at:", "Bike ID"));
+    RouteHistoryFilterSelector.getSelectionModel().selectFirst();
+    RouteHistoryFilterSelector.getSelectionModel().selectedIndexProperty().addListener(
+        new ChangeListener<Number>() {
+          @Override
+          public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+              Number newValue) {
+            filters.RouteHistorySelectedIndex = newValue.intValue();
+          }
+        });
+    fListUserRoutes = filters.routeHistoryFilter(RouteHistoryFilterField, fListUserRoutes, GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
 
-    rawDataTable.getColumns()
-        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, bikeIDCol,
-            userTypeCol, birthYearCol, genderCol);
-    rawDataTable.setItems(sListRoutes);
+    SortedList<Route> sListRoutes = new SortedList<>(fListUserRoutes);
+    sListRoutes.comparatorProperty().bind(dataTableRoute.comparatorProperty());
+    //simple: start and end stations, start and end times
+    //sets up simple view
+    dataTableRouteHistory.getColumns()
+        .setAll(startStationCol, stopStationCol, startDateTimeCol, endDateTimeCol, durationCol);
+    dataTableRouteHistory.setItems(sListRoutes);
+
+    dataTableRouteHistory.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+          Route selected_item = dataTableRouteHistory.getSelectionModel().getSelectedItem();
+          System.out.println(selected_item.getTravelledBy());
+          System.out.println(selected_item.travelledByContains(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername()));
+          tableOnClickPopup.create("Personal Route",  selected_item, false);
+          if (tableOnClickPopup.return_value == 1) {
+            try {
+
+              displayRoute(selected_item.getStartStation().getLatitude(),
+                  selected_item.getStartStation().getLongitude(),
+                  selected_item.getStopStation().getLatitude(),
+                  selected_item.getStopStation().getLongitude());
+              viewMap();
+            } catch (NullPointerException e) {
+              System.out.println("Map not yet loaded");
+            }
+          } else if (tableOnClickPopup.return_value == 2) {
+            selected_item.removeTravelledBy(GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername());
+            GUIManager.getInstanceGUIManager().removeUserRouteHistory(selected_item);
+            setDistanceChart();
+            //TODO update selected_item in the database
+            initUserRouteTable();
+          }
+        }
+      }
+    });
   }
 
-  public void dataViewSelected() {
-    DataType selected = dataTypeChoiceBox.getValue();
-    switch (selected) {
-      case HOTSPOT:
-        dataViewHotspots();
-        break;
-      case RETAILER:
-        dataViewRetailers();
-        break;
-      case PUBLICPOI:
-        dataViewPublicPOIs();
-        break;
-      case USERPOI:
-        dataViewUserPOIs();
-        break;
-      case STATION:
-        dataViewStations();
-        break;
-      case ROUTE:
-        dataViewRoutes();
-        break;
+  /**
+   * Launches the UserPOIForm window by telling GUIManager to launch that window
+   */
+  @FXML private void addUserPOI() throws Exception {
+    GUIManager.getInstanceGUIManager().addPlace();
+  }
+
+  /* ACCOUNT TAB METHODS */
+
+  /**
+   * Launches the updateAccount window Tells the GUIManager to change to updateAccount window
+   */
+  public void updateAccount() throws Exception {
+    GUIManager.getInstanceGUIManager().updateAccount();
+  }
+
+  /**
+   * Tells GUIManager the user wants to log out
+   */
+  @FXML void logOut() throws Exception {
+    //TODO make this clear any user data (route history)
+    GUIManager.getInstanceGUIManager().logOut();
+  }
+
+  private void setChartLabels(PieChart chart) {
+    final Label caption = new Label("");
+    caption.setTextFill(Color.DARKORANGE);
+    caption.setStyle("-fx-font: 24 arial;");
+
+    for (final PieChart.Data data : chart.getData()) {
+      data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED,
+          new EventHandler<MouseEvent>() {
+            @Override public void handle(MouseEvent e) {
+              caption.setTranslateX(e.getSceneX());
+              caption.setTranslateY(e.getSceneY());
+              caption.setText(String.valueOf(data.getPieValue()) + "%");
+            }
+          });
     }
   }
+
+  /** Generates and populates the data for the user's distance chart *
+   * The chart displays user distance travelled over the last four weeks
+   * This week, last week, two weeks ago, and three weeks ago in a 100% pie chart
+   */
+  private void setDistanceChart() {
+    ArrayList<String> durations = new ArrayList<>();
+    ArrayList<Integer> durationCount = new ArrayList<>();
+
+    int duration;
+    String durationStr;
+    for (Route route : GUIManager.getInstanceGUIManager().getUserRouteHistory()) {
+      duration = route.getDuration();
+      if (duration < 120) {
+        durationStr = "< 2 minutes";
+      } else if (duration < 300) {
+        durationStr = "2-5 minutes";
+      } else if (duration < 900) {
+        durationStr = "5-15 minutes";
+      } else if (duration < 1800) {
+        durationStr = "15-30 minutes";
+      } else {
+        durationStr = "> 30 minutes";
+      }
+
+      if (durations.contains(durationStr)) {
+        Integer count = durationCount.get(durations.indexOf(durationStr));
+        durationCount.set(durations.indexOf(durationStr), count+1);
+      } else {
+        durations.add(durationStr);
+        durationCount.add(1);
+      }
+    }
+
+    ArrayList<Data> dataPoints = new ArrayList<>();
+    for (int i=0; i<durations.size(); i++) {
+      dataPoints.add(new PieChart.Data(durations.get(i), durationCount.get(i)));
+    }
+
+    ObservableList<Data> userRoutesChartData = FXCollections.observableArrayList(dataPoints);
+
+    userRoutesChart.setData(userRoutesChartData);
+    setChartLabels(userRoutesChart);
+    // TODO set this to actual data @Kyle @Andrew
+
+  }
+
+  /**
+   * Allows the user to select a file to import data from, at which case the Import Function is
+   * called.
+   */
+  public void selectImportFile() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open CSV File");
+    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
+    //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
+    try {
+      File selectedFile = fileChooser.showOpenDialog(null);
+      if (selectedFile != null) {
+        if (selectedFile.getPath().endsWith(".csv")) {
+          importData(selectedFile.getPath());
+        } else {
+          new Alert(AlertType.ERROR, "Invalid File", ButtonType.OK).showAndWait();
+        }
+      }
+    } catch (NullPointerException e) {
+      new Alert(AlertType.ERROR, "Invalid File", ButtonType.OK).showAndWait();
+    }
+  }
+
+  /**
+   * Allows the user to export their routes to a custom csv file. Shows alert based on result
+   */
+  public void exportUserRoutes() {
+    Alert alert = null;
+    if (getUserRouteHistory().size() == 0) {
+      alert = new Alert(AlertType.ERROR, "Route history is empty", ButtonType.OK);
+      alert.showAndWait();
+    } else {
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.setTitle("Export CSV File");
+      fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV FILES", "*.csv"));
+      File saveFile = fileChooser.showSaveDialog(null);
+
+      if (saveFile != null) {
+        try {
+          Writer writer = new Writer();
+          if (saveFile.getPath().endsWith(".csv")) {
+            writer.writeRoutesToFile(getUserRouteHistory(), saveFile.getPath());
+          } else {
+            writer.writeRoutesToFile(getUserRouteHistory(), saveFile.getPath() + ".csv");
+          }
+          alert = new Alert(AlertType.NONE, "Routes successfully exported", ButtonType.OK);
+
+        } catch (IOException e) {
+          alert = new Alert(AlertType.ERROR, "Error exporting routes", ButtonType.OK);
+        } finally {
+          alert.showAndWait();
+        }
+      }
+    }
+  }
+
+  /**
+   * Imports additional items from a csv file to the appropriate ArrayList based on the selected
+   * datatype from the ChoiceBox
+   */
+  public void importData(String importFilePath) { //TODO expand for rest of data types, file path differences
+    Reader reader = new Reader();
+    int prevSize;
+    Alert alert = null;
+    if (importType.getValue().equals("User POI")) {
+      try {
+        ArrayList<UserPOI> userPOIsToAdd = reader
+            .readUserPOIS(importFilePath, true);
+        MySQL mysql = new MySQL();
+
+        int size = userPOIsToAdd.size();
+        String username = GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername();
+        try {
+          Connection conn = mysql.getConnection();
+          for (int i = 0; i < size; i++) {
+            mysql.insertUserPOI(conn,userPOIsToAdd.get(i),username);
+          }
+
+        } catch (Exception e) {
+          System.out.println(e);
+        }
+        prevSize = getUserPOIs().size();
+        GUIManager.getInstanceGUIManager().addUserPOIs(userPOIsToAdd);
+        alert = new Alert(AlertType.NONE,
+            getUserPOIs().size() - prevSize + " User POIs succesfully imported", ButtonType.OK);
+        initUserPOITable();
+      } catch (IOException| ArrayIndexOutOfBoundsException e) {
+        System.out.println("Error loading user POIs");
+      }
+    } else {
+      try {
+        MySQL mysql = new MySQL();
+
+        ArrayList<Route> routesToAdd = reader
+            .readRoutes(importFilePath, getStations(), true);
+        int size = routesToAdd.size();
+        String username = GUIManager.getInstanceGUIManager().getCyclistAccount().getUsername();
+        try {
+          Connection conn = mysql.getConnection();
+          for (int i = 0; i < size; i++) {
+            mysql.insertRoute(conn,routesToAdd.get(i),username);
+          }
+
+        } catch (Exception e) {
+          System.out.println(e);
+        }
+
+
+        prevSize = getRoutes().size();
+        GUIManager.getInstanceGUIManager().addRoutes(routesToAdd);
+        alert = new Alert(AlertType.NONE, getRoutes().size() - prevSize + " Routes succesfully imported",
+            ButtonType.OK);
+        initRouteTable();
+      } catch (IOException| ArrayIndexOutOfBoundsException e) {
+        System.out.println("Error loading routes");
+      }
+    }
+    if (alert != null) {
+      alert.showAndWait();
+    }
+  }
+
 }

@@ -1,0 +1,69 @@
+{
+  "results" : [
+    {
+      "address_components" : [
+        {
+          "long_name" : "Upper Manhattan",
+          "short_name" : "Upper Manhattan",
+          "types" : [ "neighborhood", "political" ]
+        },
+        {
+          "long_name" : "Manhattan",
+          "short_name" : "Manhattan",
+          "types" : [ "political", "sublocality", "sublocality_level_1" ]
+        },
+        {
+          "long_name" : "New York",
+          "short_name" : "New York",
+          "types" : [ "locality", "political" ]
+        },
+        {
+          "long_name" : "New York County",
+          "short_name" : "New York County",
+          "types" : [ "administrative_area_level_2", "political" ]
+        },
+        {
+          "long_name" : "New York",
+          "short_name" : "NY",
+          "types" : [ "administrative_area_level_1", "political" ]
+        },
+        {
+          "long_name" : "United States",
+          "short_name" : "US",
+          "types" : [ "country", "political" ]
+        }
+      ],
+      "formatted_address" : "Upper Manhattan, New York, NY, USA",
+      "geometry" : {
+        "bounds" : {
+          "northeast" : {
+            "lat" : 40.87822,
+            "lng" : -73.91064589999999
+          },
+          "southwest" : {
+            "lat" : 40.7827839,
+            "lng" : -73.9711901
+          }
+        },
+        "location" : {
+          "lat" : 40.8240478,
+          "lng" : -73.9447643
+        },
+        "location_type" : "APPROXIMATE",
+        "viewport" : {
+          "northeast" : {
+            "lat" : 40.87822,
+            "lng" : -73.91064589999999
+          },
+          "southwest" : {
+            "lat" : 40.7827839,
+            "lng" : -73.9711901
+          }
+        }
+      },
+      "place_id" : "ChIJY50xHxP2wokR7WhhDNRmgRU",
+      "types" : [ "neighborhood", "political" ]
+    }
+  ],
+  "status" : "OK"
+}

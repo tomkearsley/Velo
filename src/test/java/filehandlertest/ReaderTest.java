@@ -2,8 +2,13 @@ package filehandlertest;
 
 //TODO Replace assertTrue (blah.equals(blah2)) with assertEquals (overriding issue)
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -45,11 +50,12 @@ public class ReaderTest {
 
   /**
    * Test the Reader to ensure it extracts Hotspot csv data correctly
-   * @throws FileNotFoundException
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
   @Test
-  public void readHotspots() throws FileNotFoundException {
-    ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv");
+  public void readHotspots() throws IOException, ArrayIndexOutOfBoundsException {
+    ArrayList<Hotspot> hotspots = reader.readHotspots("/test/TestInitialHotspots.csv", false);
 
     Hotspot hotspot998 = new Hotspot(998, 40.745968, -73.994039,
         "179 WEST 26 STREET", "MN17", "New York", 10001,
@@ -73,20 +79,23 @@ public class ReaderTest {
   /**
    * Tests the Reader to verify that it collects the right Retailer information from a csv
    * and does not miss any entries
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
   @Test
-  public void readRetailers() throws FileNotFoundException{
-    List<Retailer> Retailers = reader.readRetailers("/test/retailers.csv");
+  public void readRetailers() throws IOException, ArrayIndexOutOfBoundsException{
+    List<Retailer> Retailers = reader.readRetailers("/test/retailers.csv", false);
     Retailer r1, r2, r3;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "8-32", "Casual Eating & Takeout",
-        "F-Coffeehouse");
+        "F-Coffeehouse",40.7375659,-74.04536639999999);
     r2 = new Retailer("New York Health & Racquet Club", "39 Whitehall Street", "",
         "New York", "NY", 10004, "8-32",
-        "Personal and Professional Services", "P-Athletic Clubs/Fitness");
+        "Personal and Professional Services", "P-Athletic Clubs/Fitness",
+        40.7029437,-74.0126761);
     r3 = new Retailer("A.J. Kelly's", "6 Stone Street", "", "New York",
         "NY", 10004, "10-32", "Full Service Dining",
-        "F-Irish Pub");
+        "F-Irish Pub",40.0514416,-95.60269609999999);
 
     List<Retailer> actualRetailers = Arrays.asList(r1, r2, r3);
     for (int i = 0; i < Retailers.size(); i++) {
@@ -96,8 +105,8 @@ public class ReaderTest {
   }
 
   @Test
-  public void readRetailerWithEmptyEndingCells() throws FileNotFoundException{
-    List<Retailer> Retailers = reader.readRetailers("/test/retailerEmptyEnds.csv");
+  public void readExternalRetailerWithEmptyEndingCells() throws IOException, ArrayIndexOutOfBoundsException{
+    List<Retailer> Retailers = reader.readRetailers("src/main/resources/test/retailerEmptyEnds.csv", true);
     Retailer r1, r2;
     r1 = new Retailer("Starbucks Coffee", "3 New York Plaza", "", "New York",
         "NY", 10004, "", "",
@@ -113,8 +122,8 @@ public class ReaderTest {
 
   //TODO ADD JAVADOC
   @Test
-  public void readUserPOIS() throws FileNotFoundException {
-    ArrayList<UserPOI> POIs = reader.readUserPOIS("/test/POIS.csv");
+  public void readUserPOIS() throws IOException, ArrayIndexOutOfBoundsException {
+    ArrayList<UserPOI> POIs = reader.readUserPOIS("/test/POIS.csv", false);
     ArrayList<UserPOI> expectedPOIs = new ArrayList<UserPOI>();
 
     UserPOI p1, p2, p3;
@@ -134,8 +143,8 @@ public class ReaderTest {
 
   //TODO ADD JAVADOC
   @Test
-  public void readPublicPOIS() throws FileNotFoundException {
-    ArrayList<PublicPOI> POIs = reader.readPublicPOIS("/test/PublicPOIS.csv");
+  public void readPublicPOIS() throws IOException, ArrayIndexOutOfBoundsException {
+    ArrayList<PublicPOI> POIs = reader.readPublicPOIS("/test/PublicPOIS.csv", false);
     ArrayList<PublicPOI> expectedPOIs = new ArrayList<PublicPOI>();
 
     PublicPOI p1, p2, p3;
@@ -155,15 +164,16 @@ public class ReaderTest {
 
   /**
    * Test the Reader to ensure it extracts Route csv data correctly
-   * @throws FileNotFoundException
+   * @throws IOException if there is an error with the file (or it doesn't exist)
+   * @throws ArrayIndexOutOfBoundsException if there is an error with the indexing
    */
   @Test
-  public void readRoutes() throws FileNotFoundException {
+  public void readRoutes() throws IOException, ArrayIndexOutOfBoundsException {
     ArrayList<Station> stations = new ArrayList<Station>();
 
     Station startStation1, stopStation1, startStation2, stopStation2, startStation3, stopStation3;
-    startStation1 = new Station(164,"E 47 St & 2 Ave",40.75323098,-73.97032517);
-    stopStation1 = new Station(504,"1 Ave & E 15 St",40.73221853,-73.98165557);
+    startStation1 = new Station(164, "E 47 St & 2 Ave", 40.75323098, -73.97032517);
+    stopStation1 = new Station(504, "1 Ave & E 15 St", 40.73221853, -73.98165557);
     startStation2 = new Station(531,"Forsyth St & Broome St",40.71893904,-73.99266288);
     stopStation2 = new Station(499,"Broadway & W 60 St",40.76915505,-73.98191841);
     startStation3 = new Station(345,"W 13 St & 6 Ave",40.73649403,-73.99704374);
@@ -176,7 +186,7 @@ public class ReaderTest {
     stations.add(startStation3);
     stations.add(stopStation3);
 
-    ArrayList<Route> routes = reader.readRoutes("/test/TestInitialRoutes.csv", stations);
+    ArrayList<Route> routes = reader.readRoutes("/test/TestInitialRoutes.csv", stations, false);
 
     // Expected routes
     Date startDateTime1 = new filehandler.Reader().StringToDate("7/1/13 0:00", "MM/dd/yyyy HH:mm");
@@ -202,7 +212,7 @@ public class ReaderTest {
   }
 
   @Test
-  public void readStations() throws FileNotFoundException, ParseException{
+  public void readStations() throws IOException, ArrayIndexOutOfBoundsException, ParseException{
     ArrayList<Station> stations = reader.readStations("/file/stations.json");
 
     ArrayList<Station> compareStations = new ArrayList<Station>();
@@ -211,17 +221,27 @@ public class ReaderTest {
     Date date2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse("2017-09-20 10:13:52 PM");
     Date date3 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").parse("2017-09-20 10:14:02 PM");
 
-    Station station1 = new Station(72,"W 52 St & 11 Ave",28,39,40.76727216,-73.99392888,"In Service",1,10,"W 52 St & 11 Ave","","","","","",false,date1,"");
-    Station station2 = new Station(79,"Franklin St & W Broadway",18,33,40.71911552,-74.00666661,"In Service",1,14,"Franklin St & W Broadway","","","","","",false,date2,"");
-    Station station3 = new Station(82,"St James Pl & Pearl St",3,27,40.71117416,-74.00016545,"In Service",1,24,"St James Pl & Pearl St","","","","","",false,date3,"");
+    Instant instant1 = date1.toInstant();
+    ZonedDateTime zdt1 = instant1.atZone(ZoneId.systemDefault());
+    LocalDate localDate1 = zdt1.toLocalDate();
+
+    Instant instant2 = date2.toInstant();
+    ZonedDateTime zdt2 = instant2.atZone(ZoneId.systemDefault());
+    LocalDate localDate2 = zdt2.toLocalDate();
+
+    Instant instant3 = date3.toInstant();
+    ZonedDateTime zdt3 = instant3.atZone(ZoneId.systemDefault());
+    LocalDate localDate3 = zdt3.toLocalDate();
+
+    Station station1 = new Station(72,"W 52 St & 11 Ave",28,39,40.76727216,-73.99392888,"In Service",1,10,"W 52 St & 11 Ave","","","","","",false,localDate1,"");
+    Station station2 = new Station(79,"Franklin St & W Broadway",18,33,40.71911552,-74.00666661,"In Service",1,14,"Franklin St & W Broadway","","","","","",false,localDate2,"");
+    Station station3 = new Station(82,"St James Pl & Pearl St",3,27,40.71117416,-74.00016545,"In Service",1,24,"St James Pl & Pearl St","","","","","",false,localDate3,"");
 
     compareStations.add(station1);
     compareStations.add(station2);
     compareStations.add(station3);
 
     for(int i = 0;i < compareStations.size()-1;i++) {
-      //System.out.println(stations.get(i).toString());
-      //System.out.println(compareStations.get(i).toString());
       assertTrue(stations.get(i).toString().equals(compareStations.get(i).toString()));
     }
   }

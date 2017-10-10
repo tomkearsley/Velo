@@ -4,8 +4,8 @@
   <groupId>seng202.team9</groupId>
   <artifactId>SENG202Team9</artifactId>
   <packaging>jar</packaging>
-  <version>v1.0</version>
-  <name>SENG202Team9</name>
+  <version>v3.0</version>
+  <name>Vélo</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -65,6 +65,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -78,7 +79,6 @@
         </descriptorRefs>
       </configuration>
       </plugin>
-
     </plugins>
   </build>
 </project>

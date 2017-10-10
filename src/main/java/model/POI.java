@@ -1,18 +1,21 @@
 package model;
 
-import java.util.Arrays;
-
 /**
  * The class POI defines the superclass for Points of Interest
  */
 public class POI implements Mappable {
 
-  String name = "";
-  String description = "";
+  private String name = "";
+  private String description = "";
+  private Double latitude;
+  private Double longitude;
 
-  public POI(String name, String description) {
+
+  public POI(String name, String description, Double latitude, Double longitude) {
     this.name = name;
     this.description = description;
+    this.latitude = latitude;
+    this.longitude = longitude;
 
   }
 
@@ -35,6 +38,7 @@ public class POI implements Mappable {
   }
 
   // GETTERS
+
   /**
    * Returns the name of POI Object
    *
@@ -53,14 +57,36 @@ public class POI implements Mappable {
     return this.description;
   }
 
+  public Double getLatitude() {
+    return this.latitude;
+  }
+
+  public Double getLongitude() {
+    return this.longitude;
+  }
+
+  public void setLatitude(Double latitude) {
+    this.latitude = latitude;
+  }
+
+  public void setLongitude(Double longitude) {
+    this.longitude = longitude;
+  }
+
   @Override
-  public String toString() {;
-    return "Name: " + name + "\nDescription: " + description;
+  public String toString() {
+    return "Name:\t\t" + name + "\nDescription:\t" + description + "\nCoordinates:\t" +
+        String.format("(%.3f, %.3f)", getLatitude(), getLongitude());
   }
 
   @Override
   public boolean equals(Object object) {
     return this.toString().equals(object.toString());
+  }
+
+  @Override
+  public String toHTML() {
+    return null;
   }
 }
 
