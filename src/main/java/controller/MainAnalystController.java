@@ -368,60 +368,69 @@ public class MainAnalystController {
   public void importRetailers() {
     Reader reader = new Reader();
     File inFile = getImportFile();
-    try {
-      ArrayList<Retailer> retailersToAdd = reader.readRetailers(inFile.getPath(), true);
-      int prevSize = getRetailers().size();
-      GUIManager.getInstanceGUIManager().addRetailers(retailersToAdd);
-      Alert alert = new Alert(AlertType.NONE,
-          getRetailers().size() - prevSize + " Retailer(s) successfully imported", ButtonType.OK);
-      alert.showAndWait();
-    } catch (IOException| ArrayIndexOutOfBoundsException e) {
-      System.out.println("Error loading retailers");
+    if (inFile != null) {
+      try {
+        ArrayList<Retailer> retailersToAdd = reader.readRetailers(inFile.getPath(), true);
+        int prevSize = getRetailers().size();
+        GUIManager.getInstanceGUIManager().addRetailers(retailersToAdd);
+        Alert alert = new Alert(AlertType.NONE,
+            getRetailers().size() - prevSize + " Retailer(s) successfully imported", ButtonType.OK);
+        alert.showAndWait();
+      } catch (IOException | ArrayIndexOutOfBoundsException e) {
+        System.out.println("Error loading retailers");
+      }
     }
   }
 
   public void importHotspots() {
     Reader reader = new Reader();
     File inFile = getImportFile();
-    try {
-      ArrayList<Hotspot> hotspotsToAdd = reader.readHotspots(inFile.getPath(), true);
-      int prevSize = getHotspots().size();
-      GUIManager.getInstanceGUIManager().addHotspots(hotspotsToAdd);
-      Alert alert = new Alert(AlertType.NONE,
-          getHotspots().size() - prevSize + " Hotspot(s) successfully imported", ButtonType.OK);
-      alert.showAndWait();
-    } catch (IOException| ArrayIndexOutOfBoundsException e) {
-      System.out.println("Error loading hotspots");
+    if (inFile != null) {
+      try {
+        ArrayList<Hotspot> hotspotsToAdd = reader.readHotspots(inFile.getPath(), true);
+        int prevSize = getHotspots().size();
+        GUIManager.getInstanceGUIManager().addHotspots(hotspotsToAdd);
+        Alert alert = new Alert(AlertType.NONE,
+            getHotspots().size() - prevSize + " Hotspot(s) successfully imported", ButtonType.OK);
+        alert.showAndWait();
+      } catch (IOException | ArrayIndexOutOfBoundsException e) {
+        System.out.println("Error loading hotspots");
+      }
     }
   }
 
   public void importPublicPOIs() {
     Reader reader = new Reader();
     File inFile = getImportFile();
-    try {
-      ArrayList<PublicPOI> publicPOIsToAdd = reader.readPublicPOIS(inFile.getPath(), true);
-      int prevSize = getPublicPOIs().size();
-      GUIManager.getInstanceGUIManager().addPublicPOIs(publicPOIsToAdd);
-      Alert alert = new Alert(AlertType.NONE,
-          getPublicPOIs().size() - prevSize + " Public POI(s) successfully imported", ButtonType.OK);
-      alert.showAndWait();
-    } catch (IOException| ArrayIndexOutOfBoundsException e) {
-      System.out.println("Error loading public POIs");
+    if (inFile != null) {
+      try {
+        ArrayList<PublicPOI> publicPOIsToAdd = reader.readPublicPOIS(inFile.getPath(), true);
+        int prevSize = getPublicPOIs().size();
+        GUIManager.getInstanceGUIManager().addPublicPOIs(publicPOIsToAdd);
+        Alert alert = new Alert(AlertType.NONE,
+            getPublicPOIs().size() - prevSize + " Public POI(s) successfully imported",
+            ButtonType.OK);
+        alert.showAndWait();
+      } catch (IOException | ArrayIndexOutOfBoundsException e) {
+        System.out.println("Error loading public POIs");
+      }
     }
   }
 
   public void importRoutes() {
     Reader reader = new Reader();
     File inFile = getImportFile();
-    try {
-      ArrayList<Route> routesToAdd = reader.readRoutes(inFile.getPath(), getStations(),true);
-      int prevSize = getRoutes().size();
-      GUIManager.getInstanceGUIManager().addRoutes(routesToAdd);
-      Alert alert = new Alert(AlertType.NONE,
-          getRoutes().size() - prevSize + " Route(s) successfully imported", ButtonType.OK);
-      alert.showAndWait();
-    } catch (IOException| ArrayIndexOutOfBoundsException e) {
-      System.out.println("Error loading routes");
+    if (inFile != null) {
+      try {
+        ArrayList<Route> routesToAdd = reader.readRoutes(inFile.getPath(), getStations(), true);
+        int prevSize = getRoutes().size();
+        GUIManager.getInstanceGUIManager().addRoutes(routesToAdd);
+        Alert alert = new Alert(AlertType.NONE,
+            getRoutes().size() - prevSize + " Route(s) successfully imported", ButtonType.OK);
+        alert.showAndWait();
+      } catch (IOException | ArrayIndexOutOfBoundsException e) {
+        System.out.println("Error loading routes");
+      }
     }
   }
 
