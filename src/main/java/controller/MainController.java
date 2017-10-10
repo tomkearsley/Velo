@@ -1270,9 +1270,17 @@ public class MainController {
     fileChooser.setTitle("Open CSV File");
     fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
     //fileChooser.setInitialDirectory(new File("~$USER")); //TODO Default directory
-    File selectedFile = fileChooser.showOpenDialog(null);
-    if (selectedFile != null) {
-      importData(selectedFile.getPath());
+    try {
+      File selectedFile = fileChooser.showOpenDialog(null);
+      if (selectedFile != null) {
+        if (selectedFile.getPath().endsWith(".csv")) {
+          importData(selectedFile.getPath());
+        } else {
+          new Alert(AlertType.ERROR, "Invalid File", ButtonType.OK).showAndWait();
+        }
+      }
+    } catch (NullPointerException e) {
+      new Alert(AlertType.ERROR, "Invalid File", ButtonType.OK).showAndWait();
     }
   }
 
