@@ -804,6 +804,10 @@ public class MainController {
     routeIsDetailed = !routeIsDetailed;
   }
 
+  /**
+   * Method to create and remove columns containing additional details within the User Route History table Uses a
+   * global boolean routeHistoryIsDetailed to determine state
+   */
   public void toggleDetailsRouteHistory() {
     if (routeHistoryIsDetailed) {
       dataTableRouteHistory.getColumns().remove(5, 7);

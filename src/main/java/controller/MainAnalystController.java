@@ -74,6 +74,11 @@ public class MainAnalystController {
   }
 
   /* Chart Methods */
+
+  /**
+   * Sets labels for pie charts
+   * @param chart The pie chart to add labels to
+   */
   private void setChartLabels(PieChart chart) {
     final Label caption = new Label("");
     caption.setTextFill(Color.DARKORANGE);
@@ -155,9 +160,6 @@ public class MainAnalystController {
     setChartLabels(retailersChart);
   }
 
-  /** Generates and populates the data for the public POIs chart */
-  private void setPublicPOIsChart() {
-  }
   /** Generates and populates the data for the stations chart */
   private void setStationsChart() {
     ArrayList<String> statusTypes = new ArrayList<>();
@@ -184,20 +186,8 @@ public class MainAnalystController {
     setChartLabels(stationsChart);
   }
 
-  private int getMaxRouteDuration() {
-    int max = 0;
-    for (Route route : getRoutes()) {
-      if (route.getDuration() > max) {
-        max = route.getDuration();
-      }
-    }
-    return max;
-  }
-
   /** Generates and populates the data for the routes chart */
   private void setRoutesChart() {
-    int maxDuration = getMaxRouteDuration();
-    int maxMins = maxDuration / 60;
     ArrayList<String> durations = new ArrayList<>();
     ArrayList<Integer> durationCount = new ArrayList<>();
 
@@ -310,7 +300,7 @@ public class MainAnalystController {
    * @param POIs  The list of POI child instances
    * @param poiString The String for the alert messages
    */
-  public void exportPOIs(ArrayList<? extends POI> POIs, String poiString) {
+  private void exportPOIs(ArrayList<? extends POI> POIs, String poiString) {
     Alert alert = null;
     System.out.println(POIs.size());
     if (POIs.size() > 0) {
@@ -345,7 +335,11 @@ public class MainAnalystController {
     }
   }
 
-  public File getImportFile() {
+  /**
+   * Allows the user to select a file to import data from
+   * @return The choosen file, null if none selected
+   */
+  private File getImportFile() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open CSV File");
     fileChooser.getExtensionFilters().addAll(new ExtensionFilter("CSV Files", "*.csv"));
@@ -365,6 +359,10 @@ public class MainAnalystController {
     return null;
   }
 
+  /**
+   * Allows the analyst to import retailers from an external CSV, displays an alert window if there was an
+   * error
+   */
   public void importRetailers() {
     Reader reader = new Reader();
     File inFile = getImportFile();
@@ -377,11 +375,16 @@ public class MainAnalystController {
             getRetailers().size() - prevSize + " Retailer(s) successfully imported", ButtonType.OK);
         alert.showAndWait();
       } catch (IOException | ArrayIndexOutOfBoundsException e) {
-        System.out.println("Error loading retailers");
+        Alert alert = new Alert(AlertType.ERROR, "Error loading from file", ButtonType.OK);
+        alert.showAndWait();
       }
     }
   }
 
+  /**
+   * Allows the analyst to import hotspots from an external CSV, displays an alert window if there was an
+   * error
+   */
   public void importHotspots() {
     Reader reader = new Reader();
     File inFile = getImportFile();
@@ -394,11 +397,16 @@ public class MainAnalystController {
             getHotspots().size() - prevSize + " Hotspot(s) successfully imported", ButtonType.OK);
         alert.showAndWait();
       } catch (IOException | ArrayIndexOutOfBoundsException e) {
-        System.out.println("Error loading hotspots");
+        Alert alert = new Alert(AlertType.ERROR, "Error loading from file", ButtonType.OK);
+        alert.showAndWait();
       }
     }
   }
 
+  /**
+   * Allows the analyst to import public POIs from an external CSV, displays an alert window if there was an
+   * error
+   */
   public void importPublicPOIs() {
     Reader reader = new Reader();
     File inFile = getImportFile();
@@ -412,11 +420,16 @@ public class MainAnalystController {
             ButtonType.OK);
         alert.showAndWait();
       } catch (IOException | ArrayIndexOutOfBoundsException e) {
-        System.out.println("Error loading public POIs");
+        Alert alert = new Alert(AlertType.ERROR, "Error loading from file", ButtonType.OK);
+        alert.showAndWait();
       }
     }
   }
 
+  /**
+   * Allows the analyst to import routes from an external CSV, displays an alert window if there was an
+   * error
+   */
   public void importRoutes() {
     Reader reader = new Reader();
     File inFile = getImportFile();
@@ -429,7 +442,8 @@ public class MainAnalystController {
             getRoutes().size() - prevSize + " Route(s) successfully imported", ButtonType.OK);
         alert.showAndWait();
       } catch (IOException | ArrayIndexOutOfBoundsException e) {
-        System.out.println("Error loading routes");
+        Alert alert = new Alert(AlertType.ERROR, "Error loading from file", ButtonType.OK);
+        alert.showAndWait();
       }
     }
   }
