@@ -43,8 +43,6 @@
     var stationCluster;
     var PPOICluster;
 
-    var firstWaypoint = true;
-
     //alert(directionsService.toString());
     function initialize() {
       var mapOptions = {
@@ -296,11 +294,6 @@
         refreshCluster(PPOICluster);
       });
 
-      google.maps.event.addListener(infowindow,'click',function(event) {
-        aBridge.outputValue("Clicked infowindow");
-        refreshMarkers();
-      });
-
       //var bikeLayer = new google.maps.BicyclingLayer();
       //bikeLayer.setMap(map);
       //alert("Test");
@@ -321,8 +314,17 @@
         wayPoints[i] = null
         wayPointMarkers[i].setMap(null);
       }
+      hideMarkers(wayPointIntermediateMarkers);
+      hideMarkers(wayPointMarkers);
       wayPoints = [];
       wayPointMarkers = [];
+    }
+
+    function clearWaypointIntermediate() {
+      for (var i = 0; i < wayPointIntermediateMarkers.length; i++) {
+        wayPointIntermediateMarkers[i].setMap(null);
+      }
+      wayPointIntermediateMarkers = [];
     }
 
     function insertWaypoint(location,stopover,position) {
@@ -345,6 +347,7 @@
         infowindow.open(map, marker);
         displayNearby(lat,lng,NEARBY_DISTANCE);
       });
+
       allMarkers.push(marker);
       switch(markerType) {
         case "hotspot":
@@ -542,6 +545,7 @@
         }
       });
       clearWaypoints();
+      clearWaypointIntermediate();
     }
 
     function displayRoute(startLat,startLng,endLat,endLng) {
@@ -574,7 +578,6 @@
     }
 
     function displayRouteWaypointsString(startLocation,endLocation) {
-      clearWaypointIntermediate();
       directionsService.route({
         origin: startLocation + ",New York",
         destination: endLocation + ",New York",
@@ -587,15 +590,20 @@
           aBridge.outputValue("Displaying route");
 
           var location = route.legs[0].start_location;
-
-          wayPointMarkers.push(createMarker(location.lat(),location.lng(),"Marker 1","default"));
+          wayPointMarkers.push(createMarker(location.lat(),location.lng(),"START","default"));
           displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
 
-          for (var i = 0; i < route.legs.length; i++) {
+          var i = 0;
+          for (; i < route.legs.length; i++) {
             location = route.legs[i].end_location;
             wayPointIntermediateMarkers.push(createMarker(location.lat(),location.lng(),"Marker " + (i + 2),"default"));
             displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
           }
+
+          location = route.legs[0].end_location;
+          wayPointMarkers.push(createMarker(location.lat(),location.lng(),"END","default"));
+          displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
+          displayNearby(location.lat(),location.lng(),NEARBY_DISTANCE);
         } else {
           window.alert('Directions request failed due to ' + status);
         }
@@ -795,12 +803,11 @@
         if(d <= distance) {
           markerArray[i].setMap(map);
         }
-        /*
         else {
-          markerArray[i].setMap(map);
+          //markerArray[i].setMap(map);
         }
-        */
       }
+      refreshMarkers();
     }
 
     function displayNearby(lat,lng,distance) {
@@ -845,13 +852,6 @@
         refreshMarker(POIMarkers);
         refreshMarker(stationMarkers);
         refreshMarker(PPOIMarkers)
-      }
-
-      function clearWaypointIntermediate() {
-        for (var i = 0; i < wayPointIntermediateMarkers.length; i++) {
-          wayPointIntermediateMarkers[i].setMap(null);
-        }
-        wayPointIntermediateMarkers = [];
       }
 
       //initialize();
