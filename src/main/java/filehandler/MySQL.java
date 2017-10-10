@@ -27,42 +27,14 @@ import model.UserPOI;
  * The class MySQL defines the type which queries the MySQL Database
  */
 public class MySQL {
-  // TODO: Optimisation by initialising one connection at beginning.
+
+
+
   /**
-  public static void main(String[] args) throws Exception {
-
-    Cyclist c = getCyclist("sasdadsa");
-    c.setFirstName("Jack");
-    updateUser(c);
-  } **/
-
-//  public static void main(String[] args) {
-//
-//    Reader rdr = new Reader();
-//    try {
-//      Connection conn = getConnection();
-//      // Execute deletion
-////      PreparedStatement stmt = conn.prepareStatement("TRUNCATE Hotspots");
-////      stmt.executeUpdate();
-////      PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Hotspots");
-////      // Use DELETE
-////      // Execute deletion
-////      stmt2.executeUpdate();
-//
-//      ArrayList<Hotspot> hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
-//
-//      for (Hotspot hotspot : hotspots) {
-//        insertHotspot(conn, hotspot);
-//      }
-//
-//    } catch (Exception e) {
-//      System.out.println("UH OH");
-//    }
-//
-//  }
-
-
-
+   * Updates a user's details. Can change every value except username.
+   * Password is re-hashed.
+   * @param cyclist Cyclist object given.
+   */
   public static void updateUser(Cyclist cyclist) {
       try {
         Connection conn = getConnection();
@@ -146,6 +118,14 @@ public class MySQL {
     }
 
   }
+
+  /**
+   * Inserts a UserPOI into the database for a given user.
+   * @param conn Connection to Database
+   * @param userPOI userPOI object.
+   * @param username given username for which the POI will be inserted.
+   * @throws Exception Exception thrown if connection/insertion is unsuccessful.
+   */
   public static void insertUserPOI(Connection conn,UserPOI userPOI,String username) throws Exception {
     try {
       PreparedStatement inserted = conn.prepareStatement(
@@ -164,7 +144,11 @@ public class MySQL {
 
   }
 
-
+  /**
+   * Insert Station into Dtabase
+   * @param conn Connection to server
+   * @param station Station object to be inserted.
+   */
   public static void insertStation(Connection conn,Station station) {
     try {
       PreparedStatement insert = conn.prepareStatement("INSERT INTO Stations(stationID,name,availableDocks,"
