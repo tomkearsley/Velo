@@ -1,6 +1,9 @@
 package controller;
 
+import filehandler.MySQL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -192,6 +195,30 @@ public class UpdateAccountController {
         // If user created successfully, tell GUIManager
         try {
           System.out.println("User account updated");
+
+
+          //int height = (heightInches.getValue());
+          int newGender = 0;
+
+          switch(gender.getSelectedToggle().toString()) {
+            case "male":
+              newGender = 0;
+              break;
+            case "female":
+              newGender = 1;
+              break;
+            case "other":
+              newGender = 2;
+              break;
+          }
+          SimpleDateFormat format = new SimpleDateFormat("E MMM dd H:mm:ss z yyyy");
+          int height = Integer.valueOf(heightFeet.getValue().toString()) + Integer.valueOf(heightInches.getValue().toString());
+
+          LocalDate birth = LocalDate.parse(birthDate.getValue().toString());
+          Cyclist c = new Cyclist(firstName.getText().toString(),lastName.getText().toString(),username.getText().toString(),
+              password.getText().toString(),birth,newGender, Double.valueOf(weight.getText()),height);
+          MySQL mysql = new MySQL();
+          mysql.updateUser(c);
           GUIManager.getInstanceGUIManager().accountUpdated();
         } catch (Exception e) {
           e.printStackTrace();
