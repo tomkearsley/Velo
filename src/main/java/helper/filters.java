@@ -39,7 +39,8 @@ public class filters {
 
   /**
    * Filters the given filteredList by predetermined fields (borough, type, provider)
-   *
+   * @param HotspotFilterField
+   * @param fListHotspots
    * @return filtered version of fListHotspots
    */
   public static FilteredList<Hotspot> hotspotFilter(TextField HotspotFilterField,
@@ -88,7 +89,8 @@ public class filters {
 
   /**
    * Filters the given FilteredList by predetermined fields (Address, Name, zipcode)
-   *
+   * @param RetailerFilterField
+   * @param fListRetailers
    * @return filtered version of fListRetailers
    */
   public static FilteredList<Retailer> retailerFilter(TextField RetailerFilterField,
@@ -134,8 +136,9 @@ public class filters {
 
   /**
    * Filters the given filteredList by predetermined fields (Name)
-   *
-   * @return filtered version of fListPublicPOIs
+   * @param PublicPOIFilterField
+   * @param fListPublicPOIs
+   * @return  filtered version of fListPublicPOIs
    */
   public static FilteredList<PublicPOI> publicPOIFilter(TextField PublicPOIFilterField,
       FilteredList<PublicPOI> fListPublicPOIs) {
@@ -163,9 +166,11 @@ public class filters {
 
   /**
    * Filters the given filteredList by predetermined fields (Name)
-   *
+   * @param UserPOIFilterField
+   * @param fListUserPOIs
    * @return filtered version of fListUserPOIs
    */
+
   public static FilteredList<UserPOI> userPOIFilter(TextField UserPOIFilterField,
       FilteredList<UserPOI> fListUserPOIs) {
     UserPOIFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -190,8 +195,10 @@ public class filters {
   }
 
   /**
-   * Filters the given filteredList by predetermined fields (Name)
    *
+   * Filters the given filteredList by predetermined fields (Name)
+   * @param StationFilterField
+   * @param fListStations
    * @return filtered version of fListStations
    */
   public static FilteredList<Station> stationFilter(TextField StationFilterField,
@@ -222,7 +229,8 @@ public class filters {
   /**
    * Filters the given filteredList by predetermined fields (Start/stop location names, bike ID,
    * gender of cyclist)
-   *
+   * @param RouteFilterField
+   * @param fListRoutes
    * @return filtered version of fListRoutes
    */
   public static FilteredList<Route> routeFilter(TextField RouteFilterField,
@@ -271,7 +279,13 @@ public class filters {
     return fListRoutes;
   }
 
-
+  /**
+   *
+   * @param RouteFilterField
+   * @param fListRoutes
+   * @param username
+   * @return a filtered version of fListRoutes
+   */
   public static FilteredList<Route> routeHistoryFilter(TextField RouteFilterField,
       FilteredList<Route> fListRoutes, String username) {
     RouteFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
