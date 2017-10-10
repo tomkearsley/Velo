@@ -28,13 +28,38 @@ import model.UserPOI;
  */
 public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
-
+  /**
   public static void main(String[] args) throws Exception {
 
-    Cyclist c = getCyclist("cyclist");
+    Cyclist c = getCyclist("sasdadsa");
     c.setFirstName("Jack");
     updateUser(c);
-  }
+  } **/
+
+//  public static void main(String[] args) {
+//
+//    Reader rdr = new Reader();
+//    try {
+//      Connection conn = getConnection();
+//      // Execute deletion
+////      PreparedStatement stmt = conn.prepareStatement("TRUNCATE Hotspots");
+////      stmt.executeUpdate();
+////      PreparedStatement stmt2 = conn.prepareStatement("DELETE FROM Hotspots");
+////      // Use DELETE
+////      // Execute deletion
+////      stmt2.executeUpdate();
+//
+//      ArrayList<Hotspot> hotspots = rdr.readHotspots("/file/InitialHotspots.csv", false);
+//
+//      for (Hotspot hotspot : hotspots) {
+//        insertHotspot(conn, hotspot);
+//      }
+//
+//    } catch (Exception e) {
+//      System.out.println("UH OH");
+//    }
+//
+//  }
 
 
 
@@ -43,13 +68,16 @@ public class MySQL {
         Connection conn = getConnection();
         PreparedStatement update = conn.prepareStatement("UPDATE Users SET gender = ?, height = ?, "
             + "weight = ?, firstName = ?, lastName = ?, password = ? WHERE username = ?");
+        PasswordStorage p = new PasswordStorage();
+        String hashedPassword = p.createHash(cyclist.getPassword());
         update.setInt(1,cyclist.getGender());
         update.setInt(2,cyclist.getHeight());
         update.setDouble(3,cyclist.getWeight());
         update.setString(4,cyclist.getFirstName());
         update.setString(5,cyclist.getLastName());
-        update.setString(6,cyclist.getUsername());
-        update.setString(7,cyclist.getPassword());
+        update.setString(6,hashedPassword);
+        update.setString(7,cyclist.getUsername());
+
         update.executeUpdate();
         update.close();
       } catch (Exception e) {
@@ -227,7 +255,7 @@ public class MySQL {
       insert.setString(6,hotspot.getType());
       insert.setString(7,hotspot.getSSID());
       insert.setString(8,hotspot.getBorough());
-      insert.setString(9,hotspot.getRemarks());
+      insert.setString(9,hotspot.getDescription());
       insert.setString(10,hotspot.getProvider());
       insert.setString(11,hotspot.getName());
       insert.executeUpdate();
@@ -542,7 +570,7 @@ public class MySQL {
         String block = result.getString("block");
         String secondaryDescription = result.getString("secondaryDescription");
         Retailer retailer = new Retailer(name,address,floor,city,state,zipCode,
-        block,secondaryDescription,"",latitude,longitude);
+        block,"",secondaryDescription,latitude,longitude);
         retailers.add(retailer);
 
 
