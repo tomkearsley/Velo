@@ -198,10 +198,15 @@ public class MainController {
     dataViewTab.setText("");
     historyViewTab.setText("");
     userViewTab.setText("");
-    mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap 2.png")));
-    dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace 2.png")));
-    historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory 2.png")));
-    userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount 2.png")));
+
+    //mapViewTab.setGraphic(new ImageView(new Image("/image//mainMap 2.png")));
+    mapViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainMap 2.png").toURI().toString())));
+    //dataViewTab.setGraphic(new ImageView(new Image("/image/mainPlace 2.png")));
+    dataViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainPlace 2.png").toURI().toString())));
+    //historyViewTab.setGraphic(new ImageView(new Image("/image/mainHistory 2.png")));
+    historyViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainHistory 2.png").toURI().toString())));
+    //userViewTab.setGraphic(new ImageView(new Image("/image/mainAccount 2.png")));
+    userViewTab.setGraphic(new ImageView(new Image(getClass().getResource("/image/mainAccount 2.png").toURI().toString())));
 
     // MAPS TAB INITIALIZATION
     URL url = getClass().getResource("/googleMaps.html");

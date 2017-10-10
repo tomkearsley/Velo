@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>seng202.team9</groupId>
   <artifactId>SENG202Team9</artifactId>
-  <name>SENG202Team9</name>
-  <version>v1.0</version>
+  <name>Vélo</name>
+  <version>v2.0</version>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>
