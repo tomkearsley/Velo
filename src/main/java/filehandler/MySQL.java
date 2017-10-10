@@ -28,13 +28,13 @@ import model.UserPOI;
  */
 public class MySQL {
   // TODO: Optimisation by initialising one connection at beginning.
-
+  /**
   public static void main(String[] args) throws Exception {
 
-    Cyclist c = getCyclist("cyclist");
+    Cyclist c = getCyclist("sasdadsa");
     c.setFirstName("Jack");
     updateUser(c);
-  }
+  } **/
 
 
 
@@ -43,13 +43,16 @@ public class MySQL {
         Connection conn = getConnection();
         PreparedStatement update = conn.prepareStatement("UPDATE Users SET gender = ?, height = ?, "
             + "weight = ?, firstName = ?, lastName = ?, password = ? WHERE username = ?");
+        PasswordStorage p = new PasswordStorage();
+        String hashedPassword = p.createHash(cyclist.getPassword());
         update.setInt(1,cyclist.getGender());
         update.setInt(2,cyclist.getHeight());
         update.setDouble(3,cyclist.getWeight());
         update.setString(4,cyclist.getFirstName());
         update.setString(5,cyclist.getLastName());
-        update.setString(6,cyclist.getUsername());
-        update.setString(7,cyclist.getPassword());
+        update.setString(6,hashedPassword);
+        update.setString(7,cyclist.getUsername());
+
         update.executeUpdate();
         update.close();
       } catch (Exception e) {

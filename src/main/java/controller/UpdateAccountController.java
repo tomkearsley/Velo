@@ -72,6 +72,8 @@ public class UpdateAccountController {
       int newHeightFeet = cyclist.getHeight() / 12;
       int newHeightInches = cyclist.getHeight() % 12;
       // TODO set heightFeet and heightInches
+      heightFeet.setValue(Integer.toString(newHeightFeet));
+      heightInches.setValue(Integer.toString(newHeightInches));
       weight.setText(String.valueOf(cyclist.getWeight()));
       username.setText(cyclist.getUsername());
 
@@ -190,8 +192,6 @@ public class UpdateAccountController {
 
       if (validData) {
 
-        // TODO update user cyclist account details with the values taken from the form @tom
-
         // If user created successfully, tell GUIManager
         try {
           System.out.println("User account updated");
@@ -212,14 +212,14 @@ public class UpdateAccountController {
               break;
           }
           SimpleDateFormat format = new SimpleDateFormat("E MMM dd H:mm:ss z yyyy");
-          int height = Integer.valueOf(heightFeet.getValue().toString()) + Integer.valueOf(heightInches.getValue().toString());
+          int height = (12*Integer.valueOf(heightFeet.getValue().toString())) + Integer.valueOf(heightInches.getValue().toString());
 
           LocalDate birth = LocalDate.parse(birthDate.getValue().toString());
-          Cyclist c = new Cyclist(firstName.getText().toString(),lastName.getText().toString(),username.getText().toString(),
-              password.getText().toString(),birth,newGender, Double.valueOf(weight.getText()),height);
+          Cyclist newCyclist = new Cyclist(firstName.getText(),lastName.getText(),username.getText(),
+              password.getText(),birth,newGender, Double.valueOf(weight.getText()),height);
           MySQL mysql = new MySQL();
-          mysql.updateUser(c);
-          GUIManager.getInstanceGUIManager().accountUpdated();
+          mysql.updateUser(newCyclist);
+          GUIManager.getInstanceGUIManager().accountUpdated(newCyclist);
         } catch (Exception e) {
           e.printStackTrace();
         }

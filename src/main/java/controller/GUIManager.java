@@ -193,9 +193,10 @@ public class GUIManager extends Application {
    * Lets GUIManager know a user was updated successfully via updateAccount window
    * @throws Exception possible start exceptions
    */
-  void accountUpdated() throws Exception {
+  void accountUpdated(Cyclist newCyclist) throws Exception {
 
     // Close any other window, begin Main window
+    cyclistAccount = newCyclist;
     mainWindow.start(primaryStage);
   }
 
